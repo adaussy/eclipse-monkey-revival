@@ -14,20 +14,21 @@ import org.mozilla.javascript.ScriptableObject;
 /**
  * @author Kevin Lindsey
  */
-public class Event extends ScriptableObject
-{
+public class Event extends ScriptableObject {
+
 	/*
 	 * Fields
 	 */
 	private static final long serialVersionUID = 1744174189434610182L;
+
 	private String _type;
+
 	private Object _target;
 
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
-	public String getClassName()
-	{
+	public String getClassName() {
 		return "Event";
 	}
 
@@ -36,8 +37,7 @@ public class Event extends ScriptableObject
 	 * 
 	 * @return Returns the source of this event
 	 */
-	public Object getTarget()
-	{
+	public Object getTarget() {
 		return this._target;
 	}
 
@@ -46,8 +46,7 @@ public class Event extends ScriptableObject
 	 * 
 	 * @return Returns the string name of the type of this event
 	 */
-	public String getType()
-	{
+	public String getType() {
 		return this._type;
 	}
 
@@ -59,12 +58,11 @@ public class Event extends ScriptableObject
 	 * Create a new instance of Event
 	 * 
 	 * @param type
-	 *            The event type
+	 *        The event type
 	 * @param target
-	 *            The object that threw this event
+	 *        The object that threw this event
 	 */
-	public Event(String type, Object target)
-	{
+	public Event(String type, Object target) {
 		this._type = type;
 		this._target = target;
 
@@ -72,4 +70,3 @@ public class Event extends ScriptableObject
 		this.defineProperty("type", Event.class, READONLY);
 	}
 }
-

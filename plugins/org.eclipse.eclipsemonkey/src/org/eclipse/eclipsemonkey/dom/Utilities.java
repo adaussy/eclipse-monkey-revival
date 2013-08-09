@@ -24,8 +24,7 @@ import org.eclipse.eclipsemonkey.internal.DynamicState;
 /**
  * Utilities
  */
-public class Utilities
-{
+public class Utilities {
 
 	/**
 	 * @param path
@@ -33,8 +32,7 @@ public class Utilities
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	public static String getFileContents(IPath path) throws CoreException, IOException
-	{
+	public static String getFileContents(IPath path) throws CoreException, IOException {
 		return getFileContents(path.toFile());
 	}
 
@@ -44,38 +42,29 @@ public class Utilities
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	public static String getFileContents(File file) throws CoreException, IOException
-	{
+	public static String getFileContents(File file) throws CoreException, IOException {
 		final int BUF_SIZE = 100000;
 		InputStream in = null;
-		try
-		{
+		try {
 			in = new FileInputStream(file);
-			if (in != null)
-			{
+			if(in != null) {
 				StringBuffer result = new StringBuffer();
-				while (true)
-				{
+				while(true) {
 					byte[] buf = new byte[BUF_SIZE];
 					int count = in.read(buf);
-					if (count <= 0)
+					if(count <= 0)
 						return result.toString();
 					byte[] buf2 = new byte[count];
-					for (int k = 0; k < count; k++)
-					{
+					for(int k = 0; k < count; k++) {
 						buf2[k] = buf[k];
 					}
 					result.append(new String(buf2));
 				}
-			}
-			else
-			{
+			} else {
 				return "";
 			}
-		}
-		finally
-		{
-			if (in != null)
+		} finally {
+			if(in != null)
 				in.close();
 		}
 	}
@@ -85,8 +74,7 @@ public class Utilities
 	/**
 	 * @return IDynamicState
 	 */
-	public static IDynamicState state()
-	{
+	public static IDynamicState state() {
 		return _state;
 	}
 

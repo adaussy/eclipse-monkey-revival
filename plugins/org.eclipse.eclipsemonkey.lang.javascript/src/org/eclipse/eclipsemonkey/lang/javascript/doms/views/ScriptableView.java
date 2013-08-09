@@ -26,13 +26,15 @@ import org.mozilla.javascript.Scriptable;
 /**
  * @author Kevin Lindsey
  */
-public class ScriptableView extends View
-{
+public class ScriptableView extends View {
+
 	/*
 	 * Fields
 	 */
 	private static final long serialVersionUID = -9171256728962509567L;
+
 	private LocationListener _viewListener;
+
 	// private String _url;
 	private String _id;
 
@@ -43,12 +45,10 @@ public class ScriptableView extends View
 	/**
 	 * @return getView
 	 */
-	public IWorkbenchPart getView()
-	{
+	public IWorkbenchPart getView() {
 		IWorkbenchPart result = super.getView();
 
-		if (result == null)
-		{
+		if(result == null) {
 			result = Views.getViewInternal("org.eclipse.eclipsemonkey.ui.scriptableView.GenericScriptableView", this._id); //$NON-NLS-1$
 
 			this.updateListeners(result, null);
@@ -58,58 +58,50 @@ public class ScriptableView extends View
 	}
 
 	/**
-	 * @param view 
+	 * @param view
 	 */
-	public void setView(IWorkbenchPart view)
-	{
+	public void setView(IWorkbenchPart view) {
 		IWorkbenchPart currentView = this.getView();
 
-		if (currentView != view)
-		{
+		if(currentView != view) {
 			this.updateListeners(view, currentView);
 		}
 	}
 
 	/**
 	 * updateListeners
-	 *
+	 * 
 	 * @param view
 	 * @param currentView
 	 */
-	protected void updateListeners(IWorkbenchPart view, IWorkbenchPart currentView)
-	{
-		if (currentView != null && this._viewListener != null)
-		{
-			GenericScriptableView pview = (GenericScriptableView) currentView;
+	protected void updateListeners(IWorkbenchPart view, IWorkbenchPart currentView) {
+		if(currentView != null && this._viewListener != null) {
+			GenericScriptableView pview = (GenericScriptableView)currentView;
 
 			pview.getBrowser().removeLocationListener(this._viewListener);
 		}
 
 		super.setView(view);
 
-		if (view != null)
-		{
-			if (this._viewListener == null)
-			{
+		if(view != null) {
+			if(this._viewListener == null) {
 				final ScriptableView self = this;
 
 				// create listener
-				this._viewListener = new LocationListener()
-				{
-					public void changing(LocationEvent innerEvent)
-					{
+				this._viewListener = new LocationListener() {
+
+					public void changing(LocationEvent innerEvent) {
 						LocationChangingEvent event = new LocationChangingEvent(this, innerEvent);
 
 						self.fireEventListeners(event);
 
-						if (innerEvent.location.indexOf("monkey:") == 0) //$NON-NLS-1$
+						if(innerEvent.location.indexOf("monkey:") == 0) //$NON-NLS-1$
 						{
 							innerEvent.doit = false;
 						}
 					}
 
-					public void changed(LocationEvent innerEvent)
-					{
+					public void changed(LocationEvent innerEvent) {
 						LocationChangedEvent event = new LocationChangedEvent(this, innerEvent);
 
 						self.fireEventListeners(event);
@@ -117,15 +109,14 @@ public class ScriptableView extends View
 				};
 			}
 
-			final GenericScriptableView pview = (GenericScriptableView) view;
+			final GenericScriptableView pview = (GenericScriptableView)view;
 
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 			Display display = workbench.getDisplay();
 
-			display.syncExec(new Runnable()
-			{
-				public void run()
-				{
+			display.syncExec(new Runnable() {
+
+				public void run() {
 					pview.getBrowser().addLocationListener(_viewListener);
 				}
 			});
@@ -135,8 +126,7 @@ public class ScriptableView extends View
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
-	public String getClassName()
-	{
+	public String getClassName() {
 		return "ScriptableView"; //$NON-NLS-1$
 	}
 
@@ -151,14 +141,13 @@ public class ScriptableView extends View
 	 * @param view
 	 * @param id
 	 */
-	public ScriptableView(Scriptable scope, IWorkbenchPart view, String id)
-	{
+	public ScriptableView(Scriptable scope, IWorkbenchPart view, String id) {
 		super(scope, view);
 
 		this._id = id;
 
 		// define functions
-		String[] names = new String[] { "setHTML", "execute", "showView", "setTitle" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		String[] names = new String[]{ "setHTML", "execute", "showView", "setTitle" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		this.defineFunctionProperties(names, ScriptableView.class, READONLY | PERMANENT);
 
 		// define properties
@@ -174,24 +163,19 @@ public class ScriptableView extends View
 	 * 
 	 * @param makeVisible
 	 */
-	public void showView(final boolean makeVisible)
-	{
+	public void showView(final boolean makeVisible) {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		Display display = workbench.getDisplay();
 
-		display.syncExec(new Runnable()
-		{
-			public void run()
-			{
+		display.syncExec(new Runnable() {
+
+			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
-				try
-				{
+				try {
 					page.showView("org.eclipse.eclipsemonkey.ui.scriptableView.GenericScriptableView", _id, //$NON-NLS-1$
-							makeVisible == true ? IWorkbenchPage.VIEW_VISIBLE : IWorkbenchPage.VIEW_CREATE);
-				}
-				catch (PartInitException e)
-				{
+						makeVisible == true ? IWorkbenchPage.VIEW_VISIBLE : IWorkbenchPage.VIEW_CREATE);
+				} catch (PartInitException e) {
 					System.err.println(Messages.ScriptableView_Error + ": " + e);
 				}
 			}
@@ -203,20 +187,17 @@ public class ScriptableView extends View
 	 * 
 	 * @param title
 	 */
-	public void setTitle(final String title)
-	{
+	public void setTitle(final String title) {
 		final IWorkbenchPart part = this.getView();
 
-		if (part != null)
-		{
+		if(part != null) {
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 			Display display = workbench.getDisplay();
 
-			display.asyncExec(new Runnable()
-			{
-				public void run()
-				{
-					GenericScriptableView view = (GenericScriptableView) part;
+			display.asyncExec(new Runnable() {
+
+				public void run() {
+					GenericScriptableView view = (GenericScriptableView)part;
 					view.setViewTitle(title);
 				}
 			});
@@ -228,20 +209,17 @@ public class ScriptableView extends View
 	 * 
 	 * @param html
 	 */
-	public void setHTML(final String html)
-	{
+	public void setHTML(final String html) {
 		final IWorkbenchPart part = this.getView();
 
-		if (part != null)
-		{
+		if(part != null) {
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 			Display display = workbench.getDisplay();
 
-			display.asyncExec(new Runnable()
-			{
-				public void run()
-				{
-					GenericScriptableView view = (GenericScriptableView) part;
+			display.asyncExec(new Runnable() {
+
+				public void run() {
+					GenericScriptableView view = (GenericScriptableView)part;
 					view.setText(html);
 				}
 			});
@@ -253,20 +231,17 @@ public class ScriptableView extends View
 	 * 
 	 * @param script
 	 */
-	public void execute(final String script)
-	{
+	public void execute(final String script) {
 		final IWorkbenchPart part = this.getView();
 
-		if (part != null)
-		{
+		if(part != null) {
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 			Display display = workbench.getDisplay();
 
-			display.syncExec(new Runnable()
-			{
-				public void run()
-				{
-					GenericScriptableView view = (GenericScriptableView) part;
+			display.syncExec(new Runnable() {
+
+				public void run() {
+					GenericScriptableView view = (GenericScriptableView)part;
 					view.execute(script);
 				}
 			});
@@ -278,27 +253,24 @@ public class ScriptableView extends View
 	 * 
 	 * @param url
 	 */
-	public void setUrl(String url)
-	{
+	public void setUrl(String url) {
 		final IWorkbenchPart part = this.getView();
 
-		if (part != null)
-		{
+		if(part != null) {
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 			Display display = workbench.getDisplay();
-			
-//			if(url.startsWith("http://localhost"))
-//			{
-//				url = url + "?nocache=" + System.currentTimeMillis() + "_" + Math.round(Math.random() * 1000000);
-//			}
-			
+
+			//			if(url.startsWith("http://localhost"))
+			//			{
+			//				url = url + "?nocache=" + System.currentTimeMillis() + "_" + Math.round(Math.random() * 1000000);
+			//			}
+
 			final String finalUrl = url;
 
-			display.asyncExec(new Runnable()
-			{
-				public void run()
-				{
-					GenericScriptableView view = (GenericScriptableView) part;
+			display.asyncExec(new Runnable() {
+
+				public void run() {
+					GenericScriptableView view = (GenericScriptableView)part;
 					view.setUrl(finalUrl);
 				}
 			});
@@ -310,18 +282,16 @@ public class ScriptableView extends View
 	 * 
 	 * @return Url
 	 */
-	public String getUrl()
-	{
+	public String getUrl() {
 		final IWorkbenchPart part = this.getView();
 		String result = StringUtils.EMPTY;
 
-		if (part != null)
-		{
+		if(part != null) {
 			/**
 			 * Url
 			 */
-			class Url
-			{
+			class Url {
+
 				public String value;
 			}
 
@@ -329,11 +299,10 @@ public class ScriptableView extends View
 			final IWorkbench workbench = PlatformUI.getWorkbench();
 			Display display = workbench.getDisplay();
 
-			display.syncExec(new Runnable()
-			{
-				public void run()
-				{
-					GenericScriptableView view = (GenericScriptableView) part;
+			display.syncExec(new Runnable() {
+
+				public void run() {
+					GenericScriptableView view = (GenericScriptableView)part;
 					String val = view.getUrl();
 					url.value = val;
 				}

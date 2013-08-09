@@ -13,13 +13,15 @@ import org.mozilla.javascript.Scriptable;
 
 /**
  * IJavaScriptDOMFactory
+ * 
  * @author Paul Colton
- *
+ * 
  */
-public interface IJavaScriptDOMFactory
-{
+public interface IJavaScriptDOMFactory {
+
 	/**
 	 * getDOMroot
+	 * 
 	 * @param scope
 	 * @return The root object
 	 */

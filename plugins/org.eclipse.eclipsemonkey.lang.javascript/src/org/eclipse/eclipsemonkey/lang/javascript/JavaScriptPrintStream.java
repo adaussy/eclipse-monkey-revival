@@ -17,12 +17,13 @@ import org.mozilla.javascript.ScriptableObject;
 /**
  * @author Kevin Lindsey
  */
-public class JavaScriptPrintStream extends ScriptableObject
-{
+public class JavaScriptPrintStream extends ScriptableObject {
+
 	/*
 	 * Fields
 	 */
 	private static final long serialVersionUID = -4338424230536797200L;
+
 	private java.io.PrintStream _stream;
 
 	/*
@@ -32,8 +33,7 @@ public class JavaScriptPrintStream extends ScriptableObject
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
-	public String getClassName()
-	{
+	public String getClassName() {
 		return "PrintStream"; //$NON-NLS-1$
 	}
 
@@ -46,18 +46,16 @@ public class JavaScriptPrintStream extends ScriptableObject
 	 * 
 	 * @param scope
 	 * @param stream
-	 *            The underlying stream to wrap
+	 *        The underlying stream to wrap
 	 */
-	public JavaScriptPrintStream(Scriptable scope, java.io.PrintStream stream)
-	{
+	public JavaScriptPrintStream(Scriptable scope, java.io.PrintStream stream) {
 		super();
 
 		this.setParentScope(scope);
 		this._stream = stream;
 
-		this
-				.defineFunctionProperties(new String[] { "print", "println" }, JavaScriptPrintStream.class, //$NON-NLS-1$ //$NON-NLS-2$
-						ScriptableObject.READONLY);
+		this.defineFunctionProperties(new String[]{ "print", "println" }, JavaScriptPrintStream.class, //$NON-NLS-1$ //$NON-NLS-2$
+			ScriptableObject.READONLY);
 	}
 
 	/*
@@ -72,12 +70,10 @@ public class JavaScriptPrintStream extends ScriptableObject
 	 * @param args
 	 * @param funObj
 	 */
-	public static void print(Context cx, Scriptable thisObj, Object[] args, Function funObj)
-	{
-		JavaScriptPrintStream instance = (JavaScriptPrintStream) thisObj;
+	public static void print(Context cx, Scriptable thisObj, Object[] args, Function funObj) {
+		JavaScriptPrintStream instance = (JavaScriptPrintStream)thisObj;
 
-		for (int i = 0; i < args.length; i++)
-		{
+		for(int i = 0; i < args.length; i++) {
 			String arg = Context.toString(args[0]);
 
 			instance._stream.print(arg);
@@ -92,16 +88,13 @@ public class JavaScriptPrintStream extends ScriptableObject
 	 * @param args
 	 * @param funObj
 	 */
-	public static void println(Context cx, Scriptable thisObj, Object[] args, Function funObj)
-	{
-		JavaScriptPrintStream instance = (JavaScriptPrintStream) thisObj;
+	public static void println(Context cx, Scriptable thisObj, Object[] args, Function funObj) {
+		JavaScriptPrintStream instance = (JavaScriptPrintStream)thisObj;
 
-		for (int i = 0; i < args.length; i++)
-		{
+		for(int i = 0; i < args.length; i++) {
 			String arg = Context.toString(args[0]);
 
 			instance._stream.println(arg);
 		}
 	}
 }
-

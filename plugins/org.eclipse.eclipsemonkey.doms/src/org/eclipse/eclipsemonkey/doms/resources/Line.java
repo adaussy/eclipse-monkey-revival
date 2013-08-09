@@ -17,9 +17,10 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * @author Ingo Muschenetz
- *
+ * 
  */
 public class Line {
+
 	private String text;
 
 	private int lineNumber;
@@ -56,8 +57,7 @@ public class Line {
 	 * @throws CoreException
 	 */
 	public void addMyTask(String message) throws CoreException {
-		IMarker marker = this.file.getEclipseObject()
-				.createMarker(IMarker.TASK);
+		IMarker marker = this.file.getEclipseObject().createMarker(IMarker.TASK);
 		marker.setAttribute(Resources.standardMarkerName, file.getMarkerKey());
 		marker.setAttribute(IMarker.MESSAGE, message);
 		marker.setAttribute(IMarker.LINE_NUMBER, this.lineNumber);

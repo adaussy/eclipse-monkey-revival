@@ -15,8 +15,8 @@ import org.mozilla.javascript.ScriptableObject;
 /**
  * @author Kevin Lindsey
  */
-public class EditorType extends EventTarget
-{
+public class EditorType extends EventTarget {
+
 	/*
 	 * fields
 	 */
@@ -33,8 +33,7 @@ public class EditorType extends EventTarget
 	 * 
 	 * @return String
 	 */
-	public String getType()
-	{
+	public String getType() {
 		return this._type;
 	}
 
@@ -47,8 +46,7 @@ public class EditorType extends EventTarget
 	 * 
 	 * @param type
 	 */
-	public EditorType(String type)
-	{
+	public EditorType(String type) {
 		this._type = type;
 
 		// define properties
@@ -62,8 +60,7 @@ public class EditorType extends EventTarget
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
-	public String getClassName()
-	{
+	public String getClassName() {
 		return "EditorType";
 	}
 }

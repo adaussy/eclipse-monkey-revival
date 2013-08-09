@@ -17,13 +17,12 @@ import org.mozilla.javascript.ScriptableObject;
 /**
  * @author Kevin Lindsey
  */
-public final class JavaScriptUtils
-{
+public final class JavaScriptUtils {
+
 	/**
 	 * JavaScriptUtils
 	 */
-	private JavaScriptUtils()
-	{
+	private JavaScriptUtils() {
 		// make this class publicly un-instantiable
 	}
 
@@ -32,50 +31,42 @@ public final class JavaScriptUtils
 	 * function properties to the JavaScript global
 	 * 
 	 * @param functionNames
-	 *            The names of the functions to apply to the target object. This method will throw an
-	 *            IllegalArgumentException if this parameter is null
+	 *        The names of the functions to apply to the target object. This method will throw an
+	 *        IllegalArgumentException if this parameter is null
 	 * @param functionProvider
-	 *            The scriptable object that contains the function implementations. This method will throw an
-	 *            IllegalArgumentException if this parameter is null
+	 *        The scriptable object that contains the function implementations. This method will throw an
+	 *        IllegalArgumentException if this parameter is null
 	 * @param attributes
-	 *            The property attributes to apply for each function property
+	 *        The property attributes to apply for each function property
 	 * @param target
-	 *            The scriptable object to which the function properties will be added. This method will throw an
-	 *            IllegalArgumentException if this parameter is null
+	 *        The scriptable object to which the function properties will be added. This method will throw an
+	 *        IllegalArgumentException if this parameter is null
 	 * @throws IllegalArgumentException
 	 */
-	public static void defineFunctionProperties(String[] functionNames, ScriptableObject functionProvider, int attributes, ScriptableObject target)
-	{
-		if (functionNames == null)
-		{
+	public static void defineFunctionProperties(String[] functionNames, ScriptableObject functionProvider, int attributes, ScriptableObject target) {
+		if(functionNames == null) {
 			throw new IllegalArgumentException("functionNames must be defined");
 		}
-		if (functionProvider == null)
-		{
+		if(functionProvider == null) {
 			throw new IllegalArgumentException("functionProvider must be defined");
 		}
-		if (target == null)
-		{
+		if(target == null) {
 			throw new IllegalArgumentException("target must be defined");
 		}
 
 		Method methods[] = functionProvider.getClass().getDeclaredMethods();
 
 		// add each function name
-		for (int i = 0; i < functionNames.length; i++)
-		{
+		for(int i = 0; i < functionNames.length; i++) {
 			String functionName = functionNames[i];
 
 			// silently ignore nulls and empty strings
-			if (functionName != null && functionName.length() > 0)
-			{
+			if(functionName != null && functionName.length() > 0) {
 				// find the method for the current function name
-				for (int j = 0; j < methods.length; j++)
-				{
+				for(int j = 0; j < methods.length; j++) {
 					Method currentMethod = methods[j];
 
-					if (currentMethod.getName().equals(functionName))
-					{
+					if(currentMethod.getName().equals(functionName)) {
 						// create function object for this method
 						FunctionObject function = new FunctionObject(functionName, currentMethod, functionProvider);
 

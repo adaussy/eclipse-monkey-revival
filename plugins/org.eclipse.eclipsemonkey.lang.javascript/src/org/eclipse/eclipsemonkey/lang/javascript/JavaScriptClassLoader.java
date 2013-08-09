@@ -20,15 +20,14 @@ import org.osgi.framework.Bundle;
 /**
  * @author Kevin Lindsey based on code by Patrick Mueller
  */
-public class JavaScriptClassLoader extends ClassLoader
-{
+public class JavaScriptClassLoader extends ClassLoader {
+
 	private ArrayList _bundles;
 
 	/**
 	 * ScriptClassLoader
 	 */
-	public JavaScriptClassLoader()
-	{
+	public JavaScriptClassLoader() {
 		super(JavaScriptClassLoader.class.getClassLoader());
 
 		this._bundles = new ArrayList();
@@ -36,18 +35,15 @@ public class JavaScriptClassLoader extends ClassLoader
 
 	/**
 	 * addBundle
-	 *
+	 * 
 	 * @param bundle
 	 */
-	public void addBundle(Bundle bundle)
-	{
-		if (bundle == null)
-		{
+	public void addBundle(Bundle bundle) {
+		if(bundle == null) {
 			throw new IllegalArgumentException("ScriptClassLoader_Bundle_Not_Defined");
 		}
-		
-		if (this._bundles.contains(bundle) == false)
-		{
+
+		if(this._bundles.contains(bundle) == false) {
 			this._bundles.add(bundle);
 		}
 	}
@@ -59,42 +55,36 @@ public class JavaScriptClassLoader extends ClassLoader
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
-	protected Class findClass(String name) throws ClassNotFoundException
-	{
+	protected Class findClass(String name) throws ClassNotFoundException {
 		Class result = this.loadClassFromBundles(name);
 
-		if (result == null)
-		{
+		if(result == null) {
 			String message = "ScriptClassLoader_Unable_To_Find_Class: " + name;
-			
+
 			throw new ClassNotFoundException(message);
 		}
 
 		return result;
 	}
-	
+
 	/**
 	 * findResource
 	 * 
 	 * @param name
 	 * @return URL
 	 */
-	protected URL findResource(String name)
-	{
+	protected URL findResource(String name) {
 		URL result = super.findResource(name);
 
-		if (result == null)
-		{
+		if(result == null) {
 			Iterator iterator = this._bundles.iterator();
-			
-			while (iterator.hasNext())
-			{
-				Bundle bundle = (Bundle) iterator.next();
-				
+
+			while(iterator.hasNext()) {
+				Bundle bundle = (Bundle)iterator.next();
+
 				result = bundle.getResource(name);
 
-				if (result != null)
-				{
+				if(result != null) {
 					break;
 				}
 			}
@@ -110,31 +100,26 @@ public class JavaScriptClassLoader extends ClassLoader
 	 * @return Enumeration
 	 * @throws IOException
 	 */
-	protected Enumeration findResources(String name) throws IOException
-	{
+	protected Enumeration findResources(String name) throws IOException {
 		Enumeration result = super.findResources(name);
 
-		if (result == null)
-		{
+		if(result == null) {
 			Iterator iterator = this._bundles.iterator();
-			
-			while (iterator.hasNext())
-			{
-				Bundle bundle = (Bundle) iterator.next();
-				
+
+			while(iterator.hasNext()) {
+				Bundle bundle = (Bundle)iterator.next();
+
 				result = bundle.getResources(name);
 
-				if (result != null)
-				{
+				if(result != null) {
 					break;
 				}
 			}
 		}
 
-		if (result == null)
-		{
+		if(result == null) {
 			String message = "ScriptClassLoader_Unable_To_Find_Resource: " + name;
-			
+
 			throw new IOException(message);
 		}
 
@@ -148,19 +133,16 @@ public class JavaScriptClassLoader extends ClassLoader
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
-	public Class loadClass(String name) throws ClassNotFoundException
-	{
+	public Class loadClass(String name) throws ClassNotFoundException {
 		Class result = super.loadClass(name);
 
-		if (result == null)
-		{
+		if(result == null) {
 			result = this.loadClassFromBundles(name);
 		}
 
-		if (result == null)
-		{
+		if(result == null) {
 			String message = "ScriptClassLoader_Unable_To_Load_Class: " + name;
-			
+
 			throw new ClassNotFoundException(message);
 		}
 
@@ -175,19 +157,16 @@ public class JavaScriptClassLoader extends ClassLoader
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
-	protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException
-	{
+	protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
 		Class result = super.loadClass(name, resolve);
 
-		if (result == null)
-		{
+		if(result == null) {
 			result = this.loadClassFromBundles(name);
 		}
 
-		if (result == null)
-		{
+		if(result == null) {
 			String message = "ScriptClassLoader_Unable_To_Load_Class: " + name;
-			
+
 			throw new ClassNotFoundException(message);
 		}
 
@@ -201,25 +180,19 @@ public class JavaScriptClassLoader extends ClassLoader
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
-	private Class loadClassFromBundles(String name)
-	{
+	private Class loadClassFromBundles(String name) {
 		Class result = null;
 		Iterator iterator = this._bundles.iterator();
 
-		while (iterator.hasNext())
-		{
-			Bundle bundle = (Bundle) iterator.next();
+		while(iterator.hasNext()) {
+			Bundle bundle = (Bundle)iterator.next();
 
-			try
-			{
+			try {
 				result = bundle.loadClass(name);
-			}
-			catch(ClassNotFoundException e)
-			{
+			} catch (ClassNotFoundException e) {
 			}
 
-			if (result != null)
-			{
+			if(result != null) {
 				break;
 			}
 		}
@@ -227,4 +200,3 @@ public class JavaScriptClassLoader extends ClassLoader
 		return result;
 	}
 }
-

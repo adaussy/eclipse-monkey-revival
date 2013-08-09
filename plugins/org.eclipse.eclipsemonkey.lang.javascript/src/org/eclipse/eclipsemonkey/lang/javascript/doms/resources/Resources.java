@@ -15,21 +15,21 @@ import org.mozilla.javascript.ScriptableObject;
 /**
  * 
  * @author Paul Colton
- *
+ * 
  */
-public class Resources extends ScriptableObject
-{
+public class Resources extends ScriptableObject {
+
 	/*
 	 * Fields
 	 */
 	private static final long serialVersionUID = 5439070601529120100L;
-	
+
 	/**
 	 * 
 	 */
-	
+
 	private org.eclipse.eclipsemonkey.doms.resources.Resources _resources;
-	
+
 	/*
 	 * Properties
 	 */
@@ -37,16 +37,14 @@ public class Resources extends ScriptableObject
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
-	public String getClassName()
-	{
+	public String getClassName() {
 		return "Resources";
 	}
 
 	/**
 	 * Constructors
 	 */
-	public Resources()
-	{
+	public Resources() {
 		System.err.println("Shouldn't be used directly.");
 	}
 
@@ -55,28 +53,24 @@ public class Resources extends ScriptableObject
 	 * 
 	 * @param scope
 	 */
-	public Resources(Scriptable scope)
-	{
+	public Resources(Scriptable scope) {
 		this.setParentScope(scope);
 
 		_resources = new org.eclipse.eclipsemonkey.doms.resources.Resources();
-		
-		String[] names = new String[] { 
-				"filesMatching"
-				};
+
+		String[] names = new String[]{ "filesMatching" };
 
 		this.defineFunctionProperties(names, Resources.class, PERMANENT | READONLY);
 
-//		this.defineProperty("all", Resources.class, PERMANENT | READONLY);
-//		this.defineProperty("activeEditor", Resources.class, PERMANENT | READONLY);
+		//		this.defineProperty("all", Resources.class, PERMANENT | READONLY);
+		//		this.defineProperty("activeEditor", Resources.class, PERMANENT | READONLY);
 	}
-	
+
 	/**
 	 * @param patternString
 	 * @return filesMatching
 	 */
-	public Object[] filesMatching(String patternString)
-	{
+	public Object[] filesMatching(String patternString) {
 		return _resources.filesMatching(patternString);
 	}
 }

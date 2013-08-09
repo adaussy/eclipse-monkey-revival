@@ -11,10 +11,10 @@ package org.eclipse.eclipsemonkey.lang.javascript.doms.io;
 
 /**
  * @author Paul Colton
- *
+ * 
  */
 public class IO {
-	
+
 	private static IO _io = new IO();
 
 	/**
@@ -26,8 +26,7 @@ public class IO {
 	/**
 	 * @return IO
 	 */
-	public static IO getIO()
-	{
+	public static IO getIO() {
 		return _io;
 	}
 }

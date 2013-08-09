@@ -20,6 +20,7 @@ import java.util.List;
  * MonkeyClassLoader
  */
 public class MonkeyClassLoader extends ClassLoader {
+
 	List loaders = new ArrayList();
 
 	/**
@@ -34,12 +35,12 @@ public class MonkeyClassLoader extends ClassLoader {
 	 */
 	public Class loadClass(String name) throws ClassNotFoundException {
 		Iterator iter = loaders.iterator();
-		while (iter.hasNext()) {
-			ClassLoader loader = (ClassLoader) iter.next();
+		while(iter.hasNext()) {
+			ClassLoader loader = (ClassLoader)iter.next();
 			try {
 				// ((EclipseClassLoader)loader).getDelegate();
 				Class clz = loader.loadClass(name);
-				if (clz != null) {
+				if(clz != null) {
 					return clz;
 				}
 			} catch (ClassNotFoundException x) {

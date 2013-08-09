@@ -22,26 +22,24 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 /**
  * @author Paul Colton (Aptana, Inc.)
- *
+ * 
  */
-public class JavaScriptLanguageFactory implements IMonkeyLanguageFactory
-{
+public class JavaScriptLanguageFactory implements IMonkeyLanguageFactory {
+
 	/**
-	 * @see org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory#getRunMonkeyScript(org.eclipse.core.runtime.IPath, org.eclipse.ui.IWorkbenchWindow)
+	 * @see org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory#getRunMonkeyScript(org.eclipse.core.runtime.IPath,
+	 *      org.eclipse.ui.IWorkbenchWindow)
 	 */
-	public IMonkeyScriptRunner getRunMonkeyScript(IPath path,
-			IWorkbenchWindow window) 
-	{
+	public IMonkeyScriptRunner getRunMonkeyScript(IPath path, IWorkbenchWindow window) {
 		return new JavaScriptRunner(path, window);
 	}
 
 	/**
 	 * @see org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory#init(java.lang.String, java.lang.String)
 	 */
-	public void init(String pluginID, String languageName) 
-	{
+	public void init(String pluginID, String languageName) {
 	}
-	
+
 	/**
 	 * @param contents
 	 * @return ScriptMetadata
@@ -50,19 +48,20 @@ public class JavaScriptLanguageFactory implements IMonkeyLanguageFactory
 		ScriptMetadata metadata = new ScriptMetadata();
 		Pattern p = Pattern.compile("^\\s*\\/\\*.*?\\*\\/", Pattern.DOTALL);
 		Matcher m = p.matcher(contents);
-		if (m.find()) {
+		if(m.find()) {
 			String comment = m.group();
 			p = Pattern.compile("Menu:\\s*((\\p{Graph}| )+)", Pattern.DOTALL);
 			m = p.matcher(comment);
-			if (m.find()) {
+			if(m.find()) {
 				metadata.setMenuName(m.group(1));
 			}
 			p = Pattern.compile("OnLoad:\\s*((\\p{Graph}| )+)", Pattern.DOTALL);
 			m = p.matcher(comment);
-			if (m.find()) {
+			if(m.find()) {
 				String funct = m.group(1);
 				// [IM] Listener takes an ending (), so we allow it here just to be consistent
-				if(funct.endsWith("()"));
+				if(funct.endsWith("()"))
+					;
 				{
 					funct = funct.substring(0, funct.length() - 2);
 					metadata.setOnLoadFunction(funct);
@@ -70,26 +69,23 @@ public class JavaScriptLanguageFactory implements IMonkeyLanguageFactory
 			}
 			p = Pattern.compile("Key:\\s*((\\p{Graph}| )+)", Pattern.DOTALL);
 			m = p.matcher(comment);
-			if (m.find()) {
+			if(m.find()) {
 				metadata.setKey(m.group(1));
 			}
 			p = Pattern.compile("Scope:\\s*((\\p{Graph}| )+)", Pattern.DOTALL);
 			m = p.matcher(comment);
-			if (m.find()) {
+			if(m.find()) {
 				metadata.setScopeName(m.group(1));
 			}
-			p = Pattern.compile("DOM:\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)",
-					Pattern.DOTALL);
+			p = Pattern.compile("DOM:\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)", Pattern.DOTALL);
 			m = p.matcher(comment);
-			while (m.find()) {
-				metadata.getDOMs().add(
-						new DOMDescriptor(m.group(1), m.group(2)));
+			while(m.find()) {
+				metadata.getDOMs().add(new DOMDescriptor(m.group(1), m.group(2)));
 			}
 			p = Pattern.compile("Listener:\\s*(\\w+)\\(\\)\\.(\\w+)", Pattern.DOTALL);
 			m = p.matcher(comment);
-			while (m.find()) {
-				metadata.getSubscriptions().add(new Subscription(m.group(1),
-						m.group(2)));
+			while(m.find()) {
+				metadata.getSubscriptions().add(new Subscription(m.group(1), m.group(2)));
 			}
 		} else {
 			// no meta-data comment - do nothing

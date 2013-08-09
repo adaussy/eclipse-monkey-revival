@@ -14,15 +14,14 @@ import org.mozilla.javascript.Scriptable;
 
 /**
  * @author Paul Colton
- *
+ * 
  */
 public class ResourcesDOMFactory implements IJavaScriptDOMFactory {
 
 	/**
 	 * @see org.eclipse.eclipsemonkey.lang.javascript.doms.IJavaScriptDOMFactory#getDOMroot(org.mozilla.javascript.Scriptable)
 	 */
-	public Object getDOMroot(Scriptable scope) 
-	{
+	public Object getDOMroot(Scriptable scope) {
 		return new Resources(scope);
 	}
 

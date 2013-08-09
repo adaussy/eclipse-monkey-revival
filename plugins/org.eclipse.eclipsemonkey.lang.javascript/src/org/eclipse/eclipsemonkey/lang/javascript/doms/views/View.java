@@ -15,9 +15,10 @@ import org.mozilla.javascript.Scriptable;
 
 /**
  * @author Paul Colton (Aptana, Inc.)
- *
+ * 
  */
 public class View extends EventTarget {
+
 	/*
 	 * Fields
 	 */
@@ -34,8 +35,7 @@ public class View extends EventTarget {
 	 * 
 	 * @return String
 	 */
-	public String getClassName()
-	{
+	public String getClassName() {
 		return "View"; //$NON-NLS-1$
 	}
 
@@ -44,8 +44,7 @@ public class View extends EventTarget {
 	 * 
 	 * @return IWorkbenchPart
 	 */
-	public IWorkbenchPart getView()
-	{
+	public IWorkbenchPart getView() {
 		return this._view;
 	}
 
@@ -54,8 +53,7 @@ public class View extends EventTarget {
 	 * 
 	 * @param view
 	 */
-	public void setView(IWorkbenchPart view)
-	{
+	public void setView(IWorkbenchPart view) {
 		this._view = view;
 	}
 
@@ -69,10 +67,8 @@ public class View extends EventTarget {
 	 * @param scope
 	 * @param view
 	 */
-	public View(Scriptable scope, IWorkbenchPart view)
-	{
-		if (scope == null)
-		{
+	public View(Scriptable scope, IWorkbenchPart view) {
+		if(scope == null) {
 			throw new IllegalArgumentException(Messages.View_Scope_Not_Defined);
 		}
 

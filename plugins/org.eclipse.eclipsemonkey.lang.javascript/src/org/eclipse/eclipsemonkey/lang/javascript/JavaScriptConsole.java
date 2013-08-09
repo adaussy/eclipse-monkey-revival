@@ -15,8 +15,8 @@ import org.eclipse.ui.console.MessageConsole;
 /**
  * JavaScriptConsole
  */
-public class JavaScriptConsole extends MessageConsole
-{
+public class JavaScriptConsole extends MessageConsole {
+
 	/*
 	 * Constructors
 	 */
@@ -27,8 +27,7 @@ public class JavaScriptConsole extends MessageConsole
 	 * @param name
 	 * @param imageDescriptor
 	 */
-	public JavaScriptConsole(String name, ImageDescriptor imageDescriptor)
-	{
+	public JavaScriptConsole(String name, ImageDescriptor imageDescriptor) {
 		super(name, imageDescriptor);
 	}
 }

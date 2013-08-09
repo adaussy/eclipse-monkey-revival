@@ -17,11 +17,11 @@ package org.eclipse.eclipsemonkey.actions;
  * PublishScriptForBlogger
  */
 public class PublishScriptForBlogger extends PublishScript {
+
 	/**
 	 * @see org.eclipse.eclipsemonkey.actions.PublishScript#decorateText(java.lang.String)
 	 */
 	protected String decorateText(String contents) {
-		return "<pre>\n" + super.decorateText(contents)
-				+ "\n</pre>\n";
+		return "<pre>\n" + super.decorateText(contents) + "\n</pre>\n";
 	}
 }

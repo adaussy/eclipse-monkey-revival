@@ -16,27 +16,27 @@ package org.eclipse.eclipsemonkey;
  * RunMonkeyException
  */
 public class RunMonkeyException extends Exception {
-	
+
 	/**
 	 * serialVersionUID
 	 */
 	public static final long serialVersionUID = 1;
-	
+
 	/**
 	 * exceptionName
 	 */
 	public String exceptionName;
-	
+
 	/**
 	 * fileName
 	 */
 	public String fileName;
-	
+
 	/**
 	 * lineNumber
 	 */
 	public Integer lineNumber;
-	
+
 	/**
 	 * errorMessage
 	 */
@@ -44,10 +44,15 @@ public class RunMonkeyException extends Exception {
 
 	/**
 	 * RunMonkeyException
-	 * @param e exceptionName
-	 * @param f fileName
-	 * @param n lineNumber
-	 * @param m errorMessage
+	 * 
+	 * @param e
+	 *        exceptionName
+	 * @param f
+	 *        fileName
+	 * @param n
+	 *        lineNumber
+	 * @param m
+	 *        errorMessage
 	 */
 	public RunMonkeyException(String e, String f, Integer n, String m) {
 		super(e + ": " + m + " " + f + (n != null ? " #" + n.intValue() : ""));
@@ -61,9 +66,9 @@ public class RunMonkeyException extends Exception {
 	 * @return The line number
 	 */
 	public String optionalLineNumber() {
-		if (lineNumber == null)
+		if(lineNumber == null)
 			return "";
-		if (lineNumber.intValue() <= 0)
+		if(lineNumber.intValue() <= 0)
 			return "";
 		return " line " + lineNumber.intValue();
 	}

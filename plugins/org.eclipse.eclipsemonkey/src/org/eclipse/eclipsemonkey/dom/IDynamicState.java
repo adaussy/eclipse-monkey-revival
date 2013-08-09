@@ -21,12 +21,12 @@ public interface IDynamicState {
 	 * @param id
 	 */
 	public void begin(Object id);
-	
+
 	/**
 	 * @param id
 	 */
 	public void end(Object id);
-	
+
 	/**
 	 * @param name
 	 * @param value

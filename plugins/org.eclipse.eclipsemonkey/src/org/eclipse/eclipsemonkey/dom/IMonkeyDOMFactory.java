@@ -14,10 +14,10 @@ package org.eclipse.eclipsemonkey.dom;
 
 /**
  * IMonkeyDOMFactory
- *
+ * 
  */
 public interface IMonkeyDOMFactory {
-	
+
 	/**
 	 * @return Object
 	 */

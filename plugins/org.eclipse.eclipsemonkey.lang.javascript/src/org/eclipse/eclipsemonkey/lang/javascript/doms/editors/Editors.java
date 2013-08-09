@@ -26,15 +26,15 @@ import org.mozilla.javascript.ScriptableObject;
 /**
  * @author Kevin Lindsey, Paul Colton (Aptana, Inc.)
  */
-public class Editors extends ScriptableObject
-{
+public class Editors extends ScriptableObject {
+
 	/*
 	 * Fields
 	 */
 	private static final long serialVersionUID = -1034231442157154583L;
-	
+
 	private Hashtable _editorsByType;
-	
+
 	/*
 	 * Properties
 	 */
@@ -42,8 +42,7 @@ public class Editors extends ScriptableObject
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
-	public String getClassName()
-	{
+	public String getClassName() {
 		return "Editors";
 	}
 
@@ -54,8 +53,7 @@ public class Editors extends ScriptableObject
 	/**
 	 * Editors (default contructor-should not be used directly)
 	 */
-	public Editors()
-	{
+	public Editors() {
 		System.err.println("Shouldn't be used directly.");
 	}
 
@@ -64,20 +62,18 @@ public class Editors extends ScriptableObject
 	 * 
 	 * @param scope
 	 */
-	public Editors(Scriptable scope)
-	{
+	public Editors(Scriptable scope) {
 		this.setParentScope(scope);
 
-		String[] names = new String[] { 
-				//"open", 
-				"toString"
-				};
+		String[] names = new String[]{
+		//"open", 
+		"toString" };
 
 		this.defineFunctionProperties(names, Editors.class, PERMANENT | READONLY);
 
 		this.defineProperty("all", Editors.class, PERMANENT | READONLY);
 		this.defineProperty("activeEditor", Editors.class, PERMANENT | READONLY);
-		
+
 		return;
 	}
 
@@ -91,27 +87,23 @@ public class Editors extends ScriptableObject
 	 * @param thisObj
 	 * @return Scriptable
 	 */
-	public static Scriptable getAll(ScriptableObject thisObj)
-	{
+	public static Scriptable getAll(ScriptableObject thisObj) {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		final ArrayList editors = new ArrayList();
 		Display display = workbench.getDisplay();
 		final Scriptable scope = thisObj.getParentScope();
 
-		display.syncExec(new Runnable()
-		{
-			public void run()
-			{
+		display.syncExec(new Runnable() {
+
+			public void run() {
 				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 				IWorkbenchPage[] pages = window.getPages();
 
-				for (int i = 0; i < pages.length; i++)
-				{
+				for(int i = 0; i < pages.length; i++) {
 					IWorkbenchPage page = pages[i];
 					IEditorReference[] editorRefs = page.getEditorReferences();
 
-					for (int j = 0; j < editorRefs.length; j++)
-					{
+					for(int j = 0; j < editorRefs.length; j++) {
 						IEditorPart editor = editorRefs[j].getEditor(false);
 
 						editors.add(new Editor(scope, editor));
@@ -132,17 +124,13 @@ public class Editors extends ScriptableObject
 	 * @param thisObj
 	 * @return Scriptable
 	 */
-	public static Object getActiveEditor(ScriptableObject thisObj)
-	{
+	public static Object getActiveEditor(ScriptableObject thisObj) {
 		IEditorPart editor = getActiveEditor();
 		Object result;
 
-		if (editor != null)
-		{
+		if(editor != null) {
 			result = new Editor(thisObj.getParentScope(), editor);
-		}
-		else
-		{
+		} else {
 			result = Context.getUndefinedValue();
 		}
 
@@ -154,13 +142,12 @@ public class Editors extends ScriptableObject
 	 * 
 	 * @return IEditorPart
 	 */
-	private static IEditorPart getActiveEditor()
-	{
+	private static IEditorPart getActiveEditor() {
 		/**
 		 * ActiveEditorRef
 		 */
-		class ActiveEditorRef
-		{
+		class ActiveEditorRef {
+
 			public IEditorPart activeEditor;
 		}
 
@@ -169,15 +156,13 @@ public class Editors extends ScriptableObject
 		Display display = workbench.getDisplay();
 		IEditorPart result;
 
-		display.syncExec(new Runnable()
-		{
-			public void run()
-			{
+		display.syncExec(new Runnable() {
+
+			public void run() {
 				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 
 				// this can be null if you close all perspectives
-				if (window != null && window.getActivePage() != null)
-				{
+				if(window != null && window.getActivePage() != null) {
 					activeEditor.activeEditor = window.getActivePage().getActiveEditor();
 				}
 			}
@@ -187,20 +172,16 @@ public class Editors extends ScriptableObject
 
 		return result;
 	}
-	
+
 	/**
 	 * getAllEventTargets
 	 * 
 	 * @return EditorType[]
 	 */
-	public EditorType[] getAllEventTargets()
-	{
-		if (this._editorsByType != null)
-		{
-			return (EditorType[]) this._editorsByType.values().toArray(new EditorType[0]);
-		}
-		else
-		{
+	public EditorType[] getAllEventTargets() {
+		if(this._editorsByType != null) {
+			return (EditorType[])this._editorsByType.values().toArray(new EditorType[0]);
+		} else {
 			return new EditorType[0];
 		}
 	}
@@ -211,46 +192,41 @@ public class Editors extends ScriptableObject
 	 * @param type
 	 * @return EditorType
 	 */
-	public EditorType getEventTarget(String type)
-	{
-		if (this._editorsByType != null && this._editorsByType.containsKey(type))
-		{
-			return (EditorType) this._editorsByType.get(type);
-		}
-		else
-		{
+	public EditorType getEventTarget(String type) {
+		if(this._editorsByType != null && this._editorsByType.containsKey(type)) {
+			return (EditorType)this._editorsByType.get(type);
+		} else {
 			return null;
 		}
 	}
 
-//	/**
-//	 * open the specified file in a new editor
-//	 * 
-//	 * @param cx
-//	 * @param thisObj
-//	 * @param args
-//	 * @param funObj
-//	 * @return Scriptable
-//	 */
-//	public static Scriptable open(Context cx, Scriptable thisObj, Object[] args, Function funObj)
-//	{
-//		String filename = Context.toString(args[0]);
-//		File file = new File(filename);
-//		IEditorPart editor = WorkbenchHelper.openFile(file, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
-//
-//		if(editor == null)
-//		{
-//			return null;
-//		}
-//		
-//		return new Editor(thisObj.getParentScope(), editor);
-//	}
-	
+	//	/**
+	//	 * open the specified file in a new editor
+	//	 * 
+	//	 * @param cx
+	//	 * @param thisObj
+	//	 * @param args
+	//	 * @param funObj
+	//	 * @return Scriptable
+	//	 */
+	//	public static Scriptable open(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+	//	{
+	//		String filename = Context.toString(args[0]);
+	//		File file = new File(filename);
+	//		IEditorPart editor = WorkbenchHelper.openFile(file, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+	//
+	//		if(editor == null)
+	//		{
+	//			return null;
+	//		}
+	//		
+	//		return new Editor(thisObj.getParentScope(), editor);
+	//	}
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
-	public String toString()
-	{
+	public String toString() {
 		return super.toString();
 	}
 }

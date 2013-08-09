@@ -16,7 +16,7 @@ package org.eclipse.eclipsemonkey;
  * IScriptStoreListener
  */
 public interface IScriptStoreListener {
-	
+
 	/**
 	 * storeChanged
 	 */

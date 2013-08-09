@@ -68,8 +68,8 @@ public class Subscription {
 	 * @param e
 	 */
 	protected void trouble(Throwable e) {
-		if (e instanceof RunMonkeyException) {
-			RunMonkeyException x = (RunMonkeyException) e;
+		if(e instanceof RunMonkeyException) {
+			RunMonkeyException x = (RunMonkeyException)e;
 			trouble = x.errorMessage + x.optionalLineNumber();
 		} else {
 			trouble = e.getMessage();
@@ -82,10 +82,10 @@ public class Subscription {
 	 *
 	 */
 	public void unsubscribe() {
-		if (trouble != null || removeMethod == null)
+		if(trouble != null || removeMethod == null)
 			return;
 		try {
-			removeMethod.invoke(source, new Object[] { listenerProxy });
+			removeMethod.invoke(source, new Object[]{ listenerProxy });
 			removeMethod = null;
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
@@ -96,29 +96,24 @@ public class Subscription {
 		}
 	}
 
-	private void subscribe(IPath path, Object foo, String methodName)
-			throws InstantiationException, IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException {
-		InvocationHandler listener = new ScriptSubscriptionListener(path,
-				this);
+	private void subscribe(IPath path, Object foo, String methodName) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+		InvocationHandler listener = new ScriptSubscriptionListener(path, this);
 		Method addMethod = findAddMethod(foo, methodName);
 
 		Class listenerType = addMethod.getParameterTypes()[0];
-		listenerProxy = Proxy.newProxyInstance(listenerType.getClassLoader(),
-				new Class[] { listenerType }, listener);
-		addMethod.invoke(foo, new Object[] { listenerProxy });
+		listenerProxy = Proxy.newProxyInstance(listenerType.getClassLoader(), new Class[]{ listenerType }, listener);
+		addMethod.invoke(foo, new Object[]{ listenerProxy });
 	}
 
-	private Method findAddMethod(Object source, String methodName)
-			throws NoSuchMethodException {
+	private Method findAddMethod(Object source, String methodName) throws NoSuchMethodException {
 		Method methods[] = source.getClass().getMethods();
-		for (int i = 0; i < methods.length; i++) {
+		for(int i = 0; i < methods.length; i++) {
 			Method m = methods[i];
-			if (!(m.getName().equals(methodName)))
+			if(!(m.getName().equals(methodName)))
 				continue;
-			if (m.getParameterTypes().length != 1)
+			if(m.getParameterTypes().length != 1)
 				continue;
-			if (findRemoveMethod(source, methodName, m.getParameterTypes()) == null)
+			if(findRemoveMethod(source, methodName, m.getParameterTypes()) == null)
 				continue;
 
 			return m;
@@ -126,12 +121,10 @@ public class Subscription {
 		throw new NoSuchMethodException("can't find add method");
 	}
 
-	private Method findRemoveMethod(Object source, String methodName,
-			Class[] parameterTypes) {
+	private Method findRemoveMethod(Object source, String methodName, Class[] parameterTypes) {
 		String removeMethodName = "remove" + methodName.substring(3);
 		try {
-			removeMethod = source.getClass().getMethod(removeMethodName,
-					parameterTypes);
+			removeMethod = source.getClass().getMethod(removeMethodName, parameterTypes);
 			return removeMethod;
 		} catch (Exception e) {
 			return null;
@@ -139,15 +132,16 @@ public class Subscription {
 	}
 
 	class ScriptSubscriptionListener implements InvocationHandler {
+
 		IPath script;
+
 		Subscription subscription;
 
 		/**
 		 * @param script
 		 * @param subscription
 		 */
-		public ScriptSubscriptionListener(IPath script,
-				Subscription subscription) {
+		public ScriptSubscriptionListener(IPath script, Subscription subscription) {
 			this.script = script;
 			this.subscription = subscription;
 		}
@@ -155,8 +149,7 @@ public class Subscription {
 		/**
 		 * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
 		 */
-		public Object invoke(Object proxy, Method method, Object[] args)
-				throws Throwable {
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 			/*
 			 * we do NOT want the ctrl-shift-M "re-run the last script" accelerator
 			 * bound to this script.
@@ -176,8 +169,6 @@ public class Subscription {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return (trouble == null ? "" : trouble + ": ") + this.sourceString
-				+ "()." + this.addMethodName
-				+ (removeMethod == null ? " (not listening)" : "");
+		return (trouble == null ? "" : trouble + ": ") + this.sourceString + "()." + this.addMethodName + (removeMethod == null ? " (not listening)" : "");
 	}
 }

@@ -50,14 +50,18 @@ import org.mozilla.javascript.WrappedException;
 /**
  * 
  * @author Ingo Muschenetz
- *
+ * 
  */
-public class JavaScriptRunner implements IMonkeyScriptRunner
-{
+public class JavaScriptRunner implements IMonkeyScriptRunner {
+
 	IPath path;
+
 	IWorkbenchWindow window;
+
 	StoredScript storedScript;
+
 	ClassLoader old_classloader;
+
 	JavaScriptClassLoader classloader;
 
 	/**
@@ -65,59 +69,49 @@ public class JavaScriptRunner implements IMonkeyScriptRunner
 	 * @param path
 	 * @param window
 	 */
-	public JavaScriptRunner(IPath path, IWorkbenchWindow window)
-	{
+	public JavaScriptRunner(IPath path, IWorkbenchWindow window) {
 		this.path = path;
-		
-		if(window == null)
-		{
+
+		if(window == null) {
 			this.window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		}
-		else
-		{
+		} else {
 			this.window = window;
 		}
 	}
-	
+
 	/**
 	 * @see org.eclipse.eclipsemonkey.IMonkeyScriptRunner#getStoredScript()
 	 */
-	public StoredScript getStoredScript()
-	{
+	public StoredScript getStoredScript() {
 		return storedScript;
 	}
 
 	/**
 	 * @see org.eclipse.eclipsemonkey.IMonkeyScriptRunner#run(java.lang.String, java.lang.Object[])
 	 */
-	public Object run(String entryName, Object[] functionArgs) throws RunMonkeyException
-	{
+	public Object run(String entryName, Object[] functionArgs) throws RunMonkeyException {
 		Object result = null;
 
-		try
-		{
+		try {
 			Context cx = Context.enter();
 
 			Scriptable sharedScope = null;
 			String fileName = this.path.toPortableString();
 			Map scriptStore = EclipseMonkeyPlugin.getDefault().getScriptStore();
-			
-			storedScript = (StoredScript) (scriptStore.get(fileName));
 
-			if (!storedScript.metadata.ensure_doms_are_loaded(window))
-			{
+			storedScript = (StoredScript)(scriptStore.get(fileName));
+
+			if(!storedScript.metadata.ensure_doms_are_loaded(window)) {
 				return null;
 			}
 
 			String sharedScopeName = storedScript.metadata.getScopeName();
 
-			if (sharedScopeName != null)
-			{
+			if(sharedScopeName != null) {
 				Map scopeStore = EclipseMonkeyPlugin.getDefault().getScopeStore();
-				sharedScope = (Scriptable) scopeStore.get(sharedScopeName);
+				sharedScope = (Scriptable)scopeStore.get(sharedScopeName);
 
-				if (sharedScope == null)
-				{
+				if(sharedScope == null) {
 					sharedScope = new JavaScriptGlobal(cx);
 					scopeStore.put(sharedScopeName, sharedScope);
 				}
@@ -126,19 +120,16 @@ public class JavaScriptRunner implements IMonkeyScriptRunner
 			defineDynamicVariables(path);
 			defineClassLoader(cx);
 
-			try
-			{
-				Scriptable compiledScope = (Scriptable) storedScript.extra.get("compiledScope");
+			try {
+				Scriptable compiledScope = (Scriptable)storedScript.extra.get("compiledScope");
 
 				boolean needs_compiling = compiledScope == null;
-				
-				if (needs_compiling)
-				{
+
+				if(needs_compiling) {
 					compiledScope = new JavaScriptGlobal(cx);
 					storedScript.extra.put("compiledScope", compiledScope);
 
-					if (sharedScope != null)
-					{
+					if(sharedScope != null) {
 						compiledScope.setParentScope(sharedScope);
 					}
 				}
@@ -146,115 +137,85 @@ public class JavaScriptRunner implements IMonkeyScriptRunner
 				defineStandardGlobalVariables(compiledScope);
 				defineExtensionGlobalVariables(compiledScope, storedScript.metadata);
 
-				if (needs_compiling)
-				{
+				if(needs_compiling) {
 					String contents = Utilities.getFileContents(path);
 					Script compiledScript = cx.compileString(contents, fileName, 1, null);
-					
+
 					// place path in script's global
 					compiledScope.put(JavaScriptGlobal.LOCATION_PROPERTY, compiledScope, this.path);
-					
+
 					compiledScript.exec(cx, compiledScope);
 					storedScript.extra.put("compiledScript", compiledScript);
 					EclipseMonkeyPlugin.getDefault().notifyScriptsChanged();
 				}
 
 				Object fObj = compiledScope.get(entryName, compiledScope);
-				
-				if (!(fObj instanceof Function))
-				{
+
+				if(!(fObj instanceof Function)) {
 					throw new EvaluatorException("function " + entryName + "() is not defined in ", fileName, 0, "", 0);
-				}
-				else
-				{
-					Function f = (Function) fObj;
+				} else {
+					Function f = (Function)fObj;
 					result = f.call(cx, compiledScope, compiledScope, functionArgs);
 				}
 
-			}
-			finally
-			{
+			} finally {
 				undefineClassLoader(cx);
 				undefineDynamicVariables(path);
 			}
-		}
-		catch (WrappedException x)
-		{
+		} catch (WrappedException x) {
 			error(x, x.getWrappedException().toString());
-		}
-		catch (EvaluatorException x)
-		{
+		} catch (EvaluatorException x) {
 			error(x, x.lineSource() + "\n" + x.details());
-		}
-		catch (RhinoException x)
-		{
+		} catch (RhinoException x) {
 			error(x, x.details());
-		}
-		catch (IOException x)
-		{
+		} catch (IOException x) {
 			error(x, this.path.toString(), x.toString());
-		}
-		catch (CoreException x)
-		{
+		} catch (CoreException x) {
 			error(x, this.path.toString(), x.toString());
-		}
-		finally
-		{
+		} finally {
 			Context.exit();
 		}
 
-		if (result instanceof NativeJavaObject)
-		{
-			result = ((NativeJavaObject) result).unwrap();
+		if(result instanceof NativeJavaObject) {
+			result = ((NativeJavaObject)result).unwrap();
 		}
 
 		return result;
 	}
-	
-	private void defineStandardGlobalVariables(Scriptable scope)
-	{
+
+	private void defineStandardGlobalVariables(Scriptable scope) {
 		Object wrappedWindow = Context.javaToJS(window, scope);
 		ScriptableObject.putProperty(scope, "window", wrappedWindow);
 	}
 
-	private void defineExtensionGlobalVariables(Scriptable scope,
-			ScriptMetadata metadata) throws IOException 
-	{
+	private void defineExtensionGlobalVariables(Scriptable scope, ScriptMetadata metadata) throws IOException {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint point = registry
-				.getExtensionPoint("org.eclipse.eclipsemonkey.dom");
-		if (point != null) {
+		IExtensionPoint point = registry.getExtensionPoint("org.eclipse.eclipsemonkey.dom");
+		if(point != null) {
 			IExtension[] extensions = point.getExtensions();
-			for (int i = 0; i < extensions.length; i++) {
+			for(int i = 0; i < extensions.length; i++) {
 				IExtension extension = extensions[i];
-				IConfigurationElement[] configurations = extension
-						.getConfigurationElements();
-				for (int j = 0; j < configurations.length; j++) {
+				IConfigurationElement[] configurations = extension.getConfigurationElements();
+				for(int j = 0; j < configurations.length; j++) {
 					IConfigurationElement element = configurations[j];
 					try {
 						IExtension declaring = element.getDeclaringExtension();
 
-						String declaring_plugin_id = declaring
-								.getDeclaringPluginDescriptor()
-								.getUniqueIdentifier();
-//						String declaring_plugin_id = declaring.getNamespaceIdentifier();
-						
-						if (metadata.containsDOM_by_plugin(declaring_plugin_id)) {
-							String variableName = element
-									.getAttribute("variableName");
-							Object object = element
-									.createExecutableExtension("class");
-							IMonkeyDOMFactory factory = (IMonkeyDOMFactory) object;
-							
+						String declaring_plugin_id = declaring.getDeclaringPluginDescriptor().getUniqueIdentifier();
+						//						String declaring_plugin_id = declaring.getNamespaceIdentifier();
+
+						if(metadata.containsDOM_by_plugin(declaring_plugin_id)) {
+							String variableName = element.getAttribute("variableName");
+							Object object = element.createExecutableExtension("class");
+							IMonkeyDOMFactory factory = (IMonkeyDOMFactory)object;
+
 							Object rootObject = factory.getDOMroot();
-							
-//							ClassLoader rootLoader = rootObject.getClass()
-//									.getClassLoader();
-//							classloader.add(rootLoader);
-							Object wrappedRoot = Context.javaToJS(rootObject,
-									scope);
-							ScriptableObject.putProperty(scope, variableName,
-									wrappedRoot);
+
+							//							ClassLoader rootLoader = rootObject.getClass()
+							//									.getClassLoader();
+							//							classloader.add(rootLoader);
+							Object wrappedRoot = Context.javaToJS(rootObject, scope);
+							ScriptableObject.putProperty(scope, variableName, wrappedRoot);
 						}
 					} catch (InvalidRegistryObjectException x) {
 						// ignore bad extensions
@@ -264,62 +225,52 @@ public class JavaScriptRunner implements IMonkeyScriptRunner
 				}
 			}
 		}
-		
+
 		point = registry.getExtensionPoint("org.eclipse.eclipsemonkey.lang.javascript.javascript_dom");
-		
-		if (point != null) {
+
+		if(point != null) {
 			IExtension[] extensions = point.getExtensions();
-			for (int i = 0; i < extensions.length; i++) {
+			for(int i = 0; i < extensions.length; i++) {
 				IExtension extension = extensions[i];
-				IConfigurationElement[] configurations = extension
-						.getConfigurationElements();
-				for (int j = 0; j < configurations.length; j++) {
+				IConfigurationElement[] configurations = extension.getConfigurationElements();
+				for(int j = 0; j < configurations.length; j++) {
 					IConfigurationElement element = configurations[j];
 					try {
 						IExtension declaring = element.getDeclaringExtension();
-		
-		//				String declaring_plugin_id = declaring
-		//						.getDeclaringPluginDescriptor()
-		//						.getUniqueIdentifier();
+
+						//				String declaring_plugin_id = declaring
+						//						.getDeclaringPluginDescriptor()
+						//						.getUniqueIdentifier();
 						String declaring_plugin_id = declaring.getNamespaceIdentifier();
-						
-						if (metadata.containsDOM_by_plugin(declaring_plugin_id)) {
-							
-							String variableName = element
-									.getAttribute("variableName");
-							
-							String basedOnDOM = element
-								.getAttribute("basedOn");
-							
-							if(basedOnDOM != null && basedOnDOM.trim().length() > 0)
-							{
-								Pattern p = Pattern.compile("\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)",
-										Pattern.DOTALL);
+
+						if(metadata.containsDOM_by_plugin(declaring_plugin_id)) {
+
+							String variableName = element.getAttribute("variableName");
+
+							String basedOnDOM = element.getAttribute("basedOn");
+
+							if(basedOnDOM != null && basedOnDOM.trim().length() > 0) {
+								Pattern p = Pattern.compile("\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)", Pattern.DOTALL);
 								Matcher m = p.matcher(basedOnDOM);
-								while (m.find()) {
-									metadata.getDOMs().add(
-											new DOMDescriptor(m.group(1), m.group(2)));
+								while(m.find()) {
+									metadata.getDOMs().add(new DOMDescriptor(m.group(1), m.group(2)));
 								}
-								
-								if(metadata.ensure_doms_are_loaded(window) == false)
-								{
+
+								if(metadata.ensure_doms_are_loaded(window) == false) {
 									throw new IOException("Cannot load the required DOM extension:\n\n" + basedOnDOM + "\n");
 								}
 							}
-							
-							Object object = element
-									.createExecutableExtension("class");
-							
-							IJavaScriptDOMFactory factory = (IJavaScriptDOMFactory) object;
-							
+
+							Object object = element.createExecutableExtension("class");
+
+							IJavaScriptDOMFactory factory = (IJavaScriptDOMFactory)object;
+
 							Object rootObject = factory.getDOMroot(scope);
-							
-//							ClassLoader rootLoader = rootObject.getClass().getClassLoader();
-//							classloader.add(rootLoader);
-							Object wrappedRoot = Context.javaToJS(rootObject,
-									scope);
-							ScriptableObject.putProperty(scope, variableName,
-									wrappedRoot);
+
+							//							ClassLoader rootLoader = rootObject.getClass().getClassLoader();
+							//							classloader.add(rootLoader);
+							Object wrappedRoot = Context.javaToJS(rootObject, scope);
+							ScriptableObject.putProperty(scope, variableName, wrappedRoot);
 						}
 					} catch (InvalidRegistryObjectException x) {
 						// ignore bad extensions
@@ -329,47 +280,42 @@ public class JavaScriptRunner implements IMonkeyScriptRunner
 				}
 			}
 		}
-		
-		
+
+
 	}
 
-	private void error(RhinoException x, String string)
-			throws RunMonkeyException {
-		
-		RunMonkeyException e = new RunMonkeyException(x.getClass().getName(), x.sourceName(),
-				new Integer(x.lineNumber()), string);		
+	private void error(RhinoException x, String string) throws RunMonkeyException {
 
-		MessageConsoleStream cs = JavaScriptGlobal.getConsoleStream();		
+		RunMonkeyException e = new RunMonkeyException(x.getClass().getName(), x.sourceName(), new Integer(x.lineNumber()), string);
+
+		MessageConsoleStream cs = JavaScriptGlobal.getConsoleStream();
 		cs.println(e.toString());
 
 		throw e;
 	}
-	
+
 
 	private void defineDynamicVariables(IPath path) {
 		Utilities.state().begin(path);
-		Utilities.state().set(Utilities.SCRIPT_NAME,
-				path.toPortableString());
+		Utilities.state().set(Utilities.SCRIPT_NAME, path.toPortableString());
 	}
 
 	private void undefineDynamicVariables(IPath path) {
 		Utilities.state().end(path);
 	}
 
-	private void error(Exception x, String fileName, String string)
-			throws RunMonkeyException {
+	private void error(Exception x, String fileName, String string) throws RunMonkeyException {
 
-		RunMonkeyException e = new RunMonkeyException(x.getClass().getName(), fileName, null,
-				string);
-		
-		MessageConsoleStream cs = JavaScriptGlobal.getConsoleStream();		
+		RunMonkeyException e = new RunMonkeyException(x.getClass().getName(), fileName, null, string);
+
+		MessageConsoleStream cs = JavaScriptGlobal.getConsoleStream();
 		cs.println(e.toString());
 
 		throw e;
 	}
 
 	private void defineClassLoader(Context cx) {
-		old_classloader = cx.getApplicationClassLoader(); 
+		old_classloader = cx.getApplicationClassLoader();
 		classloader = new JavaScriptClassLoader();
 		cx.setApplicationClassLoader(classloader);
 	}
@@ -378,4 +324,3 @@ public class JavaScriptRunner implements IMonkeyScriptRunner
 		cx.setApplicationClassLoader(old_classloader);
 	}
 }
-	

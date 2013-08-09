@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
  * Wrapper
  */
 public class Wrapper {
+
 	Object object;
 
 	/**
@@ -38,7 +39,7 @@ public class Wrapper {
 		Object[] params = {};
 		return method.invoke(object, params);
 	}
-	
+
 	/**
 	 * @param methodName
 	 * @param params

@@ -13,7 +13,7 @@ import org.eclipse.eclipsemonkey.dom.IMonkeyDOMFactory;
 
 /**
  * ResourcesDOMFactory
- *
+ * 
  */
 public class ResourcesDOMFactory implements IMonkeyDOMFactory {
 

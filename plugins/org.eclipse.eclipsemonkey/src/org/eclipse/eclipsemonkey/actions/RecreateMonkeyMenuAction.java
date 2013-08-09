@@ -68,26 +68,25 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 
 	private Collection getAllMetadatas() {
 		ArrayList result = new ArrayList();
-		Iterator iter = EclipseMonkeyPlugin.getDefault().getScriptStore()
-				.values().iterator();
-		for (; iter.hasNext();) {
-			StoredScript element = (StoredScript) iter.next();
+		Iterator iter = EclipseMonkeyPlugin.getDefault().getScriptStore().values().iterator();
+		for(; iter.hasNext();) {
+			StoredScript element = (StoredScript)iter.next();
 			result.add(element.metadata);
 		}
 		return result;
 	}
 
 	private void clearTheMenu() {
-		MenuManager manager = ((WorkbenchWindow) window).getMenuManager();
+		MenuManager manager = ((WorkbenchWindow)window).getMenuManager();
 		IContributionItem two = manager.findUsingPath("eclipsemonkeyMenu");
-		IMenuManager three = (IMenuManager) ((ActionSetContributionItem) two)
-				.getInnerItem();
+		IMenuManager three = (IMenuManager)((ActionSetContributionItem)two).getInnerItem();
 		three.removeAll();
 	}
 
 	private Pattern submenu_pattern = Pattern.compile("^(.+?)>(.*)$");
 
 	class MonkeyMenuStruct {
+
 		String key;
 
 		IMenuManager menu;
@@ -96,11 +95,9 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 	}
 
 	private void createTheMenu(List menuData, final IAction action) {
-		MenuManager outerManager = ((WorkbenchWindow) window).getMenuManager();
-		IContributionItem contribution = outerManager
-				.findUsingPath("eclipsemonkeyMenu");
-		IMenuManager menuManager = (IMenuManager) ((ActionSetContributionItem) contribution)
-				.getInnerItem();
+		MenuManager outerManager = ((WorkbenchWindow)window).getMenuManager();
+		IContributionItem contribution = outerManager.findUsingPath("eclipsemonkeyMenu");
+		IMenuManager menuManager = (IMenuManager)((ActionSetContributionItem)contribution).getInnerItem();
 
 		MonkeyMenuStruct current = new MonkeyMenuStruct();
 		current.key = "";
@@ -111,29 +108,27 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 		sorted.addAll(menuData);
 
 		Iterator iter = sorted.iterator();
-		while (iter.hasNext()) {
-			Association element = (Association) iter.next();
+		while(iter.hasNext()) {
+			Association element = (Association)iter.next();
 			String menu_string = element.key;
 			final IPath script_file_to_run = element.path;
 			String accelerator = element.accelerator;
-			addNestedMenuAction(current, menu_string, script_file_to_run,
-					accelerator);
+			addNestedMenuAction(current, menu_string, script_file_to_run, accelerator);
 		}
 
 		final IWorkbenchWindow _window = this.window;
 
-		if (sorted.size() != 0)
+		if(sorted.size() != 0)
 			menuManager.add(new Separator());
 
-		if (MenuRunMonkeyScript.last_run != null) {
-			String lastScriptText = "Run Last Script: "
-					+ MenuRunMonkeyScript.last_run.metadata.getMenuName();
-			Action rerunAction = menuAction(lastScriptText,
-					MenuRunMonkeyScript.last_run.scriptPath, "CTRL+ALT+M");
+		if(MenuRunMonkeyScript.last_run != null) {
+			String lastScriptText = "Run Last Script: " + MenuRunMonkeyScript.last_run.metadata.getMenuName();
+			Action rerunAction = menuAction(lastScriptText, MenuRunMonkeyScript.last_run.scriptPath, "CTRL+ALT+M");
 			menuManager.add(rerunAction);
 		}
 
 		menuManager.add(new Action("Paste New Script") {
+
 			public void run() {
 				IWorkbenchWindowActionDelegate delegate = new PasteScriptFromClipboardAction();
 				delegate.init(_window);
@@ -141,8 +136,9 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 			}
 		});
 
-		if (sorted.size() == 0) {
+		if(sorted.size() == 0) {
 			menuManager.add(new Action("Examples") {
+
 				public void run() {
 					IWorkbenchWindowActionDelegate delegate = new CreateMonkeyExamplesAction();
 					delegate.init(_window);
@@ -155,44 +151,39 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 
 	}
 
-	private void addNestedMenuAction(MonkeyMenuStruct current,
-			String menu_string, final IPath script_file_to_run,
-			String accelerator) {
-		if (menu_string == null)
+	private void addNestedMenuAction(MonkeyMenuStruct current, String menu_string, final IPath script_file_to_run, String accelerator) {
+		if(menu_string == null)
 			return;
 		Matcher match = submenu_pattern.matcher(menu_string);
-		if (match.find()) {
+		if(match.find()) {
 			String primary_key = match.group(1).trim();
 			String secondary_key = match.group(2).trim();
-			if (!primary_key.equals(current.submenu.key)) {
+			if(!primary_key.equals(current.submenu.key)) {
 				IMenuManager submenu = new MenuManager(primary_key);
 				current.menu.add(submenu);
 				current.submenu.menu = submenu;
 				current.submenu.key = primary_key;
 				current.submenu.submenu = new MonkeyMenuStruct();
 			}
-			addNestedMenuAction(current.submenu, secondary_key,
-					script_file_to_run, accelerator);
+			addNestedMenuAction(current.submenu, secondary_key, script_file_to_run, accelerator);
 		} else {
-			current.menu.add(menuAction(menu_string, script_file_to_run,
-					accelerator));
+			current.menu.add(menuAction(menu_string, script_file_to_run, accelerator));
 		}
 	}
 
 	private Action menuAction(String key, final IPath path, String accelerator) {
-		final MenuRunMonkeyScript runner = new MenuRunMonkeyScript(path,
-				window);
+		final MenuRunMonkeyScript runner = new MenuRunMonkeyScript(path, window);
 		Action action = new Action(key) {
+
 			public void run() {
 				try {
-					runner.run("main", new Object[] {});
+					runner.run("main", new Object[]{});
 				} catch (RunMonkeyException x) {
-					MessageDialog.openError(window.getShell(), x.exceptionName,
-					x.errorMessage + "\n" + x.fileName + x.optionalLineNumber());
+					MessageDialog.openError(window.getShell(), x.exceptionName, x.errorMessage + "\n" + x.fileName + x.optionalLineNumber());
 				}
 			}
 		};
-		if (accelerator != null) {
+		if(accelerator != null) {
 			action.setAccelerator(getAccelerator(accelerator));
 		}
 		return action;
@@ -201,7 +192,7 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 	private int getAccelerator(String accelerator) {
 		try {
 			KeyStroke instance = KeyStroke.getInstance(accelerator);
-			if (instance != null) {
+			if(instance != null) {
 				return instance.getNaturalKey() | instance.getModifierKeys();
 			}
 		} catch (ParseException e) {
@@ -213,19 +204,16 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 	}
 
 	private void reportKeyStrokeInvalid(String accelerator) {
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getShell();
-		MessageDialog.openError(shell, "Eclipse Monkey", "The keystroke '"
-				+ accelerator + "' is not valid and so has not been assigned.");
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		MessageDialog.openError(shell, "Eclipse Monkey", "The keystroke '" + accelerator + "' is not valid and so has not been assigned.");
 	}
 
 	private List createMenuFromMetadatas(Collection metaDatas) {
 		List menuData = new ArrayList();
-		for (Iterator iter = metaDatas.iterator(); iter.hasNext();) {
-			ScriptMetadata data = (ScriptMetadata) iter.next();
-			if (data.getMenuName() != null)
-				menuData.add(new Association(data.getMenuName(),
-						data.getPath(), data.getAccelerator()));
+		for(Iterator iter = metaDatas.iterator(); iter.hasNext();) {
+			ScriptMetadata data = (ScriptMetadata)iter.next();
+			if(data.getMenuName() != null)
+				menuData.add(new Association(data.getMenuName(), data.getPath(), data.getAccelerator()));
 		}
 		return menuData;
 	}
@@ -233,6 +221,7 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 	private static int id = 0;
 
 	class Association implements Comparable {
+
 		String accelerator;
 
 		String key;
@@ -252,10 +241,10 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 		 * @see java.lang.Comparable#compareTo(java.lang.Object)
 		 */
 		public int compareTo(Object arg0) {
-			Association b = (Association) arg0;
+			Association b = (Association)arg0;
 			int value = key.compareTo(b.key);
-			if (value == 0) {
-				if (uniqueId < b.uniqueId)
+			if(value == 0) {
+				if(uniqueId < b.uniqueId)
 					return -1;
 				else
 					return 1;

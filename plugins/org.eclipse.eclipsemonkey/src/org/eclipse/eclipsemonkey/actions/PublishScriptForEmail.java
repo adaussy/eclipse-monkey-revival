@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
  * PublishScriptForEmail
  */
 public class PublishScriptForEmail extends PublishScript {
+
 	/**
 	 * @see org.eclipse.eclipsemonkey.actions.PublishScript#decorateText(java.lang.String)
 	 */

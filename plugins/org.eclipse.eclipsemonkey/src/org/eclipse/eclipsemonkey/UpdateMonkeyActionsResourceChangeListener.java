@@ -39,56 +39,54 @@ import org.eclipse.ui.PlatformUI;
 /**
  * UpdateMonkeyActionsResourceChangeListener
  */
-public class UpdateMonkeyActionsResourceChangeListener implements
-		IResourceChangeListener
-{
+public class UpdateMonkeyActionsResourceChangeListener implements IResourceChangeListener {
+
 	/**
 	 * Valid default monkey exceptions
 	 */
 	public static String extensions = "js|em";
-	
+
 	/**
 	 * @param exts
 	 */
-	public static void setExtensions(String[] exts)
-	{
+	public static void setExtensions(String[] exts) {
 		if(exts == null)
 			return;
-		
+
 		String extPattern = "";
-		
-		for (int i = 0; i < exts.length; i++) {
+
+		for(int i = 0; i < exts.length; i++) {
 			extPattern += exts[i];
-			if(i < exts.length - 1) extPattern += "|";
+			if(i < exts.length - 1)
+				extPattern += "|";
 		}
-		
+
 		extensions = extPattern;
 	}
-	
+
 	/**
 	 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
 	 */
 	public void resourceChanged(IResourceChangeEvent event) {
 		final Boolean changes[] = new Boolean[1];
 		changes[0] = new Boolean(false);
-		
+
 		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
+
 			private void found_a_change() {
 				changes[0] = new Boolean(true);
 			}
-			
-			private Pattern monkey_file_pattern = Pattern.compile("/.+/(monkey|scripts)/(.+\\.(" +
-					extensions
-					+ "))");
+
+			private Pattern monkey_file_pattern = Pattern.compile("/.+/(monkey|scripts)/(.+\\.(" + extensions + "))");
 
 			public boolean visit(IResourceDelta delta) {
 				String fullPath = delta.getFullPath().toString();
 				Matcher matcher = monkey_file_pattern.matcher(fullPath);
-				if( matcher.matches() ) {
-					IFile file = (IFile) delta.getResource();
+				if(matcher.matches()) {
+					IFile file = (IFile)delta.getResource();
 					fullPath = file.getLocation().toPortableString();
-					
-					switch (delta.getKind()) {
+
+					switch(delta.getKind()) {
 					case IResourceDelta.ADDED:
 						processNewOrChangedScript(fullPath, file.getLocation());
 						found_a_change();
@@ -98,23 +96,21 @@ public class UpdateMonkeyActionsResourceChangeListener implements
 						found_a_change();
 						break;
 					case IResourceDelta.CHANGED:
-						if ((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
-							processRemovedScript(delta.getMovedFromPath()
-									.toString(), file.getLocation());
+						if((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
+							processRemovedScript(delta.getMovedFromPath().toString(), file.getLocation());
 							processNewOrChangedScript(fullPath, file.getLocation());
 							found_a_change();
 						}
-						if ((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
+						if((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
 							processRemovedScript(fullPath, file.getLocation());
-							processNewOrChangedScript(delta.getMovedToPath()
-									.toString(), file.getLocation());
+							processNewOrChangedScript(delta.getMovedToPath().toString(), file.getLocation());
 							found_a_change();
 						}
-						if ((delta.getFlags() & IResourceDelta.REPLACED) != 0) {
+						if((delta.getFlags() & IResourceDelta.REPLACED) != 0) {
 							processNewOrChangedScript(fullPath, file.getLocation());
 							found_a_change();
 						}
-						if ((delta.getFlags() & IResourceDelta.CONTENT) != 0) {
+						if((delta.getFlags() & IResourceDelta.CONTENT) != 0) {
 							processNewOrChangedScript(fullPath, file.getLocation());
 							found_a_change();
 						}
@@ -129,8 +125,8 @@ public class UpdateMonkeyActionsResourceChangeListener implements
 		} catch (CoreException x) {
 			// log an error in the error log
 		}
-		boolean anyMatches = ((Boolean) (changes[0])).booleanValue();
-		if (anyMatches) {
+		boolean anyMatches = ((Boolean)(changes[0])).booleanValue();
+		if(anyMatches) {
 			createTheMonkeyMenu();
 		}
 	}
@@ -158,8 +154,7 @@ public class UpdateMonkeyActionsResourceChangeListener implements
 	 * @param extensions
 	 * @param alternatePaths
 	 */
-	public void rescanAllFiles(String[] extensions, String[] alternatePaths) 
-	{
+	public void rescanAllFiles(String[] extensions, String[] alternatePaths) {
 		EclipseMonkeyPlugin.getDefault().clearScripts();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
@@ -169,24 +164,21 @@ public class UpdateMonkeyActionsResourceChangeListener implements
 	}
 
 	private void findScriptsInFolder(String[] extensions, String[] alternatePaths) {
-		for (int i = 0; i < alternatePaths.length; i++) {
+		for(int i = 0; i < alternatePaths.length; i++) {
 			String path = alternatePaths[i];
-			
+
 			File folder = new File(path);
 			String[] files = folder.list();
-			
-			for (int j = 0; j < files.length; j++) {
-				
+
+			for(int j = 0; j < files.length; j++) {
+
 				String fullPath = folder.getAbsolutePath() + File.separator + files[j];
 				File f = new File(fullPath);
-				
-				if(f.isFile())
-				{
-					for (int k = 0; k < extensions.length; k++) 
-					{
+
+				if(f.isFile()) {
+					for(int k = 0; k < extensions.length; k++) {
 						String ext = extensions[k].toLowerCase();
-						if (f.getName().toLowerCase().endsWith("." + ext))
-						{
+						if(f.getName().toLowerCase().endsWith("." + ext)) {
 							Path p = new Path(f.getAbsolutePath());
 							processNewOrChangedScript(p.toPortableString(), p);
 						}
@@ -196,26 +188,22 @@ public class UpdateMonkeyActionsResourceChangeListener implements
 		}
 	}
 
-	private void findScriptsInProjects(String folderName,
-			String[] extensions, IWorkspace workspace) {
-		for (int i = 0; i < workspace.getRoot().getProjects().length; i++)
-		{
+	private void findScriptsInProjects(String folderName, String[] extensions, IWorkspace workspace) {
+		for(int i = 0; i < workspace.getRoot().getProjects().length; i++) {
 			IProject project = workspace.getRoot().getProjects()[i];
 			IFolder folder = project.getFolder(folderName);
-			if (folder == null)
+			if(folder == null)
 				continue;
 			try {
-				for (int j = 0; j < folder.members().length; j++) {
+				for(int j = 0; j < folder.members().length; j++) {
 					IResource resource = folder.members()[j];
-					if (resource instanceof IFile) {
-						IFile file = (IFile) resource;
-						
-						for (int k = 0; k < extensions.length; k++) 
-						{
+					if(resource instanceof IFile) {
+						IFile file = (IFile)resource;
+
+						for(int k = 0; k < extensions.length; k++) {
 							String ext = extensions[k].toLowerCase();
 
-							if (file.getName().toLowerCase().endsWith("." + ext))
-							{
+							if(file.getName().toLowerCase().endsWith("." + ext)) {
 								String fullPath = file.getLocation().toPortableString();
 								processNewOrChangedScript(fullPath, new Path(fullPath));
 							}
@@ -228,10 +216,9 @@ public class UpdateMonkeyActionsResourceChangeListener implements
 		}
 	}
 
-	private ScriptMetadata getMetadataFrom(IPath path) throws CoreException,
-			IOException {
+	private ScriptMetadata getMetadataFrom(IPath path) throws CoreException, IOException {
 		String contents = Utilities.getFileContents(path);
-		IMonkeyLanguageFactory langFactory = (IMonkeyLanguageFactory) EclipseMonkeyPlugin.getDefault().getLanguageStore().get(path.getFileExtension());
+		IMonkeyLanguageFactory langFactory = (IMonkeyLanguageFactory)EclipseMonkeyPlugin.getDefault().getLanguageStore().get(path.getFileExtension());
 		ScriptMetadata metadata = langFactory.getScriptMetadata(contents);
 		metadata.setPath(path);
 		return metadata;
@@ -241,11 +228,11 @@ public class UpdateMonkeyActionsResourceChangeListener implements
 	 * 
 	 */
 	public static void createTheMonkeyMenu() {
-		IWorkbenchWindow[] windows = PlatformUI.getWorkbench()
-				.getWorkbenchWindows();
-		for (int i = 0; i < windows.length; i++) {
+		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+		for(int i = 0; i < windows.length; i++) {
 			final IWorkbenchWindow window = windows[i];
 			window.getShell().getDisplay().asyncExec(new Runnable() {
+
 				public void run() {
 					RecreateMonkeyMenuAction action = new RecreateMonkeyMenuAction();
 					action.init(window);

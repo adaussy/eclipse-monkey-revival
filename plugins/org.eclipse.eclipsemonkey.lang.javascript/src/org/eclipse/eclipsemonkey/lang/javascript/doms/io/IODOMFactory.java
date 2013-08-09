@@ -17,27 +17,25 @@ import org.mozilla.javascript.ScriptableObject;
 
 /**
  * @author Paul Colton (Aptana, Inc.)
- *
+ * 
  */
-public class IODOMFactory implements IJavaScriptDOMFactory
-{
+public class IODOMFactory implements IJavaScriptDOMFactory {
+
 	/**
 	 * @see org.eclipse.eclipsemonkey.lang.javascript.doms.IJavaScriptDOMFactory#getDOMroot(org.mozilla.javascript.Scriptable)
 	 */
-	public Object getDOMroot(Scriptable scope) 
-	{
+	public Object getDOMroot(Scriptable scope) {
 		initIO(scope);
-		
+
 		return IO.getIO();
 	}
 
-	private void initIO(Scriptable scope) 
-	{
+	private void initIO(Scriptable scope) {
 		try {
-			
+
 			ScriptableObject.defineClass(scope, File.class);
 			ScriptableObject.defineClass(scope, WebRequest.class);
-			
+
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {

@@ -17,14 +17,12 @@ import junit.framework.TestCase;
 /**
  * DynamicStateTests
  */
-public class DynamicStateTests extends TestCase
-{
+public class DynamicStateTests extends TestCase {
 
 	/**
 	 * 
 	 */
-	public void test1()
-	{
+	public void test1() {
 		DynamicState ds = new DynamicState();
 		assertNull(ds.get("foo"));
 	}
@@ -32,8 +30,7 @@ public class DynamicStateTests extends TestCase
 	/**
 	 * 
 	 */
-	public void test2()
-	{
+	public void test2() {
 		DynamicState ds = new DynamicState();
 		ds.set("foo", "three");
 		assertEquals("three", ds.get("foo"));
@@ -42,8 +39,7 @@ public class DynamicStateTests extends TestCase
 	/**
 	 * 
 	 */
-	public void test3()
-	{
+	public void test3() {
 		DynamicState ds = new DynamicState();
 		ds.set("foo", "three");
 		ds.begin("bar");
@@ -53,8 +49,7 @@ public class DynamicStateTests extends TestCase
 	/**
 	 * 
 	 */
-	public void test4()
-	{
+	public void test4() {
 		DynamicState ds = new DynamicState();
 		ds.begin("bar");
 		ds.set("foo", "three");
@@ -66,8 +61,7 @@ public class DynamicStateTests extends TestCase
 	/**
 	 * 
 	 */
-	public void test5()
-	{
+	public void test5() {
 		DynamicState ds = new DynamicState();
 		ds.begin("bar");
 		ds.set("foo", "three");
@@ -79,8 +73,7 @@ public class DynamicStateTests extends TestCase
 	/**
 	 * 
 	 */
-	public void test6()
-	{
+	public void test6() {
 		DynamicState ds = new DynamicState();
 		ds.begin("bar");
 		ds.set("foo", "three");

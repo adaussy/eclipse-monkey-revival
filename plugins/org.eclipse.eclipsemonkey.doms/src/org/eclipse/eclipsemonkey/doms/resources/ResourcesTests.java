@@ -41,10 +41,9 @@ public class ResourcesTests extends TestCase {
 	 */
 	public void setUp() throws Exception {
 		IWorkspace w = ResourcesPlugin.getWorkspace();
-		IProject project = w.getRoot().getProject(
-				"Eclipse Monkey Resources DOM Test");
+		IProject project = w.getRoot().getProject("Eclipse Monkey Resources DOM Test");
 
-		if (!project.exists())
+		if(!project.exists())
 			project.create(null);
 		project.open(null);
 
@@ -58,8 +57,7 @@ public class ResourcesTests extends TestCase {
 		stream.close();
 
 		file = folder.getFile("joat.txt");
-		String s = "I'll load up five boats with a family of Joats\n"
-				+ "Whose feet are like cows', but wear squirrel-skin coats\n";
+		String s = "I'll load up five boats with a family of Joats\n" + "Whose feet are like cows', but wear squirrel-skin coats\n";
 		stream = new ByteArrayInputStream(s.getBytes());
 		file.create(stream, false, null);
 		stream.close();
@@ -70,9 +68,8 @@ public class ResourcesTests extends TestCase {
 	 */
 	public void tearDown() throws Exception {
 		IWorkspace w = ResourcesPlugin.getWorkspace();
-		IProject project = w.getRoot().getProject(
-				"Eclipse Monkey Resources DOM Test");
-		if (project.exists())
+		IProject project = w.getRoot().getProject("Eclipse Monkey Resources DOM Test");
+		if(project.exists())
 			project.delete(true, true, null);
 	}
 
@@ -81,13 +78,11 @@ public class ResourcesTests extends TestCase {
 	 */
 	public void testFilesMatching() throws Exception {
 
-		Resources resources = (Resources) new ResourcesDOMFactory()
-				.getDOMroot();
+		Resources resources = (Resources)new ResourcesDOMFactory().getDOMroot();
 		Object[] result = resources.filesMatching(".*\\.java");
 		assertEquals(1, result.length);
 		assertTrue(result[0] instanceof File);
-		assertEquals("lunk.java", ((File) result[0]).getEclipseObject()
-				.getName());
+		assertEquals("lunk.java", ((File)result[0]).getEclipseObject().getName());
 	}
 
 	/**
@@ -95,15 +90,12 @@ public class ResourcesTests extends TestCase {
 	 * @throws Exception
 	 */
 	public void testGetLines() throws Exception {
-		Resources resources = (Resources) new ResourcesDOMFactory()
-				.getDOMroot();
+		Resources resources = (Resources)new ResourcesDOMFactory().getDOMroot();
 		Object[] result = resources.filesMatching(".*\\.txt");
-		File file = (File) result[0];
+		File file = (File)result[0];
 		Line[] lines = file.getLines();
 		assertEquals(2, lines.length);
-		assertEquals(
-				"Whose feet are like cows', but wear squirrel-skin coats",
-				lines[1].getString());
+		assertEquals("Whose feet are like cows', but wear squirrel-skin coats", lines[1].getString());
 	}
 
 }

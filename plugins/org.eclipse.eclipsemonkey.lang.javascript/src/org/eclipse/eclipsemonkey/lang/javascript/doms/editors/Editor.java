@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.mozilla.javascript.Context;
@@ -32,13 +31,15 @@ import org.mozilla.javascript.Scriptable;
 /**
  * @author Kevin Lindsey, Paul Colton (Aptana, Inc.)
  */
-public class Editor extends EventTarget
-{
+public class Editor extends EventTarget {
+
 	/*
 	 * Fields
 	 */
 	private static final long serialVersionUID = 2489151579665730844L;
+
 	private IEditorPart _editor;
+
 	private DocumentRewriteSession _key;
 
 	/*
@@ -48,8 +49,7 @@ public class Editor extends EventTarget
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
-	public String getClassName()
-	{
+	public String getClassName() {
 		return "Editor";
 	}
 
@@ -58,8 +58,7 @@ public class Editor extends EventTarget
 	 * 
 	 * @return IDocument
 	 */
-	private IDocument getDocument()
-	{
+	private IDocument getDocument() {
 		ITextEditor editor = getTextEditor();
 		IDocumentProvider dp = editor.getDocumentProvider();
 		IDocument doc = dp.getDocument(editor.getEditorInput());
@@ -72,19 +71,17 @@ public class Editor extends EventTarget
 	 * 
 	 * @return editor
 	 */
-	public ITextEditor getTextEditor()
-	{
+	public ITextEditor getTextEditor() {
 		IEditorPart part = this._editor;
 		ITextEditor result = null;
 
-		if (part instanceof ITextEditor)
-		{
-			result = (ITextEditor) part;
+		if(part instanceof ITextEditor) {
+			result = (ITextEditor)part;
 		}
 
 		return result;
 	}
-	
+
 	/*
 	 * Constructors
 	 */
@@ -95,22 +92,11 @@ public class Editor extends EventTarget
 	 * @param scope
 	 * @param editor
 	 */
-	public Editor(Scriptable scope, IEditorPart editor)
-	{
+	public Editor(Scriptable scope, IEditorPart editor) {
 		this.setParentScope(scope);
 		this._editor = editor;
 
-		String[] functions = new String[] { 
-				"applyEdit", 
-				"beginCompoundChange", 
-				"close", 
-				"endCompoundChange",
-				"getLineAtOffset", 
-				"getOffsetAtLine", 
-				"save", 
-				"selectAndReveal", 
-				"toString" 
-				};
+		String[] functions = new String[]{ "applyEdit", "beginCompoundChange", "close", "endCompoundChange", "getLineAtOffset", "getOffsetAtLine", "save", "selectAndReveal", "toString" };
 
 		this.defineFunctionProperties(functions, Editor.class, READONLY | PERMANENT);
 
@@ -134,10 +120,8 @@ public class Editor extends EventTarget
 	/**
 	 * save
 	 */
-	public void save()
-	{
-		if (this._editor != null)
-		{
+	public void save() {
+		if(this._editor != null) {
 			this._editor.doSave(null);
 		}
 	}
@@ -146,15 +130,13 @@ public class Editor extends EventTarget
 	 * @param offset
 	 * @param length
 	 */
-	public void selectAndReveal(final int offset, final int length)
-	{
+	public void selectAndReveal(final int offset, final int length) {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		Display display = workbench.getDisplay();
 
-		display.asyncExec(new Runnable()
-		{
-			public void run()
-			{
+		display.asyncExec(new Runnable() {
+
+			public void run() {
 				ITextEditor editor = getTextEditor();
 				editor.selectAndReveal(offset, length);
 			}
@@ -166,30 +148,28 @@ public class Editor extends EventTarget
 	 * 
 	 * @return int
 	 */
-	public int getCurrentOffset()
-	{
+	public int getCurrentOffset() {
 		/**
 		 * ResultRef
 		 */
-		class ResultRef
-		{
+		class ResultRef {
+
 			public int result = -1;
 		}
-		
+
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		Display display = workbench.getDisplay();
 		final ResultRef result = new ResultRef();
-		
-		display.syncExec(new Runnable()
-		{
-			public void run()
-			{
-				ITextSelection ts = (ITextSelection) getTextEditor().getSelectionProvider().getSelection();
-				
-				result.result =  ts.getOffset();
+
+		display.syncExec(new Runnable() {
+
+			public void run() {
+				ITextSelection ts = (ITextSelection)getTextEditor().getSelectionProvider().getSelection();
+
+				result.result = ts.getOffset();
 			}
 		});
-		
+
 		return result.result;
 	}
 
@@ -198,8 +178,7 @@ public class Editor extends EventTarget
 	 * 
 	 * @param offset
 	 */
-	public void setCurrentOffset(int offset)
-	{
+	public void setCurrentOffset(int offset) {
 		getTextEditor().getSelectionProvider().setSelection(new TextSelection(offset, 0));
 	}
 
@@ -208,17 +187,14 @@ public class Editor extends EventTarget
 	 * 
 	 * @return String
 	 */
-	public String getLineDelimiter()
-	{
+	public String getLineDelimiter() {
 		IDocument document = this.getDocument();
 		String result = "\n";
 
-		if (document != null)
-		{
+		if(document != null) {
 			String[] delims = document.getLegalLineDelimiters();
 
-			if (delims.length > 0)
-			{
+			if(delims.length > 0) {
 				result = delims[0];
 			}
 		}
@@ -231,12 +207,10 @@ public class Editor extends EventTarget
 	 * 
 	 * @return String
 	 */
-	public String getId()
-	{
+	public String getId() {
 		String result = StringUtils.EMPTY;
 
-		if (this._editor != null)
-		{
+		if(this._editor != null) {
 			result = this._editor.getSite().getId();
 		}
 
@@ -248,10 +222,9 @@ public class Editor extends EventTarget
 	 * 
 	 * @return Object
 	 */
-	public Scriptable getSelectionRange()
-	{
-		ITextSelection ts = (ITextSelection) getTextEditor().getSelectionProvider().getSelection();
-		
+	public Scriptable getSelectionRange() {
+		ITextSelection ts = (ITextSelection)getTextEditor().getSelectionProvider().getSelection();
+
 		Context cx = Context.getCurrentContext();
 		Scriptable result = null;
 
@@ -269,8 +242,7 @@ public class Editor extends EventTarget
 	 * 
 	 * @return Scriptable
 	 */
-	public String getSource()
-	{
+	public String getSource() {
 		return this.getDocument().get();
 	}
 
@@ -279,8 +251,7 @@ public class Editor extends EventTarget
 	 * 
 	 * @return Scriptable
 	 */
-	public int getSourceLength()
-	{
+	public int getSourceLength() {
 		return this.getDocument().getLength();
 	}
 
@@ -289,13 +260,11 @@ public class Editor extends EventTarget
 	 * 
 	 * @return String
 	 */
-	public String getTitle()
-	{
+	public String getTitle() {
 		ITextEditor uniEditor = this.getTextEditor();
 
-		if (uniEditor != null)
-		{
-			return ((IEditorPart) uniEditor).getTitle();
+		if(uniEditor != null) {
+			return ((IEditorPart)uniEditor).getTitle();
 		}
 
 		return null;
@@ -308,20 +277,15 @@ public class Editor extends EventTarget
 	 * @param deleteLength
 	 * @param insertText
 	 */
-	public void applyEdit(int offset, int deleteLength, String insertText)
-	{
+	public void applyEdit(int offset, int deleteLength, String insertText) {
 		IEditorPart part = this._editor;
 
-		if (part != null && part instanceof ITextEditor)
-		{
+		if(part != null && part instanceof ITextEditor) {
 			IDocument doc = getDocument();
 
-			try
-			{
+			try {
 				doc.replace(offset, deleteLength, insertText);
-			}
-			catch (BadLocationException e)
-			{
+			} catch (BadLocationException e) {
 				System.err.println("Error: " + e);
 			}
 		}
@@ -330,21 +294,16 @@ public class Editor extends EventTarget
 	/**
 	 * beginCompoundChange
 	 */
-	public void beginCompoundChange()
-	{
-		if (this._key == null)
-		{
+	public void beginCompoundChange() {
+		if(this._key == null) {
 			IDocument document = this.getDocument();
 
-			if (document != null)
-			{
-				IDocumentExtension4 docExt = (IDocumentExtension4) document;
+			if(document != null) {
+				IDocumentExtension4 docExt = (IDocumentExtension4)document;
 
 				this._key = docExt.startRewriteSession(DocumentRewriteSessionType.SEQUENTIAL);
 			}
-		}
-		else
-		{
+		} else {
 			throw new IllegalStateException("A previous begin change was not closed");
 		}
 	}
@@ -354,12 +313,10 @@ public class Editor extends EventTarget
 	 * 
 	 * @param save
 	 */
-	public void close(boolean save)
-	{
+	public void close(boolean save) {
 		ITextEditor editor = this.getTextEditor();
 
-		if (editor != null)
-		{
+		if(editor != null) {
 			editor.close(save);
 		}
 	}
@@ -367,15 +324,12 @@ public class Editor extends EventTarget
 	/**
 	 * endCompoundChange
 	 */
-	public void endCompoundChange()
-	{
-		if (this._key != null)
-		{
+	public void endCompoundChange() {
+		if(this._key != null) {
 			IDocument document = this.getDocument();
 
-			if (document != null)
-			{
-				IDocumentExtension4 docExt = (IDocumentExtension4) document;
+			if(document != null) {
+				IDocumentExtension4 docExt = (IDocumentExtension4)document;
 
 				docExt.stopRewriteSession(this._key);
 			}
@@ -390,14 +344,13 @@ public class Editor extends EventTarget
 	 * @param offset
 	 * @return int
 	 */
-	public int getLineAtOffset(int offset)
-	{
+	public int getLineAtOffset(int offset) {
 		try {
 			return getDocument().getLineOfOffset(offset);
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
-		
+
 		return -1;
 	}
 
@@ -407,26 +360,24 @@ public class Editor extends EventTarget
 	 * @param line
 	 * @return int
 	 */
-	public int getOffsetAtLine(final int line)
-	{
+	public int getOffsetAtLine(final int line) {
 		/**
 		 * Result
 		 */
-		class Result
-		{
+		class Result {
+
 			public int result;
 		}
-		
+
 		final Result r = new Result();
 		r.result = -1;
 
 		final IWorkbench workbench = PlatformUI.getWorkbench();
 		Display display = workbench.getDisplay();
 
-		display.syncExec(new Runnable()
-		{
-			public void run()
-			{
+		display.syncExec(new Runnable() {
+
+			public void run() {
 				try {
 					r.result = getDocument().getLineOffset(line);
 				} catch (BadLocationException e) {
@@ -443,11 +394,7 @@ public class Editor extends EventTarget
 	 * 
 	 * @return String
 	 */
-	public String toString()
-	{
+	public String toString() {
 		return "[object Editor]";
 	}
 }
-
-
-

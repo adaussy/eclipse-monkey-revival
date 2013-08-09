@@ -12,8 +12,7 @@ package org.eclipse.eclipsemonkey.lang.javascript.events;
 /**
  * @author Kevin Lindsey
  */
-public interface IEventTarget
-{
+public interface IEventTarget {
 
 	/**
 	 * fireEventListeners

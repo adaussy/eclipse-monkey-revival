@@ -17,15 +17,19 @@ import org.mozilla.javascript.Scriptable;
 /**
  * @author Paul Colton
  */
-public class JavaScriptThread implements Runnable
-{
+public class JavaScriptThread implements Runnable {
+
 	/*
 	 * Fields
 	 */
 	private Scriptable _scope;
+
 	private Object[] _args;
+
 	private Object _callback;
+
 	private Object _result;
+
 	private JavaScriptClassLoader _classLoader;
 
 	/**
@@ -33,8 +37,7 @@ public class JavaScriptThread implements Runnable
 	 * 
 	 * @return Object
 	 */
-	public Object getResult()
-	{
+	public Object getResult() {
 		return _result;
 	}
 
@@ -45,11 +48,10 @@ public class JavaScriptThread implements Runnable
 	 * @param callback
 	 * @param args
 	 */
-	public JavaScriptThread(Scriptable scope, Object callback, Object[] args)
-	{
+	public JavaScriptThread(Scriptable scope, Object callback, Object[] args) {
 		this(scope, callback, args, null);
 	}
-	
+
 	/**
 	 * ScriptThread
 	 * 
@@ -58,8 +60,7 @@ public class JavaScriptThread implements Runnable
 	 * @param args
 	 * @param classLoader
 	 */
-	public JavaScriptThread(Scriptable scope, Object callback, Object[] args, JavaScriptClassLoader classLoader)
-	{
+	public JavaScriptThread(Scriptable scope, Object callback, Object[] args, JavaScriptClassLoader classLoader) {
 		this._scope = scope;
 		this._callback = callback;
 		this._args = args;
@@ -69,50 +70,37 @@ public class JavaScriptThread implements Runnable
 	/**
 	 * @see java.lang.Runnable#run()
 	 */
-	public void run()
-	{
+	public void run() {
 		Context cx = Context.enter();
 
-		try
-		{
-			if (this._callback instanceof Function)
-			{
+		try {
+			if(this._callback instanceof Function) {
 				ClassLoader oldClassLoader = null;
-				
-				if (this._classLoader != null)
-				{
+
+				if(this._classLoader != null) {
 					oldClassLoader = cx.getApplicationClassLoader();
-					
+
 					cx.setApplicationClassLoader(this._classLoader);
 				}
-				
-				Function f = (Function) this._callback;
-				
-				try
-				{
+
+				Function f = (Function)this._callback;
+
+				try {
 					this._result = f.call(cx, this._scope, this._scope, this._args);
-				}
-				finally
-				{
-					if (this._classLoader != null)
-					{
+				} finally {
+					if(this._classLoader != null) {
 						cx.setApplicationClassLoader(oldClassLoader);
 					}
 				}
-			}
-			else
-			{
+			} else {
 				String message = StringUtils.format("ScriptThread_Callback_Does_Not_Exist: {0}", this._callback);
-				
+
 				System.err.println(message);
-				
+
 				return;
 			}
-		}
-		finally
-		{
+		} finally {
 			Context.exit();
 		}
 	}
 }
-

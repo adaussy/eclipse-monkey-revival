@@ -11,8 +11,9 @@ package org.eclipse.eclipsemonkey;
 
 /**
  * IMonkeyScriptRunner
+ * 
  * @author Paul Colton
- *
+ * 
  */
 public interface IMonkeyScriptRunner {
 
@@ -22,11 +23,11 @@ public interface IMonkeyScriptRunner {
 	 * @return The result from running the script
 	 * @throws RunMonkeyException
 	 */
-	public Object run(String entryName, Object[] functionArgs)
-			throws RunMonkeyException;
+	public Object run(String entryName, Object[] functionArgs) throws RunMonkeyException;
 
 	/**
 	 * getStoredScript
+	 * 
 	 * @return StoredScript
 	 */
 	public StoredScript getStoredScript();

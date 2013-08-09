@@ -16,10 +16,10 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 /**
  * @author Paul Colton (Aptana, Inc.)
- *
+ * 
  */
-public interface IMonkeyLanguageFactory 
-{
+public interface IMonkeyLanguageFactory {
+
 	/**
 	 * @param pluginID
 	 * @param languageName
@@ -32,6 +32,6 @@ public interface IMonkeyLanguageFactory
 	 * @return IMonkeyScriptRunner
 	 */
 	IMonkeyScriptRunner getRunMonkeyScript(IPath path, IWorkbenchWindow window);
-	
+
 	ScriptMetadata getScriptMetadata(String contents);
 }

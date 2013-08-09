@@ -18,16 +18,17 @@ import org.mozilla.javascript.Scriptable;
 
 /**
  * @author Paul Colton (Aptana, Inc.)
- *
+ * 
  */
 public class Views extends EventTarget {
+
 	/*
 	 * Fields
 	 */
 	private static final long serialVersionUID = -1034231442157154583L;
-	
+
 	private Hashtable _scriptableViews;
-	
+
 	/*
 	 * Properties
 	 */
@@ -35,11 +36,10 @@ public class Views extends EventTarget {
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
-	public String getClassName()
-	{
+	public String getClassName() {
 		return "Views"; //$NON-NLS-1$
 	}
-	
+
 	/*
 	 * Constructors
 	 */
@@ -49,44 +49,38 @@ public class Views extends EventTarget {
 	 * 
 	 * @param scope
 	 */
-	public Views(Scriptable scope)
-	{
+	public Views(Scriptable scope) {
 		this.setParentScope(scope);
 
 		this._scriptableViews = new Hashtable();
 
-		String[] names = new String[] { "getView" }; //$NON-NLS-1$
+		String[] names = new String[]{ "getView" }; //$NON-NLS-1$
 		this.defineFunctionProperties(names, Views.class, READONLY | PERMANENT);
 
-//		this.defineProperty("all", Views.class, READONLY | PERMANENT); //$NON-NLS-1$
-//		this.defineProperty("actionsView", Views.class, READONLY | PERMANENT); //$NON-NLS-1$
-//		this.defineProperty("navigatorView", Views.class, READONLY | PERMANENT); //$NON-NLS-1$
-//		this.defineProperty("profilesView", Views.class, READONLY | PERMANENT); //$NON-NLS-1$
-//		this.defineProperty("outlineView", Views.class, READONLY | PERMANENT); //$NON-NLS-1$
-//		this.defineProperty("problemsView", Views.class, READONLY | PERMANENT); //$NON-NLS-1$
+		//		this.defineProperty("all", Views.class, READONLY | PERMANENT); //$NON-NLS-1$
+		//		this.defineProperty("actionsView", Views.class, READONLY | PERMANENT); //$NON-NLS-1$
+		//		this.defineProperty("navigatorView", Views.class, READONLY | PERMANENT); //$NON-NLS-1$
+		//		this.defineProperty("profilesView", Views.class, READONLY | PERMANENT); //$NON-NLS-1$
+		//		this.defineProperty("outlineView", Views.class, READONLY | PERMANENT); //$NON-NLS-1$
+		//		this.defineProperty("problemsView", Views.class, READONLY | PERMANENT); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * getView Get a generic scritable view
 	 * 
 	 * @param id
 	 * @return ProblemsView
 	 */
-	public ScriptableView getView(String id)
-	{
+	public ScriptableView getView(String id) {
 		ScriptableView _scriptableView = null;
 
-		if (id == null)
-		{
+		if(id == null) {
 			return null;
 		}
 
-		if (_scriptableViews.containsKey(id))
-		{
-			_scriptableView = (ScriptableView) _scriptableViews.get(id);
-		}
-		else
-		{
+		if(_scriptableViews.containsKey(id)) {
+			_scriptableView = (ScriptableView)_scriptableViews.get(id);
+		} else {
 			IWorkbenchPart part = getViewInternal("org.eclipse.eclipsemonkey.ui.scriptableView.GenericScriptableView", id); //$NON-NLS-1$
 
 			_scriptableView = new ScriptableView(this.getParentScope(), part, id);
@@ -95,15 +89,14 @@ public class Views extends EventTarget {
 
 		return _scriptableView;
 	}
-	
+
 	/**
 	 * getViewInternal
 	 * 
 	 * @param id
 	 * @return Scriptable
 	 */
-	public static IWorkbenchPart getViewInternal(final String id)
-	{
+	public static IWorkbenchPart getViewInternal(final String id) {
 		return getViewInternal(id, null);
 	}
 
@@ -114,8 +107,7 @@ public class Views extends EventTarget {
 	 * @param secondaryId
 	 * @return IWorkbenchPart
 	 */
-	public static IWorkbenchPart getViewInternal(String id, String secondaryId)
-	{
+	public static IWorkbenchPart getViewInternal(String id, String secondaryId) {
 		return UIUtils.getViewInternal(id, secondaryId);
 	}
 }

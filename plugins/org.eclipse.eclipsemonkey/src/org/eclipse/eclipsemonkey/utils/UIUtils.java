@@ -150,6 +150,7 @@ public class UIUtils {
 
 	/**
 	 * Create an editor input from path
+	 * 
 	 * @param path
 	 * @return
 	 */
@@ -163,6 +164,7 @@ public class UIUtils {
 
 	/**
 	 * Create an editor input from file
+	 * 
 	 * @param t
 	 * @return
 	 */

@@ -36,8 +36,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 /**
  * PublishScript
  */
-public class PublishScript implements IWorkbenchWindowActionDelegate,
-		IObjectActionDelegate {
+public class PublishScript implements IWorkbenchWindowActionDelegate, IObjectActionDelegate {
 
 	/**
 	 * 
@@ -51,31 +50,26 @@ public class PublishScript implements IWorkbenchWindowActionDelegate,
 	public void run(IAction action) {
 		String result = "";
 
-		IStructuredSelection sel = (IStructuredSelection) this.selection;
+		IStructuredSelection sel = (IStructuredSelection)this.selection;
 		List selectedObjects = sel.toList();
-		for (Iterator iter = selectedObjects.iterator(); iter.hasNext();) {
-			IFile element = (IFile) iter.next();
+		for(Iterator iter = selectedObjects.iterator(); iter.hasNext();) {
+			IFile element = (IFile)iter.next();
 
 			try {
 				String contents = Utilities.getFileContents(element.getLocation());
-				
+
 				result += decorateText(contents);
 			} catch (IOException x) {
-				MessageDialog.openInformation(shell, "Eclipse Monkey", x
-						.toString()
-						+ " while trying to copy script for publication");
+				MessageDialog.openInformation(shell, "Eclipse Monkey", x.toString() + " while trying to copy script for publication");
 			} catch (CoreException x) {
-				MessageDialog.openInformation(shell, "Eclipse Monkey", x
-						.toString()
-						+ " while trying to copy script for publication");
+				MessageDialog.openInformation(shell, "Eclipse Monkey", x.toString() + " while trying to copy script for publication");
 			}
 		}
 
 		Clipboard clipboard = new Clipboard(shell.getDisplay());
 		try {
 			TextTransfer textTransfer = TextTransfer.getInstance();
-			clipboard.setContents(new Object[] { result },
-					new Transfer[] { textTransfer });
+			clipboard.setContents(new Object[]{ result }, new Transfer[]{ textTransfer });
 		} finally {
 			clipboard.dispose();
 		}
@@ -83,20 +77,19 @@ public class PublishScript implements IWorkbenchWindowActionDelegate,
 
 	/**
 	 * decorateText
+	 * 
 	 * @param contents
 	 * @return The decorated text
 	 */
 	protected String decorateText(String contents) {
-		return EclipseMonkeyPlugin.PUBLISH_BEFORE_MARKER
-		+ "\n" + contents + "\n"
-		+ EclipseMonkeyPlugin.PUBLISH_AFTER_MARKER;
+		return EclipseMonkeyPlugin.PUBLISH_BEFORE_MARKER + "\n" + contents + "\n" + EclipseMonkeyPlugin.PUBLISH_AFTER_MARKER;
 	}
 
 	private ISelection selection;
 
 	/**
-	 * @param action 
-	 * @param selection 
+	 * @param action
+	 * @param selection
 	 * 
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -110,7 +103,7 @@ public class PublishScript implements IWorkbenchWindowActionDelegate,
 	}
 
 	/**
-	 * @param window 
+	 * @param window
 	 * 
 	 */
 	public void init(IWorkbenchWindow window) {
@@ -120,8 +113,8 @@ public class PublishScript implements IWorkbenchWindowActionDelegate,
 	private Shell shell;
 
 	/**
-	 * @param action 
-	 * @param targetPart 
+	 * @param action
+	 * @param targetPart
 	 * 
 	 */
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {

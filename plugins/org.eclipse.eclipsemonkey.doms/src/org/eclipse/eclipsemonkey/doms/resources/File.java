@@ -29,17 +29,19 @@ import org.eclipse.eclipsemonkey.dom.Utilities;
  * File
  */
 public class File {
+
 	private IFile file;
 
 	/**
 	 * @param resource
 	 */
 	public File(IResource resource) {
-		file = (IFile) resource;
+		file = (IFile)resource;
 	}
 
 	/**
 	 * getEclipseObject
+	 * 
 	 * @return The Eclipse IFile object
 	 */
 	public IFile getEclipseObject() {
@@ -48,24 +50,24 @@ public class File {
 
 	/**
 	 * getLines
+	 * 
 	 * @return The lines in the file
 	 */
 	public Line[] getLines() {
 		try {
 			List result = new ArrayList();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					file.getContents()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(file.getContents()));
 			String text;
 			int lineNumber = 0;
-			while ((text = reader.readLine()) != null) {
+			while((text = reader.readLine()) != null) {
 				lineNumber++;
 				result.add(new Line(text, lineNumber, this));
 			}
 			reader.close();
 			int i = 0;
 			Line[] rtrn = new Line[result.size()];
-			for (Iterator iter = result.iterator(); iter.hasNext();) {
-				Line element = (Line) iter.next();
+			for(Iterator iter = result.iterator(); iter.hasNext();) {
+				Line element = (Line)iter.next();
 				rtrn[i++] = element;
 			}
 			return rtrn;
@@ -78,21 +80,22 @@ public class File {
 
 	/**
 	 * removeMyTasks
+	 * 
 	 * @throws CoreException
 	 */
 	public void removeMyTasks() throws CoreException {
 		IMarker[] markers = file.findMarkers(IMarker.TASK, false, 0);
 		String key = this.getMarkerKey();
-		for (int i = 0; i < markers.length; i++) {
+		for(int i = 0; i < markers.length; i++) {
 			IMarker marker = markers[i];
 			Object value = marker.getAttribute(Resources.standardMarkerName);
-			if (key.equals(value)) {
+			if(key.equals(value)) {
 				marker.delete();
 			}
 		}
 	}
 
 	String getMarkerKey() {
-		return (String) Utilities.state().get(Utilities.SCRIPT_NAME);
+		return (String)Utilities.state().get(Utilities.SCRIPT_NAME);
 	}
 }

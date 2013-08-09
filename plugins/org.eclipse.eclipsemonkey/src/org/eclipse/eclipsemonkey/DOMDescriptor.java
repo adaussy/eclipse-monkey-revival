@@ -11,10 +11,10 @@ package org.eclipse.eclipsemonkey;
 
 /**
  * @author Paul Colton
- *
+ * 
  */
 public class DOMDescriptor {
-	
+
 	/**
 	 * url
 	 */

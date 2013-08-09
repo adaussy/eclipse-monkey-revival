@@ -29,15 +29,15 @@ public class ScriptMetadataTest extends TestCase {
 		ScriptMetadata data = new ScriptMetadata();
 		data.setMenuName("This is a test");
 		assertEquals("This_is_a_test.js", data.getReasonableFilename());
-		
+
 		data.setMenuName("ABCD@#$%@$#DEFG");
 		assertEquals("ABCDDEFG.js", data.getReasonableFilename());
-		
+
 		data.setMenuName("!!!+++");
 		assertEquals("script.js", data.getReasonableFilename());
-		
+
 		data.setMenuName(null);
 		assertEquals("script.js", data.getReasonableFilename());
-		
+
 	}
 }

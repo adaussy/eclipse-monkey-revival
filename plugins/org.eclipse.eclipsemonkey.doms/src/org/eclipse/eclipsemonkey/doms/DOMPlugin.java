@@ -15,13 +15,13 @@ import org.eclipse.core.runtime.Plugin;
 /**
  * 
  * @author Ingo Muschenetz
- *
+ * 
  */
 public class DOMPlugin extends Plugin {
 
 	/**
 	 * DOMPlugin
-	 *
+	 * 
 	 */
 	public DOMPlugin() {
 		// TODO Auto-generated constructor stub

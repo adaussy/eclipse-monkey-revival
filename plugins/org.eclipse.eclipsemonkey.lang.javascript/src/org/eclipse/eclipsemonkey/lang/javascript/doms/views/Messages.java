@@ -13,47 +13,45 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Kevin Lindsey
- *
+ * 
  */
-public final class Messages extends NLS
-{
+public final class Messages extends NLS {
+
 	private static final String BUNDLE_NAME = "org.eclipse.dash.doms.views.messages"; //$NON-NLS-1$
 
-	private Messages()
-	{
+	private Messages() {
 	}
 
-	static
-	{
+	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
-	
+
 	/**
 	 * ActionsView_Error
 	 */
 	public static String ActionsView_Error;
-	
+
 	/**
 	 * ActionsView_Unrecognized_Event_Type
 	 */
 	public static String ActionsView_Unrecognized_Event_Type;
-	
+
 	/**
 	 * OutlineView_Error
 	 */
 	public static String OutlineView_Error;
-	
+
 	/**
 	 * ProblemsView_Error
 	 */
 	public static String ProblemsView_Error;
-	
+
 	/**
 	 * ScriptableView_Error
 	 */
 	public static String ScriptableView_Error;
-	
+
 	/**
 	 * View_Scope_Not_Defined
 	 */

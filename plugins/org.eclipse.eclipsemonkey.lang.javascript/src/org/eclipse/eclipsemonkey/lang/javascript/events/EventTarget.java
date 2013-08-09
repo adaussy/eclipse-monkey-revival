@@ -24,8 +24,8 @@ import org.mozilla.javascript.ScriptableObject;
 /**
  * @author Kevin Lindsey
  */
-public abstract class EventTarget extends ScriptableObject implements IEventTarget
-{
+public abstract class EventTarget extends ScriptableObject implements IEventTarget {
+
 	/*
 	 * Fields
 	 */
@@ -38,9 +38,8 @@ public abstract class EventTarget extends ScriptableObject implements IEventTarg
 	/**
 	 * Create a new instance of EventTarget
 	 */
-	public EventTarget()
-	{
-		String[] names = new String[] { "addEventListener", "removeEventListener" };
+	public EventTarget() {
+		String[] names = new String[]{ "addEventListener", "removeEventListener" };
 
 		this.defineFunctionProperties(names, EventTarget.class, READONLY | PERMANENT);
 	}
@@ -50,52 +49,44 @@ public abstract class EventTarget extends ScriptableObject implements IEventTarg
 	 */
 
 	/**
-	 * @param event 
+	 * @param event
 	 */
-	public void fireEventListeners(Event event)
-	{
-		this.fireEventListeners(event.getType(), new Object[] { event });
+	public void fireEventListeners(Event event) {
+		this.fireEventListeners(event.getType(), new Object[]{ event });
 	}
 
 	/**
-	 * @param eventType 
-	 * @param args 
+	 * @param eventType
+	 * @param args
 	 */
-	public void fireEventListeners(String eventType, Object[] args)
-	{
-		if (this._events != null && this._events.containsKey(eventType))
-		{
-			ArrayList handlers = (ArrayList) _events.get(eventType);
+	public void fireEventListeners(String eventType, Object[] args) {
+		if(this._events != null && this._events.containsKey(eventType)) {
+			ArrayList handlers = (ArrayList)_events.get(eventType);
 
-			for (int i = 0; i < handlers.size(); i++)
-			{
+			for(int i = 0; i < handlers.size(); i++) {
 				Object eventHandler = handlers.get(i);
 
-				if (eventHandler instanceof Function)
-				{
+				if(eventHandler instanceof Function) {
 					final Object[] fArgs = args;
-					final Function f = (Function) eventHandler;
+					final Function f = (Function)eventHandler;
 					final Scriptable scope = f.getParentScope();
-					
+
 					final IWorkbench workbench = PlatformUI.getWorkbench();
 					Display display = workbench.getDisplay();
-					
+
 					// execute callback in the correct thread
-					display.syncExec(new Runnable()
-					{
+					display.syncExec(new Runnable() {
+
 						public void run() {
 							Context cx = Context.enter();
-							
-							try
-							{
+
+							try {
 								f.call(cx, scope, scope, fArgs);
-							}	
-							finally
-							{
+							} finally {
 								Context.exit();
 							}
 						}
-						
+
 					});
 				}
 			}
@@ -104,37 +95,31 @@ public abstract class EventTarget extends ScriptableObject implements IEventTarg
 	}
 
 	/**
-	 * @param eventType 
-	 * @param eventHandler 
+	 * @param eventType
+	 * @param eventHandler
 	 */
-	public void addEventListener(String eventType, Object eventHandler)
-	{
-		if (this._events == null)
-		{
+	public void addEventListener(String eventType, Object eventHandler) {
+		if(this._events == null) {
 			this._events = new Hashtable();
 		}
 
-		if (this._events.containsKey(eventType) == false)
-		{
+		if(this._events.containsKey(eventType) == false) {
 			this._events.put(eventType, new ArrayList());
 		}
 
-		ArrayList handlers = (ArrayList) this._events.get(eventType);
+		ArrayList handlers = (ArrayList)this._events.get(eventType);
 
 		handlers.add(eventHandler);
 	}
 
 	/**
-	 * @param eventType 
-	 * @param eventHandler 
+	 * @param eventType
+	 * @param eventHandler
 	 */
-	public void removeEventListener(String eventType, Object eventHandler)
-	{
-		if (this._events != null)
-		{
-			if (this._events.containsKey(eventType))
-			{
-				ArrayList handlers = (ArrayList) this._events.get(eventType);
+	public void removeEventListener(String eventType, Object eventHandler) {
+		if(this._events != null) {
+			if(this._events.containsKey(eventType)) {
+				ArrayList handlers = (ArrayList)this._events.get(eventType);
 
 				handlers.remove(eventHandler);
 			}

@@ -36,7 +36,7 @@ public class Resources {
 	 * standardMarkerName
 	 */
 	public static final String standardMarkerName = "Eclipse Monkey Script";
-	
+
 	/**
 	 * Resources
 	 */
@@ -53,7 +53,7 @@ public class Resources {
 		try {
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
 			IProject[] projects = workspace.getRoot().getProjects();
-			for (int i = 0; i < projects.length; i++) {
+			for(int i = 0; i < projects.length; i++) {
 				IProject project = projects[i];
 				walk(project, pattern, result);
 			}
@@ -62,35 +62,34 @@ public class Resources {
 		}
 		Object[] array = new Object[result.size()];
 		int i = 0;
-		for (Iterator iter = result.iterator(); iter.hasNext();) {
+		for(Iterator iter = result.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			array[i++] = element;
 		}
 		return array;
 	}
 
-	private void walk(IResource resource, Pattern pattern, Collection result)
-			throws CoreException {
-		if (resource instanceof IFolder) {
-			IResource[] children = ((IFolder) resource).members();
-			for (int i = 0; i < children.length; i++) {
+	private void walk(IResource resource, Pattern pattern, Collection result) throws CoreException {
+		if(resource instanceof IFolder) {
+			IResource[] children = ((IFolder)resource).members();
+			for(int i = 0; i < children.length; i++) {
 				IResource resource2 = children[i];
 				walk(resource2, pattern, result);
 			}
-		} else if (resource instanceof IProject) {
-			IProject project = (IProject) resource;
+		} else if(resource instanceof IProject) {
+			IProject project = (IProject)resource;
 			if(!project.isOpen())
 				return;
 			IResource[] children = project.members();
-			for (int i = 0; i < children.length; i++) {
+			for(int i = 0; i < children.length; i++) {
 				IResource resource2 = children[i];
 				walk(resource2, pattern, result);
 			}
 
-		} else if (resource instanceof IFile) {
+		} else if(resource instanceof IFile) {
 			String path = resource.getFullPath().toString();
 			Matcher match = pattern.matcher(path);
-			if (match.matches()) {
+			if(match.matches()) {
 				result.add(new File(resource));
 			}
 		}

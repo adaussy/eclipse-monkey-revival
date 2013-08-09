@@ -15,8 +15,8 @@ import java.text.MessageFormat;
 /**
  * @author Kevin Lindsey
  */
-public class StringUtils
-{
+public class StringUtils {
+
 	/**
 	 * LINE_DELIMITER
 	 */
@@ -45,8 +45,7 @@ public class StringUtils
 	/**
 	 * Protected constructor for utility class.
 	 */
-	protected StringUtils()
-	{
+	protected StringUtils() {
 
 	}
 
@@ -54,27 +53,23 @@ public class StringUtils
 	 * Create a string by concatenating the elements of a string array using a delimited between each item
 	 * 
 	 * @param delimiter
-	 *            The text to place between each element in the array
+	 *        The text to place between each element in the array
 	 * @param items
-	 *            The array of items to join
+	 *        The array of items to join
 	 * @return The resulting string
 	 */
-	public static String join(String delimiter, String[] items)
-	{
-		if (items == null)
-		{
+	public static String join(String delimiter, String[] items) {
+		if(items == null) {
 			return null;
 		}
 
 		int length = items.length;
 		String result = StringUtils.EMPTY;
 
-		if (length > 0)
-		{
+		if(length > 0) {
 			StringBuffer sb = new StringBuffer();
 
-			for (int i = 0; i < length - 1; i++)
-			{
+			for(int i = 0; i < length - 1; i++) {
 				sb.append(items[i]).append(delimiter);
 			}
 
@@ -90,13 +85,11 @@ public class StringUtils
 	 * Strips HTML tags from text
 	 * 
 	 * @param text
-	 *            Text to strip
+	 *        Text to strip
 	 * @return the text, minus any tags
 	 */
-	public static String stripHTML(String text)
-	{
-		if (text == null)
-		{
+	public static String stripHTML(String text) {
+		if(text == null) {
 			return null;
 		}
 
@@ -112,23 +105,17 @@ public class StringUtils
 	 * @return String
 	 * @since 3.0.2
 	 */
-	public static String urlEncodeForSpaces(char[] input)
-	{
+	public static String urlEncodeForSpaces(char[] input) {
 
-		if (input == null)
-		{
+		if(input == null) {
 			return null;
 		}
 
 		StringBuffer retu = new StringBuffer(input.length);
-		for (int i = 0; i < input.length; i++)
-		{
-			if (input[i] == ' ')
-			{
+		for(int i = 0; i < input.length; i++) {
+			if(input[i] == ' ') {
 				retu.append("%20"); //$NON-NLS-1$
-			}
-			else
-			{
+			} else {
 				retu.append(input[i]);
 			}
 		}
@@ -136,54 +123,36 @@ public class StringUtils
 	}
 
 	/**
-	 * This method encodes the URL, removes the spaces and brackets from the URL and replaces the same with
-	 * <code>"%20"</code> and <code>"%5B" and "%5D"</code> and <code>"%7B" "%7D"</code>.
+	 * This method encodes the URL, removes the spaces and brackets from the URL and replaces the same with <code>"%20"</code> and
+	 * <code>"%5B" and "%5D"</code> and <code>"%7B" "%7D"</code>.
 	 * 
 	 * @param input
 	 * @return String
 	 * @since 3.0.2
 	 */
-	public static String urlEncodeFilename(char[] input)
-	{
+	public static String urlEncodeFilename(char[] input) {
 
-		if (input == null)
-		{
+		if(input == null) {
 			return null;
 		}
 
 		StringBuffer retu = new StringBuffer(input.length);
-		for (int i = 0; i < input.length; i++)
-		{
-			if (input[i] == ' ')
-			{
+		for(int i = 0; i < input.length; i++) {
+			if(input[i] == ' ') {
 				retu.append("%20"); //$NON-NLS-1$
-			}
-			else if (input[i] == '[')
-			{
+			} else if(input[i] == '[') {
 				retu.append("%5B"); //$NON-NLS-1$
-			}
-			else if (input[i] == ']')
-			{
+			} else if(input[i] == ']') {
 				retu.append("%5D"); //$NON-NLS-1$
-			}
-			else if (input[i] == '{')
-			{
+			} else if(input[i] == '{') {
 				retu.append("%7B"); //$NON-NLS-1$
-			}
-			else if (input[i] == '}')
-			{
+			} else if(input[i] == '}') {
 				retu.append("%7D"); //$NON-NLS-1$
-			}
-			else if (input[i] == '`')
-			{
+			} else if(input[i] == '`') {
 				retu.append("%60"); //$NON-NLS-1$
-			}
-			else if (input[i] == '+')
-			{
+			} else if(input[i] == '+') {
 				retu.append("%2B"); //$NON-NLS-1$
-			}
-			else
-			{
+			} else {
 				retu.append(input[i]);
 			}
 		}
@@ -194,13 +163,11 @@ public class StringUtils
 	 * Removes all carriage returns from a string
 	 * 
 	 * @param text
-	 *            The string to strip of '\n'
+	 *        The string to strip of '\n'
 	 * @return The string minus the carriage returns
 	 */
-	public static String stripCarriageReturns(String text)
-	{
-		if (text == null)
-		{
+	public static String stripCarriageReturns(String text) {
+		if(text == null) {
 			return null;
 		}
 
@@ -211,13 +178,11 @@ public class StringUtils
 	 * Removes all extra whitespace (multiple spaces or tabs) from a string
 	 * 
 	 * @param text
-	 *            The string to strip of '\n'
+	 *        The string to strip of '\n'
 	 * @return The string minus the whitespace
 	 */
-	public static String stripWhitespace(String text)
-	{
-		if (text == null)
-		{
+	public static String stripWhitespace(String text) {
+		if(text == null) {
 			return null;
 		}
 
@@ -228,11 +193,10 @@ public class StringUtils
 	 * Removes the HTML, extra whitespace and carriage returns from a string
 	 * 
 	 * @param text
-	 *            The text to strip
+	 *        The text to strip
 	 * @return The new text, reformatted
 	 */
-	public static String formatAsPlainText(String text)
-	{
+	public static String formatAsPlainText(String text) {
 		String tempText = StringUtils.stripCarriageReturns(text);
 		tempText = StringUtils.stripWhitespace(tempText);
 		tempText = StringUtils.replace(tempText, "</li>", StringUtils.EMPTY); //$NON-NLS-1$
@@ -247,25 +211,23 @@ public class StringUtils
 	 * strings from the lexer, and need to be surrounded by StringUtils.EMPTY
 	 * 
 	 * @param stringToTrim
-	 *            The string to trim
+	 *        The string to trim
 	 * @return String
 	 */
-	public static String trimStringQuotes(String stringToTrim)
-	{
+	public static String trimStringQuotes(String stringToTrim) {
 
-		if (stringToTrim == null)
-		{
+		if(stringToTrim == null) {
 			return null;
 		}
 
 		String trimmed = stringToTrim.trim();
 
-		if (trimmed.startsWith("\"") || trimmed.startsWith("'")) //$NON-NLS-1$ //$NON-NLS-2$
+		if(trimmed.startsWith("\"") || trimmed.startsWith("'")) //$NON-NLS-1$ //$NON-NLS-2$
 		{
 			trimmed = trimmed.substring(1);
 		}
 
-		if (trimmed.endsWith("\"") || trimmed.endsWith("'")) //$NON-NLS-1$ //$NON-NLS-2$
+		if(trimmed.endsWith("\"") || trimmed.endsWith("'")) //$NON-NLS-1$ //$NON-NLS-2$
 		{
 			trimmed = trimmed.substring(0, trimmed.length() - 1);
 		}
@@ -277,25 +239,23 @@ public class StringUtils
 	 * Removes any leading or trailing [] on the string.
 	 * 
 	 * @param stringToTrim
-	 *            The string to trim
+	 *        The string to trim
 	 * @return String
 	 */
-	public static String trimBrackets(String stringToTrim)
-	{
+	public static String trimBrackets(String stringToTrim) {
 
-		if (stringToTrim == null)
-		{
+		if(stringToTrim == null) {
 			return null;
 		}
 
 		String trimmed = stringToTrim.trim();
 
-		if (trimmed.startsWith("[")) //$NON-NLS-1$
+		if(trimmed.startsWith("[")) //$NON-NLS-1$
 		{
 			trimmed = trimmed.substring(1);
 		}
 
-		if (trimmed.endsWith("]")) //$NON-NLS-1$
+		if(trimmed.endsWith("]")) //$NON-NLS-1$
 		{
 			trimmed = trimmed.substring(0, trimmed.length() - 1);
 		}
@@ -311,15 +271,13 @@ public class StringUtils
 	 * @param replace
 	 * @return String
 	 */
-	public static String replace(String str, String pattern, String replace)
-	{
+	public static String replace(String str, String pattern, String replace) {
 
 		int s = 0;
 		int e = 0;
 		StringBuffer result = new StringBuffer();
 
-		while ((e = str.indexOf(pattern, s)) >= 0)
-		{
+		while((e = str.indexOf(pattern, s)) >= 0) {
 			result.append(str.substring(s, e));
 			result.append(replace);
 			s = e + pattern.length();
@@ -336,9 +294,8 @@ public class StringUtils
 	 * @param replacement
 	 * @return String
 	 */
-	public static String format(String str, long replacement)
-	{
-		return MessageFormat.format(str, new Object[] { new Long(replacement) });
+	public static String format(String str, long replacement) {
+		return MessageFormat.format(str, new Object[]{ new Long(replacement) });
 	}
 
 	/**
@@ -348,9 +305,8 @@ public class StringUtils
 	 * @param replacement
 	 * @return String
 	 */
-	public static String format(String str, int replacement)
-	{
-		return MessageFormat.format(str, new Object[] { new Integer(replacement) });
+	public static String format(String str, int replacement) {
+		return MessageFormat.format(str, new Object[]{ new Integer(replacement) });
 	}
 
 	/**
@@ -360,9 +316,8 @@ public class StringUtils
 	 * @param replacement
 	 * @return String
 	 */
-	public static String format(String str, String replacement)
-	{
-		return MessageFormat.format(str, new Object[] { replacement });
+	public static String format(String str, String replacement) {
+		return MessageFormat.format(str, new Object[]{ replacement });
 	}
 
 	/**
@@ -372,9 +327,8 @@ public class StringUtils
 	 * @param replacement
 	 * @return String
 	 */
-	public static String format(String str, Object replacement)
-	{
-		return MessageFormat.format(str, new Object[] { replacement.toString() });
+	public static String format(String str, Object replacement) {
+		return MessageFormat.format(str, new Object[]{ replacement.toString() });
 	}
 
 	/**
@@ -384,8 +338,7 @@ public class StringUtils
 	 * @param replacements
 	 * @return String
 	 */
-	public static String format(String str, Object[] replacements)
-	{
+	public static String format(String str, Object[] replacements) {
 		return MessageFormat.format(str, replacements);
 	}
 
@@ -396,49 +349,46 @@ public class StringUtils
 	 * @param message
 	 * @return The ellipsif-ied string
 	 */
-	public static String ellipsify(String message)
-	{
+	public static String ellipsify(String message) {
 		return message + "...";
 	}
-	
+
 	/**
 	 * Adds a colon to the end of the string, as if making a form label
 	 * 
 	 * @param message
 	 * @return string + colon
 	 */
-	public static String makeFormLabel(String message)
-	{
+	public static String makeFormLabel(String message) {
 		return message + COLON;
 	}
-	
+
 	/**
 	 * Converts a filename extension wildcard string to a regular expression (i.e. *.js into a regular expression matching all .js file names)
-	 * @param wildcardExpression the expression to convert
-	 * @param caseInsensitive do we make the expression case-insensitive
+	 * 
+	 * @param wildcardExpression
+	 *        the expression to convert
+	 * @param caseInsensitive
+	 *        do we make the expression case-insensitive
 	 * @return The modified expression
 	 */
-	public static String convertWildcardExpressionToRegex(String wildcardExpression, boolean caseInsensitive)
-	{
-		if(wildcardExpression == null)
-		{
+	public static String convertWildcardExpressionToRegex(String wildcardExpression, boolean caseInsensitive) {
+		if(wildcardExpression == null) {
 			return null;
 		}
-		
-		if(wildcardExpression.startsWith("/") && wildcardExpression.endsWith("/"))  //$NON-NLS-1$//$NON-NLS-2$
+
+		if(wildcardExpression.startsWith("/") && wildcardExpression.endsWith("/")) //$NON-NLS-1$//$NON-NLS-2$
 		{
 			return wildcardExpression.substring(1, wildcardExpression.length() - 1);
 		}
-		
+
 		String string = wildcardExpression.replaceAll("\\.(?=[^\\*])", "\\\\."); //$NON-NLS-1$//$NON-NLS-2$
 		string = string.replaceAll("\\*", ".*"); //$NON-NLS-1$ //$NON-NLS-2$
 
-		if(caseInsensitive)
-		{
+		if(caseInsensitive) {
 			string = "(?i)" + string; //$NON-NLS-1$
 		}
 		return string;
 	}
 
 }
-

@@ -19,16 +19,18 @@ import org.eclipse.core.runtime.IPath;
 /**
  * StoredScript
  */
-public class StoredScript
-{
+public class StoredScript {
+
 	/**
 	 * 
 	 */
 	public IPath scriptPath;
+
 	/**
 	 * 
 	 */
 	public ScriptMetadata metadata;
+
 	/**
 	 * 
 	 */

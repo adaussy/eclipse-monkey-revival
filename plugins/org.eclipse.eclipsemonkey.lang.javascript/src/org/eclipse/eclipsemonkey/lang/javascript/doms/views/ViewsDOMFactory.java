@@ -14,7 +14,7 @@ import org.mozilla.javascript.Scriptable;
 
 /**
  * @author Paul Colton (Aptana, Inc.)
- *
+ * 
  */
 public class ViewsDOMFactory implements IJavaScriptDOMFactory {
 

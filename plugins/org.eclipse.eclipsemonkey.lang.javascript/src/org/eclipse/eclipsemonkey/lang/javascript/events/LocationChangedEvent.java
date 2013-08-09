@@ -14,12 +14,13 @@ import org.eclipse.swt.browser.LocationEvent;
 /**
  * @author Kevin Lindsey
  */
-public class LocationChangedEvent extends Event
-{
+public class LocationChangedEvent extends Event {
+
 	/*
 	 * Fields
 	 */
 	private static final long serialVersionUID = -5136024629622265505L;
+
 	private LocationEvent _innerEvent;
 
 	/**
@@ -36,8 +37,7 @@ public class LocationChangedEvent extends Event
 	 * 
 	 * @return LocationEvent
 	 */
-	public LocationEvent getInnerEvent()
-	{
+	public LocationEvent getInnerEvent() {
 		return this._innerEvent;
 	}
 
@@ -47,11 +47,10 @@ public class LocationChangedEvent extends Event
 
 	/**
 	 * @param target
-	 *            The object that threw this event
+	 *        The object that threw this event
 	 * @param innerEvent
 	 */
-	public LocationChangedEvent(Object target, LocationEvent innerEvent)
-	{
+	public LocationChangedEvent(Object target, LocationEvent innerEvent) {
 		super(eventType, target);
 
 		this._innerEvent = innerEvent;
