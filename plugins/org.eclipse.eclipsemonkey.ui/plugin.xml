@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Scripting"
+            id="monkey">
+      </category>
+      <view
+            name="Scripts Info"
+            icon="icons/scripts_info.gif"
+            category="monkey"
+            class="org.eclipse.eclipsemonkey.ui.views.ScriptsInfoView"
+            id="org.eclipse.eclipsemonkey.views.ScriptsInfoView">
+      </view>
+      <view
+            category="monkey"
+            class="org.eclipse.eclipsemonkey.ui.views.scriptsView.ScriptsView"
+            icon="icons/monkey.gif"
+            id="org.eclipse.eclipsemonkey.views.ScriptsView"
+            name="Scripts"/>
+      <view
+            allowMultiple="true"
+            category="monkey"
+            class="org.eclipse.eclipsemonkey.ui.scriptableView.GenericScriptableView"
+            icon="icons/web_view.gif"
+            id="org.eclipse.eclipsemonkey.ui.scriptableView.GenericScriptableView"
+            name="Web View"/>
+   </extension>
+
+</plugin>

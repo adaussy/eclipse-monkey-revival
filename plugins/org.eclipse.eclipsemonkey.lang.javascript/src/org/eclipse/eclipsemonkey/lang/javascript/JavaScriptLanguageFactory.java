@@ -50,12 +50,12 @@ public class JavaScriptLanguageFactory implements IMonkeyLanguageFactory {
 		Matcher m = p.matcher(contents);
 		if(m.find()) {
 			String comment = m.group();
-			p = Pattern.compile("Menu:\\s*((\\p{Graph}| )+)", Pattern.DOTALL);
+			p = Pattern.compile(IMetadaPattern.MENU_METADA_PATTERN, Pattern.DOTALL);
 			m = p.matcher(comment);
 			if(m.find()) {
 				metadata.setMenuName(m.group(1));
 			}
-			p = Pattern.compile("OnLoad:\\s*((\\p{Graph}| )+)", Pattern.DOTALL);
+			p = Pattern.compile(IMetadaPattern.ON_LOAD_METADATA_PATTERN, Pattern.DOTALL);
 			m = p.matcher(comment);
 			if(m.find()) {
 				String funct = m.group(1);
@@ -67,22 +67,22 @@ public class JavaScriptLanguageFactory implements IMonkeyLanguageFactory {
 					metadata.setOnLoadFunction(funct);
 				}
 			}
-			p = Pattern.compile("Key:\\s*((\\p{Graph}| )+)", Pattern.DOTALL);
+			p = Pattern.compile(IMetadaPattern.KEY_METADA_PATTERN, Pattern.DOTALL);
 			m = p.matcher(comment);
 			if(m.find()) {
 				metadata.setKey(m.group(1));
 			}
-			p = Pattern.compile("Scope:\\s*((\\p{Graph}| )+)", Pattern.DOTALL);
+			p = Pattern.compile(IMetadaPattern.SCOPE_SCOPE_METADA_PATTERN, Pattern.DOTALL);
 			m = p.matcher(comment);
 			if(m.find()) {
 				metadata.setScopeName(m.group(1));
 			}
-			p = Pattern.compile("DOM:\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)", Pattern.DOTALL);
+			p = Pattern.compile(IMetadaPattern.DOM_METADATA_PATTERN, Pattern.DOTALL);
 			m = p.matcher(comment);
 			while(m.find()) {
 				metadata.getDOMs().add(new DOMDescriptor(m.group(1), m.group(2)));
 			}
-			p = Pattern.compile("Listener:\\s*(\\w+)\\(\\)\\.(\\w+)", Pattern.DOTALL);
+			p = Pattern.compile(IMetadaPattern.LISTENER_METADA_PATTERN, Pattern.DOTALL);
 			m = p.matcher(comment);
 			while(m.find()) {
 				metadata.getSubscriptions().add(new Subscription(m.group(1), m.group(2)));

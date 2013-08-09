@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Eclipse Monkey User Interface (Incubation)
+Bundle-SymbolicName: org.eclipse.eclipsemonkey.ui; singleton:=true
+Bundle-Version: 1.0.1.qualifier
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.eclipsemonkey,
+ org.eclipse.ui.ide,
+ org.eclipse.core.resources,
+ org.eclipse.ui.editors,
+ org.mozilla.javascript;bundle-version="1.6.2"
+Eclipse-LazyStart: true
+Export-Package: org.eclipse.eclipsemonkey.ui.scriptableView,
+ org.eclipse.eclipsemonkey.ui.views,
+ org.eclipse.eclipsemonkey.ui.views.scriptsView
+Bundle-Vendor: Eclipse.org
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Activator: org.eclipse.eclipsemonkey.ui.EclipseMonkeyUIActivator
