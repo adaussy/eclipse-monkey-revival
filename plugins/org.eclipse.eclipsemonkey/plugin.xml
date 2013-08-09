@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="dom" name="DOM for Monkey scripts" schema="schema/dom.exsd"/>
+   <extension-point id="language" name="Language DOM for Monkey scripts" schema="schema/language.exsd"/>
+   <extension-point id="scriptpath" name="Alternate Script Paths" schema="schema/scriptpath.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="Eclipse Monkey Actions"
+            visible="true"
+            id="eclipsemonkeyAction.actionSet">
+         <menu
+               id="eclipsemonkeyMenu"
+               label="Scripts">
+            <separator
+                  name="eclipsemonkeyGroup">
+            </separator>
+         </menu>
+         <action
+               class="org.eclipse.eclipsemonkey.actions.CreateMonkeyExamplesAction"
+               icon="icons/monkey.gif"
+               id="org.eclipse.eclipsemonkey.action1"
+               label="Eclipse Monkey Examples"
+               menubarPath="eclipsemonkeyMenu/eclipsemonkeyGroup"
+               tooltip="Create the Examples project">
+         </action>
+      </actionSet>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.eclipsemonkey.emFileContextMenu"
+            nameFilter="*.em"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.eclipsemonkey.actions.PublishScriptForBlogger"
+               id="org.eclipse.eclipsemonkey.action2"
+               label="as Blogger (HTML)"
+               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"
+               tooltip="Publish script in blogging format"/>
+         <action
+               class="org.eclipse.eclipsemonkey.actions.PublishScriptForWiki"
+               id="org.eclipse.eclipsemonkey.action4"
+               label="as Wiki (indented)"
+               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"
+               tooltip="Publish script in wiki format"/>
+         <action
+               class="org.eclipse.eclipsemonkey.actions.PublishScript"
+               id="org.eclipse.eclipsemonkey.action5"
+               label="as Bugzilla (text)"
+               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"
+               tooltip="Publish script in wiki format"/>
+         <menu
+               id="org.eclipse.eclipsemonkey.navigatorContextMenu"
+               label="Copy for Publication"
+               path="group.managing"/>
+         <action
+               class="org.eclipse.eclipsemonkey.actions.PublishScriptForEmail"
+               id="org.eclipse.eclipsemonkey.action6"
+               label="as Email (wrapped text)"
+               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.eclipsemonkey.emFileContextMenu"
+            nameFilter="*.js"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.eclipse.eclipsemonkey.actions.PublishScriptForBlogger"
+               id="org.eclipse.eclipsemonkey.action2"
+               label="as Blogger (HTML)"
+               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"
+               tooltip="Publish script in blogging format"/>
+         <action
+               class="org.eclipse.eclipsemonkey.actions.PublishScriptForWiki"
+               id="org.eclipse.eclipsemonkey.action4"
+               label="as Wiki (indented)"
+               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"
+               tooltip="Publish script in wiki format"/>
+         <action
+               class="org.eclipse.eclipsemonkey.actions.PublishScript"
+               id="org.eclipse.eclipsemonkey.action5"
+               label="as Bugzilla (text)"
+               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"
+               tooltip="Publish script in wiki format"/>
+         <menu
+               id="org.eclipse.eclipsemonkey.navigatorContextMenu"
+               label="Copy for Publication"
+               path="group.managing"/>
+         <action
+               class="org.eclipse.eclipsemonkey.actions.PublishScriptForEmail"
+               id="org.eclipse.eclipsemonkey.action6"
+               label="as Email (wrapped text)"
+               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.eclipseMonkey.monkeyFolderContextMenu"
+            nameFilter="monkey"
+            objectClass="org.eclipse.core.resources.IFolder">
+         <action
+               class="org.eclipse.eclipsemonkey.actions.PasteScriptFromClipboardAction"
+               id="org.eclipse.eclipsemonkey.action3"
+               label="Paste New Script"
+               menubarPath="group.editor"
+               tooltip="Paste Script from Clipboard"/>
+      </objectContribution>
+   </extension>
+
+
+</plugin>

@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>Eclipse Monkey Help - Writing a script</title>
+</head>
+<body>
+<h2>Writing a script</h2>
+<h3>Script file locations</h3>
+<p>
+Scripts are installed in the <em>Monkey</em> menu by placing them in "*.em" files in a top-level "monkey" folder of any project (obviously, scripts are un-installed by renaming or moving them). The complete set of scripts is the union of the scripts in all the top-level monkey folders in the workspace.
+</p>
+
+<center>
+<img src="images/monkey-tree.png">
+</center>
+
+<h3>Script metadata
+</h3>
+
+<p>Scripts include metadata that specifiy how a script is to be run and additional resources required for successful operation. Metadata consists of keyword values pairs. These are placed in the first comment block of the script. This must be a /* ... */ style comment. Only recognized keywords are processed. For example, only Menu: and DOM: keywords are processed in the following script.</p>
+
+
+<center>
+<img src="images/monkey-editor.png">
+</center>
+
+<h3>Script menus (Menu:)
+</h3>
+<p>The <b>Menu:</b> metadata tag specifies that this script is to be included in
+the <em>Monkey</em> menu. If more than one script specifies the same menu item,
+the menu item will appear more than once. Submenus are created using the Eclipse
+standard notation "Menu > SubMenu" or "Menu > SubMenu > SubSubMenu" (etc.) in the metadata string.</p>
+
+<h3><a name="Script key bindings">Script key bindings</a> (Key:)
+</h3>
+<p>
+The <b>Key:</b> metadata tag specifies the <b>single</b> keystroke to be assigned to the script.
+<p>The format of keystrokes is described in the <i>org.eclipse.ui.bindings</i> extension point documentation for the <i>sequence</i> attribute which is reproduced below.</p>
+<p>
+The recognized modifiers keys are <code>M1</code>, <code>M2</code>, <code>M3</code>, <code>M4</code>, <code>ALT</code>, <code>COMMAND</code>, <code>CTRL</code>, and <code>SHIFT</code>.  The "M" modifier keys are a platform-independent way of representing keys, and these are generally preferred.  <code>M1</code> is the <code>COMMAND</code> key on MacOS X, and the <code>CTRL</code> key on most other platforms.  <code>M2</code> is the <code>SHIFT</code> key.  <code>M3</code> is the <code>Option</code> key on MacOS X, and the <code>ALT</code> key on most other platforms.  <code>M4</code> is the <code>CTRL</code> key on MacOS X, and is undefined on other platforms.
+</p>
+<p>
+The actual key is generally specified simply as the ASCII character, in uppercase.  So, for example <code>F</code> or <code>,</code> are examples of such keys.  However, there are some special keys; keys that have no printable ASCII representation.  The following is a list of the current special keys: <code>ARROW_DOWN</code>, <code>ARROW_LEFT</code>, <code>ARROW_RIGHT</code>, <code>ARROW_UP</code>, <code>BREAK</code>, <code>BS</code>, <code>CAPS_LOCK</code>, <code>CR</code>, <code>DEL</code>, <code>END</code>, <code>ESC</code>, <code>F1</code>, <code>F2</code>, <code>F3</code>, <code>F4</code>, <code>F5</code>, <code>F6</code>, <code>F7</code>, <code>F8</code>, <code>F9</code>, <code>F10</code>, <code>F11</code>, <code>F12</code>, <code>F13</code>, <code>F14</code>, <code>F15</code>, <code>FF</code>, <code>HOME</code>, <code>INSERT</code>, <code>LF</code>, <code>NUL</code>, <code>NUM_LOCK</code>, <code>NUMPAD_0</code>, <code>NUMPAD_1</code>, <code>NUMPAD_2</code>, <code>NUMPAD_3</code>, <code>NUMPAD_4</code>, <code>NUMPAD_5</code>, <code>NUMPAD_6</code>, <code>NUMPAD_7</code>, <code>NUMPAD_8</code>, <code>NUMPAD_9</code>, <code>NUMPAD_ADD</code>, <code>NUMPAD_DECIMAL</code>, <code>NUMPAD_DIVIDE</code>, <code>NUMPAD_ENTER</code>, <code>NUMPAD_EQUAL</code>, <code>NUMPAD_MULTIPLY</code>, <code>NUMPAD_SUBTRACT</code>, <code>PAGE_UP</code>, <code>PAGE_DOWN</code>, <code>PAUSE</code>, <code>PRINT_SCREEN</code>, <code>SCROLL_LOCK</code>, <code>SPACE</code>, <code>TAB</code> and <code>VT</code>.
+</p>
+<p>
+We also understand some alternative names for some common special keys.  For example, we accept both <code>ESC</code> and <code>ESCAPE</code>, and <code>CR</code>, <code>ENTER</code> and <code>RETURN</code> are all the same.
+</p>
+
+<h3>Scripts as listeners (Listener:)</h3>
+<p>
+The <b>Listener:</b> metadata tag specifies that the script subscribes to events which are handled by functions in the script. The tag's value is of the form:
+<blockquote>
+    <i>&lt;function-name&gt;</i>().<i>&lt;add-method-name&gt;</i>(this)
+</blockquote>
+
+The <i>&lt;function-name&gt;</i> names a function in the current script that answers the object to which the script will listen. The &lt;add-method-name&gt; names the method that will be used to register as a listener of that object. The add method implies a corresponding remove method as well as the appropriate handling functions that will be called, if present, when an update happens. <p/>
+The following script listens for and prints resource change events.</p>
+
+<center>
+<img src="images/listener.png">
+</center>
+
+
+<h3>Scripts sharing scope (Scope:)</h3>
+<p>
+The <b>Scope:</b> metadata tag specifies which shared outer scope this scrip shares with others. The value of the tag is a name that is used for no other purpose than identifying scopes. Without the scope tag a script will have its own annonymous scope that lasts until the script is recompiled.
+</p>
+
+
+<h3>Objects of all Kinds</h3>
+
+<p>Scripts manipulate script objects such as strings and arrays, native Java objects including native Eclipse objects, and special DOM objects made specifically to simplify scripting.</p>
+
+<p>Native Java objects can be accessed through their fully qualified class names. Eclipse objects require that the fully qualified name be prepended with the additional name "Packages". Here are some valid scripting expressions that show how this works</p>
+
+<ul>
+<li><code>java.lang.System.out.println("hello world");</code></li>
+<li><code>Packages.org.eclipse.jface.dialogs.MessageDialog.openInformation(
+	window.getShell(),
+	"Monkey Dialog",
+	"Hello World"
+	)</code></li>
+</ul>
+
+<p>One of the challenges in scripting for Eclipse is dealing with the restricted namespaces of the various plug-ins. The classes and packages that are directly referencable are those in the plug-in pre-requisites of the org.eclipse.eclipsemonkey plug-in such as org.eclipse.ui and org.eclipse.jface.text. To use other packages and classes, you must use a DOM (see below).
+</p>
+
+<h3>Built-In DOM Objects</h3>
+
+<p>DOM objects appear as globals in the script namespace. Some DOMs are primitively supported, others are supplied by DOM plug-ins (standard Eclipse plug-ins that contribute an org.eclipse.eclipsemonkey.dom extensions). The built-in DOMs available with this release are:
+
+<ul>
+<li><code>window</code> -- direct access to the Eclipse IWorkbenchWindow object.
+</ul>
+
+<h3>Plug-In DOM Objects</h3>
+
+Plugin-DOMs are specified in the metadata with the "DOM:" tag who's value is a URI of the form:
+
+<blockquote>
+http://<i>&lt;update-site&gt;</i>/<i>&lt;dom-plugin-ID&gt;</i>
+</blockquote>
+
+The &lt;update-site&gt; refers to a normal Eclipse Update Manager update site. The &lt;dom-plugin-ID&gt; is the unique ID of the plug-in that supplies the DOM (via the org.eclipse.eclipsemonkey.dom extension point). Eclipse Monkey checks to be sure that all specified DOMs are loaded and notifies you if they aren't.
+
+<center>
+<img src="images/missing-dom-dialog.png">
+</center>
+
+<p>If you ask, Eclipse Monkey will open an approximately configured update dialog to load missing DOMs:</p>
+
+<center>
+<img src="images/missing-dom-update.png">
+</center>
+<h4>Standard DOM Objects</h4>
+
+<p>The following DOMs are contributed by the <code>org.eclipse.dash.doms</code> plug-in</p>
+
+<ul>
+<li><code>workspace</code> -- direct acccess to the Eclipse IWorkspace object.
+<li><code>resources</code> -- indirect access to Eclipse IResources through custom wrappers: Resources, File and Line.
+</ul>
+
+<p>Learn about these DOM through the examples or by reading the source code of the Eclipse Monkey Standard DOMs plug-in (org.eclipse.dash.doms).</p>
+
+
+</body>
+</html>
