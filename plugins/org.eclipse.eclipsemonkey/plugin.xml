@@ -114,6 +114,21 @@
                tooltip="Paste Script from Clipboard"/>
       </objectContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+    <category
+            id="org.eclipse.eclipsemonkey.newsamplecategory"
+            name="Eclipse Monkey Script Examples"
+            parentCategory="org.eclipse.ui.Examples">
+      </category>
+    <wizard
+          category="org.eclipse.ui.Examples/org.eclipse.eclipsemonkey.newsamplecategory"
+          class="org.eclipse.eclipsemonkey.wizards.ExampleWizards"
+          icon="icons/eclipse_monkey.png"
+          id="org.eclipse.eclipsemonkey.examples"
+          name="Eclipse Monkey Scripts Examples">
+    </wizard>
+   </extension>
 
 
 </plugin>

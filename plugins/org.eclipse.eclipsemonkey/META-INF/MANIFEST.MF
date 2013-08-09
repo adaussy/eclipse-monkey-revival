@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.update.core,
  org.eclipse.update.ui,
- org.junit;resolution:=optional
+ org.junit;resolution:=optional,
+ org.eclipse.ui.examples.readmetool
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.eclipsemonkey,
  org.eclipse.eclipsemonkey.dom,
@@ -22,4 +23,4 @@ Export-Package: org.eclipse.eclipsemonkey,
  org.eclipse.eclipsemonkey.utils
 Bundle-ClassPath: monkey.jar
 Bundle-Vendor: Eclipse.org
-Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -1,16 +1,16 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2006 Eclipse Foundation
+/**
+ * Copyright (c) 2013 Atos
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Bjorn Freeman-Benson - initial implementation
- *     Ward Cunningham - initial implementation
- *******************************************************************************/
-
-package org.eclipse.eclipsemonkey.actions;
+ * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
+ * this entire header must remain intact.
+ * 
+ *  * Contributors:
+ *     Arthur Daussy - initial implementation
+ */
+package org.eclipse.eclipsemonkey.wizards;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,44 +25,43 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.eclipsemonkey.EclipseMonkeyPlugin;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.osgi.framework.Bundle;
 
 /**
- * CreateMonkeyExamplesAction
+ * Base class used to define a wizard for sample creation
+ * @author adaussy
+ *
  */
-public class CreateMonkeyExamplesAction implements IWorkbenchWindowActionDelegate {
+public abstract class AbstractEclipseMonkeyNewSampleWizard extends BasicNewProjectResourceWizard {
 
-	private IWorkbenchWindow window;
+	public AbstractEclipseMonkeyNewSampleWizard() {
+		super();
+	}
 
-	/**
-	 * 
-	 */
-	public CreateMonkeyExamplesAction() {
+	protected void openError(String message) {
+		ErrorDialog.openError(getShell(), "Eclipse Monkey example error", "Unable to create the Examples project\n" + message, new Status(Status.ERROR, EclipseMonkeyPlugin.PLUGIN_ID, message));
 	}
 
 	/**
-	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+	 * Path to manifest file to find scripts (Relative path to the bundle)
+	 * @return
 	 */
-	public void run(IAction action) {
-		IWorkspace w = ResourcesPlugin.getWorkspace();
-		IProject project = w.getRoot().getProject("Eclipse Monkey Examples");
+	protected abstract String getManifestPath();
+
+	public boolean performFinish() {
+		super.performFinish();
+		IProject project = getNewProject();
 		try {
 			Bundle bundle = EclipseMonkeyPlugin.getDefault().getBundle();
-
-			URL url = Platform.find(bundle, new Path("samples/manifest.txt"));
-			url = Platform.resolve(url);
+			URL url = FileLocator.find(bundle, new Path(getManifestPath()), null);
 			Object content = url.getContent();
 			InputStream ins = (InputStream)content;
 			int count = ins.available();
@@ -78,11 +77,14 @@ public class CreateMonkeyExamplesAction implements IWorkbenchWindowActionDelegat
 				if(string.length() > 0)
 					manifest.add(string);
 			}
-
-			if(!project.exists())
+	
+			if(!project.exists()) {
 				project.create(null);
-			project.open(null);
-
+			}
+			if(!project.isOpen()) {
+				project.open(null);
+			}
+	
 			String errors = "";
 			for(Iterator iter = manifest.iterator(); iter.hasNext();) {
 				try {
@@ -97,7 +99,7 @@ public class CreateMonkeyExamplesAction implements IWorkbenchWindowActionDelegat
 						if(!folder.exists())
 							folder.create(IResource.NONE, true, null);
 					}
-					IPath path = new Path("samples/" + name);
+					IPath path = new Path(getScriptContainerFolder() + name);
 					InputStream stream = EclipseMonkeyPlugin.getDefault().openStream(path);
 					IFile file = folder.getFile(words[words.length - 1]);
 					file.create(stream, false, null);
@@ -109,31 +111,16 @@ public class CreateMonkeyExamplesAction implements IWorkbenchWindowActionDelegat
 				}
 			}
 			if(errors.length() > 0) {
-				MessageDialog.openInformation(window.getShell(), "Eclipse Monkey", "Errors creating the Examples project: " + errors);
+				openError(errors);
 			}
 		} catch (CoreException x) {
-			MessageDialog.openInformation(window.getShell(), "Eclipse Monkey", "Unable to create the Examples project due to " + x);
+			openError(x.getMessage());
 		} catch (IOException x) {
-			MessageDialog.openInformation(window.getShell(), "Eclipse Monkey", "Unable to create the Examples project due to " + x);
+			openError(x.getMessage());
 		}
+		return true;
 	}
 
-	/**
-	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
-	 */
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
+	protected abstract String getScriptContainerFolder();
 
-	/**
-	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
-	 */
-	public void dispose() {
-	}
-
-	/**
-	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
-	 */
-	public void init(IWorkbenchWindow window) {
-		this.window = window;
-	}
 }

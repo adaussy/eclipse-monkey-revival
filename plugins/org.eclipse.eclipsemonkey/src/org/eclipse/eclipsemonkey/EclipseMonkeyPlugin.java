@@ -53,6 +53,8 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	 * Marker indicating the end of an Eclipse Monkey script
 	 */
 	public static final String PUBLISH_AFTER_MARKER = "--- And burbled as it ran! ---";
+	
+	public static final String PLUGIN_ID ="org.eclipse.eclipsemonkey";
 
 	// The shared instance.
 	private static EclipseMonkeyPlugin plugin;
