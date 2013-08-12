@@ -55,12 +55,14 @@ public abstract class AbstractEclipseMonkeyNewSampleWizard extends BasicNewProje
 	 * @return
 	 */
 	protected abstract String getManifestPath();
+	
+	protected abstract Bundle getBundle();
 
 	public boolean performFinish() {
 		super.performFinish();
 		IProject project = getNewProject();
 		try {
-			Bundle bundle = EclipseMonkeyPlugin.getDefault().getBundle();
+			Bundle bundle = getBundle();
 			URL url = FileLocator.find(bundle, new Path(getManifestPath()), null);
 			Object content = url.getContent();
 			InputStream ins = (InputStream)content;
@@ -70,7 +72,7 @@ public abstract class AbstractEclipseMonkeyNewSampleWizard extends BasicNewProje
 			in.read(cbuf);
 			in.close();
 			String[] lines = new String(cbuf).split("\n");
-			List manifest = new ArrayList();
+			List<String> manifest = new ArrayList<String>();
 			for(int i = 0; i < lines.length; i++) {
 				String string = lines[i];
 				string = string.trim();
@@ -86,7 +88,7 @@ public abstract class AbstractEclipseMonkeyNewSampleWizard extends BasicNewProje
 			}
 	
 			String errors = "";
-			for(Iterator iter = manifest.iterator(); iter.hasNext();) {
+			for(Iterator<String> iter = manifest.iterator(); iter.hasNext();) {
 				try {
 					String name = (String)iter.next();
 					String[] words = name.split("/");
@@ -100,7 +102,8 @@ public abstract class AbstractEclipseMonkeyNewSampleWizard extends BasicNewProje
 							folder.create(IResource.NONE, true, null);
 					}
 					IPath path = new Path(getScriptContainerFolder() + name);
-					InputStream stream = EclipseMonkeyPlugin.getDefault().openStream(path);
+					
+					InputStream stream =  FileLocator.openStream(getBundle(), path, true);
 					IFile file = folder.getFile(words[words.length - 1]);
 					file.create(stream, false, null);
 					stream.close();

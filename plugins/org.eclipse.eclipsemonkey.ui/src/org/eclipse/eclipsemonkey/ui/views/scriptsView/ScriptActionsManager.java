@@ -27,11 +27,11 @@ public class ScriptActionsManager {
 	/*
 	 * Fields
 	 */
-	private ArrayList _listeners = new ArrayList();
+	private ArrayList<IScriptActionChangeListener> _listeners = new ArrayList<IScriptActionChangeListener>();
 
-	private ArrayList _scriptActions = new ArrayList();
+	private ArrayList<ScriptAction> _scriptActions = new ArrayList<ScriptAction>();
 
-	private HashMap _scriptActionSets = new HashMap();
+	private HashMap<String,ScriptActionSet> _scriptActionSets = new HashMap<String,ScriptActionSet>();
 
 	/**
 	 * Constructor
@@ -99,7 +99,7 @@ public class ScriptActionsManager {
 	 */
 	public void fireScriptActionsChangeEvent(IScriptAction a) {
 		for(int i = 0; i < this._listeners.size(); i++) {
-			IScriptActionChangeListener listener = (IScriptActionChangeListener)this._listeners.get(i);
+			IScriptActionChangeListener listener = this._listeners.get(i);
 			listener.onScriptActionChanged(a);
 		}
 	}
@@ -232,7 +232,7 @@ public class ScriptActionsManager {
 	 * clearAll
 	 */
 	public void clearAll() {
-		this._scriptActions = new ArrayList();
-		this._scriptActionSets = new HashMap();
+		this._scriptActions = new ArrayList<ScriptAction>();
+		this._scriptActionSets = new HashMap<String, ScriptActionSet>();
 	}
 }

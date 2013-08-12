@@ -63,6 +63,7 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 
 		// Get actions and action sets
 		IScriptAction[] actions = _scriptActionsManager.getAll();
+		
 		viewer.refresh();
 		if(actions != null && actions.length > 0) {
 			return actions;
@@ -90,6 +91,7 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 				Matcher match = submenu_pattern.matcher(menuName);
 
 				if(match.find()) {
+					
 					String primary_key = match.group(1).trim();
 					String secondary_key = match.group(2).trim();
 

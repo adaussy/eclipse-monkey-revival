@@ -23,7 +23,8 @@ public class ScriptActionSet implements IScriptAction {
 	 */
 	private String _name;
 
-	private ArrayList _scriptActions = new ArrayList();
+	private ArrayList<IScriptAction> _scriptActions = new ArrayList<IScriptAction>();
+	
 
 	private boolean _executable = false;
 
