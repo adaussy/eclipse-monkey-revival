@@ -1,0 +1,40 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Eclipse Monkey Python Support
+Bundle-SymbolicName: org.eclipse.eclipsemonkey.lang.python;singleton:=true
+Bundle-Version: 0.1.0
+Bundle-Activator: org.eclipse.eclipsemonkey.lang.python.PythonPlugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.eclipsemonkey,
+ org.eclipse.eclipsemonkey.doms,
+ org.eclipse.eclipsemonkey.ui,
+ org.eclipse.ui.console
+Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: José Fonseca
+Export-Package: org.eclipse.eclipsemonkey.lang.python;
+  uses:="org.eclipse.eclipsemonkey,
+   org.eclipse.core.runtime,
+   org.eclipse.ui,
+   org.eclipse.ui.plugin,
+   org.eclipse.eclipsemonkey.language",
+ org.python.compiler;uses:="org.python.parser,org.python.core,org.python.parser.ast",
+ org.python.core;
+  uses:="org.python.parser.ast,
+   org.python.core.adapter,
+   new org.python.core,
+   org.python.parser",
+ org.python.core.adapter;uses:="org.python.core",
+ org.python.modules;uses:="org.python.modules.sre,org.python.core",
+ org.python.modules.sre;uses:="org.python.core",
+ org.python.modules.time;uses:="org.python.core",
+ org.python.util;
+  uses:="javax.servlet,
+   jline,
+   org.python.core,
+   org.apache.tools.ant.taskdefs,
+   org.apache.tools.ant.types,
+   javax.servlet.http"
+Bundle-ClassPath: pythonmonkey.jar,
+ jython.jar
