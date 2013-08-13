@@ -74,7 +74,7 @@ public class Subscription {
 		} else {
 			trouble = e.getMessage();
 		}
-		EclipseMonkeyPlugin.getDefault().notifyScriptsChanged();
+		ScriptService.getInstance().notifyScriptsChanged();
 	}
 
 	/**

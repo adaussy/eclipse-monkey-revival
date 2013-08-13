@@ -85,7 +85,7 @@ public class MenuRunMonkeyScript {
 
 	private IMonkeyLanguageFactory getLanguageFactory(IPath path) {
 		String scriptExtension = path.getFileExtension();
-		IMonkeyLanguageFactory factory = (IMonkeyLanguageFactory)EclipseMonkeyPlugin.getDefault().getLanguageStore().get(scriptExtension);
+		IMonkeyLanguageFactory factory = (IMonkeyLanguageFactory)ScriptService.getInstance().getLanguageStore().get(scriptExtension);
 		return factory;
 	}
 }

@@ -28,6 +28,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.eclipsemonkey.EclipseMonkeyPlugin;
+import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.ScriptMetadata;
 import org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory;
 import org.eclipse.jface.action.IAction;
@@ -139,7 +140,7 @@ public class PasteScriptFromClipboardAction implements IWorkbenchWindowActionDel
 
 	private IFile createScriptFile(IFolder destination, String script) throws CoreException, IOException {
 		// FIXME This just assumes content pasted form clipbaord is always javascript. Ideally we should ask the languages their confidence level that they can hadnle/recognize the contents.
-		IMonkeyLanguageFactory langFactory = (IMonkeyLanguageFactory)EclipseMonkeyPlugin.getDefault().getLanguageStore().get("js"); // $NON-NLS-1$
+		IMonkeyLanguageFactory langFactory = (IMonkeyLanguageFactory)ScriptService.getInstance().getLanguageStore().get("js"); // $NON-NLS-1$
 		ScriptMetadata metadata = langFactory.getScriptMetadata(script);
 		String basename = metadata.getReasonableFilename();
 		int ix = basename.lastIndexOf(".");

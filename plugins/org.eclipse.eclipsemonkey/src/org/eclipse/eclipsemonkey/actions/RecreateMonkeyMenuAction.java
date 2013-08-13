@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.eclipsemonkey.EclipseMonkeyPlugin;
+import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.MenuRunMonkeyScript;
 import org.eclipse.eclipsemonkey.RunMonkeyException;
 import org.eclipse.eclipsemonkey.ScriptMetadata;
@@ -68,7 +68,7 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 
 	private Collection getAllMetadatas() {
 		ArrayList result = new ArrayList();
-		Iterator iter = EclipseMonkeyPlugin.getDefault().getScriptStore().values().iterator();
+		Iterator iter = ScriptService.getInstance().getScriptStore().values().iterator();
 		for(; iter.hasNext();) {
 			StoredScript element = (StoredScript)iter.next();
 			result.add(element.metadata);

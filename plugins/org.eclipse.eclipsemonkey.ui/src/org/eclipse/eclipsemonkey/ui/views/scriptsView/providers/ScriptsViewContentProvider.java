@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.eclipsemonkey.EclipseMonkeyPlugin;
+import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.StoredScript;
 import org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptAction;
 import org.eclipse.eclipsemonkey.ui.views.scriptsView.ScriptAction;
@@ -74,7 +74,7 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 	private void updateActionSets() {
 		ArrayList<String> foundItems = new ArrayList<String>();
 
-		Map<URI, StoredScript> scriptStore = EclipseMonkeyPlugin.getDefault().getScriptStore();
+		Map<URI, StoredScript> scriptStore = ScriptService.getInstance().getScriptStore();
 		Object[] scripts = scriptStore.values().toArray();
 
 		for(int i = 0; i < scripts.length; i++) {

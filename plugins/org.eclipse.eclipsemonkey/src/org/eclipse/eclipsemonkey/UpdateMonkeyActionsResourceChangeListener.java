@@ -15,10 +15,9 @@ package org.eclipse.eclipsemonkey;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IContainer;
@@ -38,6 +37,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.eclipsemonkey.actions.RecreateMonkeyMenuAction;
 import org.eclipse.eclipsemonkey.dom.Utilities;
 import org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory;
+import org.eclipse.eclipsemonkey.utils.ScriptResourceUtils;
 import org.eclipse.eclipsemonkey.utils.URIScriptUtils;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -46,22 +46,6 @@ import org.eclipse.ui.PlatformUI;
  * UpdateMonkeyActionsResourceChangeListener
  */
 public class UpdateMonkeyActionsResourceChangeListener implements IResourceChangeListener {
-
-	protected static Set<String> extensionsSet = null;
-	static {
-		extensionsSet = new HashSet<String>();
-		extensionsSet.add("js");
-		extensionsSet.add("em");
-	}
-
-	/**
-	 * @param exts
-	 */
-	public static void setExtensions(Collection<String> exts) {
-		if(exts == null)
-			return;
-		extensionsSet.addAll(exts);
-	}
 
 	/**
 	 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
@@ -80,50 +64,50 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 				IResource resource = delta.getResource();
 				if(resource instanceof IFile) {
 					IFile file = (IFile)resource;
-					if(EclipseMonkeyProjectNature.isEclipseMonkeyResource(file)) {
+					if(ScriptResourceUtils.isEclipseMonkeyResource(file)) {
 						handleScriptResourceChange(delta, file);
 					} else if(".project".equals(file.getName())) {
 						//When the .project is modify then look for scripts
-						if(delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.CHANGED)
+						if(delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.CHANGED) {
 							findScriptsInContainer(resource.getProject());
+							found_a_change();
+						}
 					}
 				}
 				return true;
 			}
 
-			private void handleScriptResourceChange(IResourceDelta delta, IFile file) {
-				if(extensionsSet.contains(file.getFileExtension())) {
-					URI fileURI = URIScriptUtils.getAbsoluteURI(delta);
-					switch(delta.getKind()) {
-					case IResourceDelta.ADDED:
+			protected void handleScriptResourceChange(IResourceDelta delta, IFile file) {
+				URI fileURI = URIScriptUtils.getAbsoluteURI(delta);
+				switch(delta.getKind()) {
+				case IResourceDelta.ADDED:
+					processNewOrChangedScript(fileURI, file.getLocation());
+					found_a_change();
+					break;
+				case IResourceDelta.REMOVED:
+					processRemovedScript(fileURI, file.getLocation());
+					found_a_change();
+					break;
+				case IResourceDelta.CHANGED:
+					if((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
+						processRemovedScript(URIUtil.toURI(delta.getMovedFromPath()), file.getLocation());
 						processNewOrChangedScript(fileURI, file.getLocation());
 						found_a_change();
-						break;
-					case IResourceDelta.REMOVED:
-						processRemovedScript(fileURI, file.getLocation());
-						found_a_change();
-						break;
-					case IResourceDelta.CHANGED:
-						if((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
-							processRemovedScript(URIUtil.toURI(delta.getMovedFromPath()), file.getLocation());
-							processNewOrChangedScript(fileURI, file.getLocation());
-							found_a_change();
-						}
-						if((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
-							processRemovedScript(fileURI, file.getLocation());
-							processNewOrChangedScript(URIUtil.toURI(delta.getMovedToPath()), file.getLocation());
-							found_a_change();
-						}
-						if((delta.getFlags() & IResourceDelta.REPLACED) != 0) {
-							processNewOrChangedScript(fileURI, file.getLocation());
-							found_a_change();
-						}
-						if((delta.getFlags() & IResourceDelta.CONTENT) != 0) {
-							processNewOrChangedScript(fileURI, file.getLocation());
-							found_a_change();
-						}
-						break;
 					}
+					if((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
+						processRemovedScript(fileURI, file.getLocation());
+						processNewOrChangedScript(URIUtil.toURI(delta.getMovedToPath()), file.getLocation());
+						found_a_change();
+					}
+					if((delta.getFlags() & IResourceDelta.REPLACED) != 0) {
+						processNewOrChangedScript(fileURI, file.getLocation());
+						found_a_change();
+					}
+					if((delta.getFlags() & IResourceDelta.CONTENT) != 0) {
+						processNewOrChangedScript(fileURI, file.getLocation());
+						found_a_change();
+					}
+					break;
 				}
 			}
 		};
@@ -150,11 +134,11 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 			store.metadata = new ScriptMetadata();
 			// log an error in the error log
 		}
-		EclipseMonkeyPlugin.getDefault().addScript(uri, store);
+		ScriptService.getInstance().addScript(uri, store);
 	}
 
 	private void processRemovedScript(URI name, IPath path) {
-		EclipseMonkeyPlugin.getDefault().removeScript(name);
+		ScriptService.getInstance().removeScript(name);
 	}
 
 	/**
@@ -162,16 +146,16 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 	 * @param alternatePaths
 	 * @throws CoreException
 	 */
-	public void rescanAllFiles(Collection<String> extensions, String[] alternatePaths) throws CoreException {
-		EclipseMonkeyPlugin.getDefault().clearScripts();
+	public void rescanAllFiles(Collection<String> extensions, Collection<URI> alternatePaths) throws CoreException {
+		ScriptService.getInstance().clearScripts();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		findScriptsInContainer(extensions, workspace.getRoot());
 		findScriptsInalternatePath(extensions, alternatePaths);
 	}
 
-	private void findScriptsInalternatePath(Collection<String> extensions, String[] alternatePaths) {
-		for(int i = 0; i < alternatePaths.length; i++) {
-			String path = alternatePaths[i];
+	private void findScriptsInalternatePath(Collection<String> extensions, Collection<URI> alternatePaths) {
+		for(Iterator<URI> iterator = alternatePaths.iterator(); iterator.hasNext();) {
+			URI path = (URI)iterator.next();
 
 			File folder = new File(path);
 			String[] files = folder.list();
@@ -195,34 +179,38 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 		}
 	}
 
-	protected void findScriptsInContainer(IContainer container) throws CoreException {
-		findScriptsInContainer(extensionsSet, container);
+	protected Collection<IFile> findScriptsInContainer(IContainer container) throws CoreException {
+		return findScriptsInContainer(ScriptService.getInstance().getLanguageStore().keySet(), container);
 	}
 
-	protected void findScriptsInContainer(final Collection<String> extensions, IContainer container) throws CoreException {
+	protected Collection<IFile> findScriptsInContainer(final Collection<String> extensions, IContainer container) throws CoreException {
+		final Collection<IFile> scripts = new ArrayList<IFile>();
+
 		container.accept(new IResourceVisitor() {
 
 			@Override
 			public boolean visit(IResource resource) throws CoreException {
 				if(resource instanceof IProject) {
 					IProject p = (IProject)resource;
-					return EclipseMonkeyProjectNature.isEclipseMonkeyProject(p);
+					return ScriptResourceUtils.isEclipseMonkeyProject(p);
 				} else if(resource instanceof IFile) {
 					IFile file = (IFile)resource;
 					if(extensions.contains(file.getFileExtension())) {
 						IPath location = file.getLocation();
 						URI scriptURI = URIUtil.toURI(location);
 						processNewOrChangedScript(scriptURI, location);
+						scripts.add(file);
 					}
 				}
 				return true;
 			}
 		});
+		return scripts;
 	}
 
 	private ScriptMetadata getMetadataFrom(IPath path) throws CoreException, IOException {
 		String contents = Utilities.getFileContents(path);
-		IMonkeyLanguageFactory langFactory = (IMonkeyLanguageFactory)EclipseMonkeyPlugin.getDefault().getLanguageStore().get(path.getFileExtension());
+		IMonkeyLanguageFactory langFactory = (IMonkeyLanguageFactory)ScriptService.getInstance().getLanguageStore().get(path.getFileExtension());
 		ScriptMetadata metadata = langFactory.getScriptMetadata(contents);
 		metadata.setPath(path);
 		return metadata;

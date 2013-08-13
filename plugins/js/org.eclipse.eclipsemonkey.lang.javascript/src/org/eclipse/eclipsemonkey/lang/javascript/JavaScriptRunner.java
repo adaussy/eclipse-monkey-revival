@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.eclipsemonkey.DOMDescriptor;
-import org.eclipse.eclipsemonkey.EclipseMonkeyPlugin;
+import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.IMonkeyScriptRunner;
 import org.eclipse.eclipsemonkey.RunMonkeyException;
 import org.eclipse.eclipsemonkey.ScriptMetadata;
@@ -99,7 +99,7 @@ public class JavaScriptRunner implements IMonkeyScriptRunner {
 
 			Scriptable sharedScope = null;
 			URI uri = URIUtil.toURI(this.path.toPortableString());
-			Map<URI, StoredScript> scriptStore = EclipseMonkeyPlugin.getDefault().getScriptStore();
+			Map<URI, StoredScript> scriptStore = ScriptService.getInstance().getScriptStore();
 
 			storedScript = (StoredScript)(scriptStore.get(uri));
 
@@ -110,7 +110,7 @@ public class JavaScriptRunner implements IMonkeyScriptRunner {
 			String sharedScopeName = storedScript.metadata.getScopeName();
 
 			if(sharedScopeName != null) {
-				Map<String, Object> scopeStore = EclipseMonkeyPlugin.getDefault().getScopeStore();
+				Map<String, Object> scopeStore = ScriptService.getInstance().getScopeStore();
 				sharedScope = (Scriptable)scopeStore.get(sharedScopeName);
 
 				if(sharedScope == null) {
@@ -149,7 +149,7 @@ public class JavaScriptRunner implements IMonkeyScriptRunner {
 					compiledScript.exec(cx, compiledScope);
 					storedScript.extra.put("compiledScript", compiledScript);
 					//Ckeck if necessary?
-//					EclipseMonkeyPlugin.getDefault().notifyScriptsChanged();
+					//					EclipseMonkeyPlugin.getDefault().notifyScriptsChanged();
 				}
 
 				Object fObj = compiledScope.get(entryName, compiledScope);
@@ -284,7 +284,6 @@ public class JavaScriptRunner implements IMonkeyScriptRunner {
 			}
 		}
 
-
 	}
 
 	private void error(RhinoException x, String string) throws RunMonkeyException {
@@ -296,7 +295,6 @@ public class JavaScriptRunner implements IMonkeyScriptRunner {
 
 		throw e;
 	}
-
 
 	private void defineDynamicVariables(IPath path) {
 		Utilities.state().begin(path);

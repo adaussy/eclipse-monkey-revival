@@ -36,4 +36,16 @@ public class URIScriptUtils {
 		}
 		return null;
 	}
+
+	public static URI getAbsoluteURI(IResource resource) {
+
+		URI worspaceURI = resource.getWorkspace().getRoot().getLocationURI();
+
+		try {
+			return URIUtil.makeAbsolute(new URI(resource.getFullPath().toString()), worspaceURI);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

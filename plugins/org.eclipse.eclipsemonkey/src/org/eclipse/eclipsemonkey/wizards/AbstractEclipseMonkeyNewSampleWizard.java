@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.eclipsemonkey.EclipseMonkeyPlugin;
-import org.eclipse.eclipsemonkey.EclipseMonkeyProjectNature;
+import org.eclipse.eclipsemonkey.utils.ScriptResourceUtils;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.osgi.framework.Bundle;
@@ -65,7 +65,7 @@ public abstract class AbstractEclipseMonkeyNewSampleWizard extends BasicNewProje
 		super.performFinish();
 		IProject project = getNewProject();
 		try {
-			EclipseMonkeyProjectNature.addEclipseMoneyNature(project);
+			ScriptResourceUtils.addEclipseMoneyNature(project);
 			Bundle bundle = getBundle();
 			URL url = FileLocator.find(bundle, new Path(getManifestPath()), null);
 			Object content = url.getContent();

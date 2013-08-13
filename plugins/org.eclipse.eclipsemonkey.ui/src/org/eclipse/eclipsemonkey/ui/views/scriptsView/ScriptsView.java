@@ -13,7 +13,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.eclipsemonkey.EclipseMonkeyPlugin;
+import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.IScriptStoreListener;
 import org.eclipse.eclipsemonkey.MenuRunMonkeyScript;
 import org.eclipse.eclipsemonkey.RunMonkeyException;
@@ -190,7 +190,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 			infoLabelFont.dispose();
 		}
 
-		EclipseMonkeyPlugin.getDefault().removeScriptStoreListener(this);
+		ScriptService.getInstance().removeScriptStoreListener(this);
 	}
 
 	/**
@@ -247,7 +247,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 		hookDoubleClickAction();
 		contributeToActionBars();
 
-		EclipseMonkeyPlugin.getDefault().addScriptStoreListener(this);
+		ScriptService.getInstance().addScriptStoreListener(this);
 	}
 
 	/**

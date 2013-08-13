@@ -12,11 +12,12 @@
 
 package org.eclipse.eclipsemonkey.ui.views;
 
+import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.eclipsemonkey.EclipseMonkeyPlugin;
+import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.IScriptStoreListener;
 import org.eclipse.eclipsemonkey.StoredScript;
 import org.eclipse.eclipsemonkey.Subscription;
@@ -62,7 +63,7 @@ public class ScriptsInfoView extends ViewPart implements IScriptStoreListener {
 		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 		 */
 		public Object[] getElements(Object parent) {
-			Map scriptStore = EclipseMonkeyPlugin.getDefault().getScriptStore();
+			Map<URI, StoredScript> scriptStore = ScriptService.getInstance().getScriptStore();
 			return scriptStore.keySet().toArray();
 		}
 	}
@@ -76,13 +77,13 @@ public class ScriptsInfoView extends ViewPart implements IScriptStoreListener {
 			if(index == 0)
 				return getText(obj);
 			if(index == 1) {
-				StoredScript stored = (StoredScript)EclipseMonkeyPlugin.getDefault().getScriptStore().get(obj);
+				StoredScript stored = (StoredScript)ScriptService.getInstance().getScriptStore().get(obj);
 				if(stored == null)
 					return "";
 				return stored.metadata.getMenuName();
 			}
 			if(index == 2) {
-				StoredScript stored = (StoredScript)EclipseMonkeyPlugin.getDefault().getScriptStore().get(obj);
+				StoredScript stored = (StoredScript)ScriptService.getInstance().getScriptStore().get(obj);
 				if(stored == null)
 					return "";
 				List subscriptions = stored.metadata.getSubscriptions();
@@ -166,14 +167,14 @@ public class ScriptsInfoView extends ViewPart implements IScriptStoreListener {
 		hookContextMenu();
 		hookDoubleClickAction();
 		contributeToActionBars();
-		EclipseMonkeyPlugin.getDefault().addScriptStoreListener(this);
+		ScriptService.getInstance().addScriptStoreListener(this);
 	}
 
 	/**
 	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
 	 */
 	public void dispose() {
-		EclipseMonkeyPlugin.getDefault().removeScriptStoreListener(this);
+		ScriptService.getInstance().removeScriptStoreListener(this);
 	}
 
 	/**
