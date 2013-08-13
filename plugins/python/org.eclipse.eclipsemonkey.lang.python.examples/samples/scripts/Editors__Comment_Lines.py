@@ -1,6 +1,6 @@
 #
 # Menu: Py > Editors > Comment Lines
-# Kudos: José Fonseca & Paul Colton
+# Kudos: Jose Fonseca & Paul Colton
 # License: EPL 1.0
 #
 
