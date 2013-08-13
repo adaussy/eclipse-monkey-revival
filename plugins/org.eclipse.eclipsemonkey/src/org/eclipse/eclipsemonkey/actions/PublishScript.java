@@ -51,8 +51,8 @@ public class PublishScript implements IWorkbenchWindowActionDelegate, IObjectAct
 		String result = "";
 
 		IStructuredSelection sel = (IStructuredSelection)this.selection;
-		List selectedObjects = sel.toList();
-		for(Iterator iter = selectedObjects.iterator(); iter.hasNext();) {
+		List<Object> selectedObjects = sel.toList();
+		for(Iterator<Object> iter = selectedObjects.iterator(); iter.hasNext();) {
 			IFile element = (IFile)iter.next();
 
 			try {

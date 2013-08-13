@@ -373,15 +373,15 @@ public abstract class BrowserView extends ViewPart {
 			}
 		}
 
-		/**
-		 * flagStartOfFrameNavigation
-		 */
-		public void flagStartOfFrameNavigation() {
-			if(implementation.getBrowser().getData("frameNavigation") == null) //$NON-NLS-1$
-			{
-				implementation.getBrowser().setData("frameNavigation", "true"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		}
+		//		/**
+		//		 * flagStartOfFrameNavigation
+		//		 */
+		//		public void flagStartOfFrameNavigation() {
+		//			if(implementation.getBrowser().getData("frameNavigation") == null) //$NON-NLS-1$
+		//			{
+		//				implementation.getBrowser().setData("frameNavigation", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+		//			}
+		//		}
 
 		/**
 		 * flagEndOfFrameNavigation
@@ -390,15 +390,15 @@ public abstract class BrowserView extends ViewPart {
 			implementation.getBrowser().setData("frameNavigation", null); //$NON-NLS-1$
 		}
 
-		/**
-		 * flagStartOfNavigation
-		 */
-		public void flagStartOfNavigation() {
-			if(implementation.getBrowser().getData("navigation") == null) //$NON-NLS-1$
-			{
-				implementation.getBrowser().setData("navigation", "true"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		}
+		//		/**
+		//		 * flagStartOfNavigation
+		//		 */
+		//		public void flagStartOfNavigation() {
+		//			if(implementation.getBrowser().getData("navigation") == null) //$NON-NLS-1$
+		//			{
+		//				implementation.getBrowser().setData("navigation", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+		//			}
+		//		}
 
 		/**
 		 * flagEndOfNavigation
@@ -407,15 +407,15 @@ public abstract class BrowserView extends ViewPart {
 			implementation.getBrowser().setData("navigation", null); //$NON-NLS-1$
 		}
 
-		/**
-		 * flagStoredTempUrl
-		 */
-		public void flagStoredTempUrl() {
-			if(implementation.getBrowser().getData("tempUrl") == null) //$NON-NLS-1$
-			{
-				implementation.getBrowser().setData("tempUrl", "true"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		}
+		//		/**
+		//		 * flagStoredTempUrl
+		//		 */
+		//		public void flagStoredTempUrl() {
+		//			if(implementation.getBrowser().getData("tempUrl") == null) //$NON-NLS-1$
+		//			{
+		//				implementation.getBrowser().setData("tempUrl", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+		//			}
+		//		}
 
 		/**
 		 * flagRemovedTempUrl
@@ -434,7 +434,7 @@ public abstract class BrowserView extends ViewPart {
 
 		// History of Intro Pages and real URL visited by Intro Browser. All
 		// elements are all of type HistoryObject.
-		private Vector history = new Vector();
+		private Vector<HistoryObject> history = new Vector<HistoryObject>();
 
 		private int navigationLocation = 0;
 
@@ -447,7 +447,7 @@ public abstract class BrowserView extends ViewPart {
 		 */
 		class HistoryObject {
 
-			String iframeUrl;
+			//			String iframeUrl;
 
 			String url;
 
@@ -455,10 +455,6 @@ public abstract class BrowserView extends ViewPart {
 				if(location instanceof String) {
 					this.url = (String)location;
 				}
-			}
-
-			String getIFrameUrl() {
-				return iframeUrl;
 			}
 
 			String getUrl() {
@@ -469,9 +465,9 @@ public abstract class BrowserView extends ViewPart {
 				return (url != null) ? true : false;
 			}
 
-			boolean isIFramePage() {
-				return (iframeUrl != null) ? true : false;
-			}
+			//			boolean isIFramePage() {
+			//				return (iframeUrl != null) ? true : false;
+			//			}
 
 		}
 
@@ -517,18 +513,18 @@ public abstract class BrowserView extends ViewPart {
 			navigationLocation = getHistoryEndPosition();
 		}
 
-		/**
-		 * removeLastHistory
-		 */
-		public void removeLastHistory() {
-			history.remove(getHistoryEndPosition());
-			// point the nav location to the end of the vector.
-			navigationLocation = getHistoryEndPosition();
-		}
+		//		/**
+		//		 * removeLastHistory
+		//		 */
+		//		public void removeLastHistory() {
+		//			history.remove(getHistoryEndPosition());
+		//			// point the nav location to the end of the vector.
+		//			navigationLocation = getHistoryEndPosition();
+		//		}
 
 		private void trimHistory(Object location) {
-			List newHistory = history.subList(0, navigationLocation + 1);
-			history = new Vector(newHistory);
+			List<HistoryObject> newHistory = history.subList(0, navigationLocation + 1);
+			history = new Vector<HistoryObject>(newHistory);
 			history.add(new HistoryObject(location));
 			// point the nav location to the end of the vector.
 			navigationLocation = getHistoryEndPosition();
@@ -547,35 +543,35 @@ public abstract class BrowserView extends ViewPart {
 			return history.size() - 1;
 		}
 
-		/**
-		 * navigateHistoryBackward
-		 */
-		public void navigateHistoryBackward() {
-			if(badNavigationLocation(navigationLocation - 1)) {
-				// do nothing. We are at the beginning.
-				return;
-			}
-			--navigationLocation;
-		}
+		//		/**
+		//		 * navigateHistoryBackward
+		//		 */
+		//		public void navigateHistoryBackward() {
+		//			if(badNavigationLocation(navigationLocation - 1)) {
+		//				// do nothing. We are at the beginning.
+		//				return;
+		//			}
+		//			--navigationLocation;
+		//		}
+		//
+		//		/**
+		//		 * Navigate forward in the history.
+		//		 */
+		//		public void navigateHistoryForward() {
+		//			if(badNavigationLocation(navigationLocation + 1)) {
+		//				// do nothing. We are at the beginning.
+		//				return;
+		//			}
+		//			++navigationLocation;
+		//		}
 
-		/**
-		 * Navigate forward in the history.
-		 */
-		public void navigateHistoryForward() {
-			if(badNavigationLocation(navigationLocation + 1)) {
-				// do nothing. We are at the beginning.
-				return;
-			}
-			++navigationLocation;
-		}
-
-		private boolean badNavigationLocation(int navigationLocation) {
-			if(navigationLocation < 0 || navigationLocation >= history.size()) {
-				// bad nav location.
-				return true;
-			}
-			return false;
-		}
+		//		private boolean badNavigationLocation(int navigationLocation) {
+		//			if(navigationLocation < 0 || navigationLocation >= history.size()) {
+		//				// bad nav location.
+		//				return true;
+		//			}
+		//			return false;
+		//		}
 
 		/**
 		 * Returns true if the current location in the navigation history represents a URL. False if the location is an
@@ -584,52 +580,52 @@ public abstract class BrowserView extends ViewPart {
 		 * @return Returns the locationIsURL.
 		 */
 		private HistoryObject getCurrentLocation() {
-			return (HistoryObject)history.elementAt(navigationLocation);
+			return history.elementAt(navigationLocation);
 		}
 
-		/**
-		 * canNavigateForward
-		 * 
-		 * @return boolean
-		 */
-		public boolean canNavigateForward() {
-			return navigationLocation != getHistoryEndPosition() ? true : false;
-		}
-
-		/**
-		 * canNavigateBackward
-		 * 
-		 * @return boolean
-		 */
-		public boolean canNavigateBackward() {
-			return navigationLocation == 0 ? false : true;
-		}
-
-		/**
-		 * currentLocationIsUrl
-		 * 
-		 * @return boolean
-		 */
-		public boolean currentLocationIsUrl() {
-			return getCurrentLocation().isURL();
-		}
-
-		/**
-		 * getCurrentLocationAsUrl
-		 * 
-		 * @return boolean
-		 */
-		public String getCurrentLocationAsUrl() {
-			return getCurrentLocation().getUrl();
-		}
-
-		/**
-		 * clear
-		 */
-		public void clear() {
-			history.clear();
-			navigationLocation = 0;
-		}
+		//		/**
+		//		 * canNavigateForward
+		//		 * 
+		//		 * @return boolean
+		//		 */
+		//		public boolean canNavigateForward() {
+		//			return navigationLocation != getHistoryEndPosition() ? true : false;
+		//		}
+		//
+		//		/**
+		//		 * canNavigateBackward
+		//		 * 
+		//		 * @return boolean
+		//		 */
+		//		public boolean canNavigateBackward() {
+		//			return navigationLocation == 0 ? false : true;
+		//		}
+		//
+		//		/**
+		//		 * currentLocationIsUrl
+		//		 * 
+		//		 * @return boolean
+		//		 */
+		//		public boolean currentLocationIsUrl() {
+		//			return getCurrentLocation().isURL();
+		//		}
+		//
+		//		/**
+		//		 * getCurrentLocationAsUrl
+		//		 * 
+		//		 * @return boolean
+		//		 */
+		//		public String getCurrentLocationAsUrl() {
+		//			return getCurrentLocation().getUrl();
+		//		}
+		//
+		//		/**
+		//		 * clear
+		//		 */
+		//		public void clear() {
+		//			history.clear();
+		//			navigationLocation = 0;
+		//		}
 
 	}
 }

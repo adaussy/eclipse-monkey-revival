@@ -23,10 +23,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.MenuRunMonkeyScript;
 import org.eclipse.eclipsemonkey.RunMonkeyException;
 import org.eclipse.eclipsemonkey.ScriptMetadata;
+import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.StoredScript;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -61,16 +61,16 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 	 */
 	public void run(IAction action) {
 		clearTheMenu();
-		Collection metaDatas = getAllMetadatas();
-		List menuData = createMenuFromMetadatas(metaDatas);
+		Collection<ScriptMetadata> metaDatas = getAllMetadatas();
+		List<Association> menuData = createMenuFromMetadatas(metaDatas);
 		createTheMenu(menuData, action);
 	}
 
-	private Collection getAllMetadatas() {
-		ArrayList result = new ArrayList();
-		Iterator iter = ScriptService.getInstance().getScriptStore().values().iterator();
+	private Collection<ScriptMetadata> getAllMetadatas() {
+		ArrayList<ScriptMetadata> result = new ArrayList<ScriptMetadata>();
+		Iterator<StoredScript> iter = ScriptService.getInstance().getScriptStore().values().iterator();
 		for(; iter.hasNext();) {
-			StoredScript element = (StoredScript)iter.next();
+			StoredScript element = iter.next();
 			result.add(element.metadata);
 		}
 		return result;
@@ -94,7 +94,7 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 		MonkeyMenuStruct submenu;
 	}
 
-	private void createTheMenu(List menuData, final IAction action) {
+	private void createTheMenu(List<Association> menuData, final IAction action) {
 		MenuManager outerManager = ((WorkbenchWindow)window).getMenuManager();
 		IContributionItem contribution = outerManager.findUsingPath("eclipsemonkeyMenu");
 		IMenuManager menuManager = (IMenuManager)((ActionSetContributionItem)contribution).getInnerItem();
@@ -104,12 +104,12 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 		current.menu = menuManager;
 		current.submenu = new MonkeyMenuStruct();
 
-		SortedSet sorted = new TreeSet();
+		SortedSet<Association> sorted = new TreeSet<Association>();
 		sorted.addAll(menuData);
 
-		Iterator iter = sorted.iterator();
+		Iterator<Association> iter = sorted.iterator();
 		while(iter.hasNext()) {
-			Association element = (Association)iter.next();
+			Association element = iter.next();
 			String menu_string = element.key;
 			final IPath script_file_to_run = element.path;
 			String accelerator = element.accelerator;
@@ -197,10 +197,10 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 		MessageDialog.openError(shell, "Eclipse Monkey", "The keystroke '" + accelerator + "' is not valid and so has not been assigned.");
 	}
 
-	private List createMenuFromMetadatas(Collection metaDatas) {
-		List menuData = new ArrayList();
-		for(Iterator iter = metaDatas.iterator(); iter.hasNext();) {
-			ScriptMetadata data = (ScriptMetadata)iter.next();
+	private List<Association> createMenuFromMetadatas(Collection<ScriptMetadata> metaDatas) {
+		List<Association> menuData = new ArrayList<Association>();
+		for(Iterator<ScriptMetadata> iter = metaDatas.iterator(); iter.hasNext();) {
+			ScriptMetadata data = iter.next();
 			if(data.getMenuName() != null)
 				menuData.add(new Association(data.getMenuName(), data.getPath(), data.getAccelerator()));
 		}
@@ -209,7 +209,7 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 
 	private static int id = 0;
 
-	class Association implements Comparable {
+	class Association implements Comparable<Association> {
 
 		String accelerator;
 
@@ -229,7 +229,7 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 		/**
 		 * @see java.lang.Comparable#compareTo(java.lang.Object)
 		 */
-		public int compareTo(Object arg0) {
+		public int compareTo(Association arg0) {
 			Association b = (Association)arg0;
 			int value = key.compareTo(b.key);
 			if(value == 0) {

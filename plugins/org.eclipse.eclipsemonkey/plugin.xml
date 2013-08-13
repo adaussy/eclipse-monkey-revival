@@ -18,14 +18,6 @@
                   name="eclipsemonkeyGroup">
             </separator>
          </menu>
-         <action
-               class="org.eclipse.eclipsemonkey.actions.CreateMonkeyExamplesAction"
-               icon="icons/monkey.gif"
-               id="org.eclipse.eclipsemonkey.action1"
-               label="Eclipse Monkey Examples"
-               menubarPath="eclipsemonkeyMenu/eclipsemonkeyGroup"
-               tooltip="Create the Examples project">
-         </action>
       </actionSet>
    </extension>
    

@@ -28,8 +28,8 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.eclipsemonkey.EclipseMonkeyPlugin;
-import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.ScriptMetadata;
+import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -68,8 +68,8 @@ public class PasteScriptFromClipboardAction implements IWorkbenchWindowActionDel
 	 */
 	public void run(IAction action) {
 		TextAndRTF text = getTextFromClipboard();
-		Collection scripts = extractScriptsFromText(text);
-		for(Iterator iter = scripts.iterator(); iter.hasNext();) {
+		Collection<String> scripts = extractScriptsFromText(text);
+		for(Iterator<String> iter = scripts.iterator(); iter.hasNext();) {
 			try {
 				String scriptText = (String)iter.next();
 				scriptText = collapseEscapedNewlines(scriptText);
@@ -189,8 +189,8 @@ public class PasteScriptFromClipboardAction implements IWorkbenchWindowActionDel
 		}
 	}
 
-	private Collection extractScriptsFromText(TextAndRTF text) {
-		Collection result = new ArrayList();
+	private Collection<String> extractScriptsFromText(TextAndRTF text) {
+		Collection<String> result = new ArrayList<String>();
 		Pattern pattern = Pattern.compile(EclipseMonkeyPlugin.PUBLISH_BEFORE_MARKER + "\\s*(.*?)\\s*" + EclipseMonkeyPlugin.PUBLISH_AFTER_MARKER, Pattern.DOTALL);
 		Pattern crpattern = Pattern.compile("\r\n?");
 		if(text.text != null) {

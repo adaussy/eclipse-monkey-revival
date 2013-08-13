@@ -35,6 +35,7 @@ import org.osgi.framework.Bundle;
 
 /**
  * Service to centralize all action about scripts
+ * 
  * @author adaussy
  * 
  */

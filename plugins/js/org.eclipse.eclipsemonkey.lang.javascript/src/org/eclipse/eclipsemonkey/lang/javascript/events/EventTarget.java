@@ -9,7 +9,6 @@
  */
 package org.eclipse.eclipsemonkey.lang.javascript.events;
 
-
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -29,7 +28,7 @@ public abstract class EventTarget extends ScriptableObject implements IEventTarg
 	/*
 	 * Fields
 	 */
-	private Hashtable _events;
+	private Hashtable<String, ArrayList> _events;
 
 	/*
 	 * Constructors
@@ -61,7 +60,7 @@ public abstract class EventTarget extends ScriptableObject implements IEventTarg
 	 */
 	public void fireEventListeners(String eventType, Object[] args) {
 		if(this._events != null && this._events.containsKey(eventType)) {
-			ArrayList handlers = (ArrayList)_events.get(eventType);
+			ArrayList handlers = _events.get(eventType);
 
 			for(int i = 0; i < handlers.size(); i++) {
 				Object eventHandler = handlers.get(i);
@@ -100,14 +99,14 @@ public abstract class EventTarget extends ScriptableObject implements IEventTarg
 	 */
 	public void addEventListener(String eventType, Object eventHandler) {
 		if(this._events == null) {
-			this._events = new Hashtable();
+			this._events = new Hashtable<String, ArrayList>();
 		}
 
 		if(this._events.containsKey(eventType) == false) {
 			this._events.put(eventType, new ArrayList());
 		}
 
-		ArrayList handlers = (ArrayList)this._events.get(eventType);
+		ArrayList<Object> handlers = this._events.get(eventType);
 
 		handlers.add(eventHandler);
 	}
@@ -119,7 +118,7 @@ public abstract class EventTarget extends ScriptableObject implements IEventTarg
 	public void removeEventListener(String eventType, Object eventHandler) {
 		if(this._events != null) {
 			if(this._events.containsKey(eventType)) {
-				ArrayList handlers = (ArrayList)this._events.get(eventType);
+				ArrayList handlers = this._events.get(eventType);
 
 				handlers.remove(eventHandler);
 			}

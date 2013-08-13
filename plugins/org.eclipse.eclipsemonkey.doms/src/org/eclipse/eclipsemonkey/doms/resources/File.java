@@ -55,7 +55,7 @@ public class File {
 	 */
 	public Line[] getLines() {
 		try {
-			List result = new ArrayList();
+			List<Line> result = new ArrayList<Line>();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(file.getContents()));
 			String text;
 			int lineNumber = 0;
@@ -66,8 +66,8 @@ public class File {
 			reader.close();
 			int i = 0;
 			Line[] rtrn = new Line[result.size()];
-			for(Iterator iter = result.iterator(); iter.hasNext();) {
-				Line element = (Line)iter.next();
+			for(Iterator<Line> iter = result.iterator(); iter.hasNext();) {
+				Line element = iter.next();
 				rtrn[i++] = element;
 			}
 			return rtrn;

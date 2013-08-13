@@ -27,7 +27,7 @@ public class Views extends EventTarget {
 	 */
 	private static final long serialVersionUID = -1034231442157154583L;
 
-	private Hashtable _scriptableViews;
+	private Hashtable<String, ScriptableView> _scriptableViews;
 
 	/*
 	 * Properties
@@ -52,7 +52,7 @@ public class Views extends EventTarget {
 	public Views(Scriptable scope) {
 		this.setParentScope(scope);
 
-		this._scriptableViews = new Hashtable();
+		this._scriptableViews = new Hashtable<String, ScriptableView>();
 
 		String[] names = new String[]{ "getView" }; //$NON-NLS-1$
 		this.defineFunctionProperties(names, Views.class, READONLY | PERMANENT);
@@ -79,7 +79,7 @@ public class Views extends EventTarget {
 		}
 
 		if(_scriptableViews.containsKey(id)) {
-			_scriptableView = (ScriptableView)_scriptableViews.get(id);
+			_scriptableView = _scriptableViews.get(id);
 		} else {
 			IWorkbenchPart part = getViewInternal("org.eclipse.eclipsemonkey.ui.scriptableView.GenericScriptableView", id); //$NON-NLS-1$
 

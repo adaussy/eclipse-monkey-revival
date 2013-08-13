@@ -49,7 +49,7 @@ public class Resources {
 	 */
 	public Object[] filesMatching(String patternString) {
 		Pattern pattern = Pattern.compile(patternString);
-		Collection result = new ArrayList();
+		Collection<File> result = new ArrayList<File>();
 		try {
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
 			IProject[] projects = workspace.getRoot().getProjects();
@@ -62,14 +62,14 @@ public class Resources {
 		}
 		Object[] array = new Object[result.size()];
 		int i = 0;
-		for(Iterator iter = result.iterator(); iter.hasNext();) {
+		for(Iterator<File> iter = result.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			array[i++] = element;
 		}
 		return array;
 	}
 
-	private void walk(IResource resource, Pattern pattern, Collection result) throws CoreException {
+	private void walk(IResource resource, Pattern pattern, Collection<File> result) throws CoreException {
 		if(resource instanceof IFolder) {
 			IResource[] children = ((IFolder)resource).members();
 			for(int i = 0; i < children.length; i++) {

@@ -17,8 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.IScriptStoreListener;
+import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.StoredScript;
 import org.eclipse.eclipsemonkey.Subscription;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -86,8 +86,8 @@ public class ScriptsInfoView extends ViewPart implements IScriptStoreListener {
 				StoredScript stored = (StoredScript)ScriptService.getInstance().getScriptStore().get(obj);
 				if(stored == null)
 					return "";
-				List subscriptions = stored.metadata.getSubscriptions();
-				Iterator iter = subscriptions.iterator();
+				List<Subscription> subscriptions = stored.metadata.getSubscriptions();
+				Iterator<Subscription> iter = subscriptions.iterator();
 				String s = "";
 				while(iter.hasNext()) {
 					Subscription subscription = (Subscription)iter.next();

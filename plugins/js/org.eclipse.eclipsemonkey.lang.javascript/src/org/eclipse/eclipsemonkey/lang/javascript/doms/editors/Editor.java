@@ -9,7 +9,6 @@
  */
 package org.eclipse.eclipsemonkey.lang.javascript.doms.editors;
 
-
 import org.eclipse.eclipsemonkey.lang.javascript.events.EventTarget;
 import org.eclipse.eclipsemonkey.utils.StringUtils;
 import org.eclipse.jface.text.BadLocationException;

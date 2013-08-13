@@ -2,8 +2,9 @@ package org.eclipse.eclipsemonkey.lang.javascript;
 
 /**
  * Store all pattern to find metadata
+ * 
  * @author adaussy
- *
+ * 
  */
 public interface IMetadaPattern {
 

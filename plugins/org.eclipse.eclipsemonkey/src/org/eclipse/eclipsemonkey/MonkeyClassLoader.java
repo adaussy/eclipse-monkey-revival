@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class MonkeyClassLoader extends ClassLoader {
 
-	List loaders = new ArrayList();
+	List<ClassLoader> loaders = new ArrayList<ClassLoader>();
 
 	/**
 	 * @param loader
@@ -34,9 +34,9 @@ public class MonkeyClassLoader extends ClassLoader {
 	 * @see java.lang.ClassLoader#loadClass(java.lang.String)
 	 */
 	public Class loadClass(String name) throws ClassNotFoundException {
-		Iterator iter = loaders.iterator();
+		Iterator<ClassLoader> iter = loaders.iterator();
 		while(iter.hasNext()) {
-			ClassLoader loader = (ClassLoader)iter.next();
+			ClassLoader loader = iter.next();
 			try {
 				// ((EclipseClassLoader)loader).getDelegate();
 				Class clz = loader.loadClass(name);

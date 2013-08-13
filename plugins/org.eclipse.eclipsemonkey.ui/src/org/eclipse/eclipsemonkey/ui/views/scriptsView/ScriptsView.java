@@ -13,10 +13,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.IScriptStoreListener;
 import org.eclipse.eclipsemonkey.MenuRunMonkeyScript;
 import org.eclipse.eclipsemonkey.RunMonkeyException;
+import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.ui.EclipseMonkeyUIActivator;
 import org.eclipse.eclipsemonkey.ui.IconPath;
 import org.eclipse.eclipsemonkey.ui.views.scriptsView.providers.ScriptsViewContentProvider;
@@ -113,7 +113,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 
 	private org.eclipse.jface.action.Action actionMakeExecutable;
 
-	private ArrayList listeners = new ArrayList();
+	private ArrayList<IScriptActionsViewEventListener> listeners = new ArrayList<IScriptActionsViewEventListener>();
 
 	private ScriptActionsManager _scriptActionsManager;
 
@@ -139,7 +139,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 	 */
 	public void fireActionsViewEvent(ScriptActionsViewEvent e) {
 		for(int i = 0; i < listeners.size(); i++) {
-			IScriptActionsViewEventListener listener = (IScriptActionsViewEventListener)listeners.get(i);
+			IScriptActionsViewEventListener listener = listeners.get(i);
 			listener.onScriptActionsViewEvent(e);
 		}
 	}
@@ -257,14 +257,14 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 	 */
 	protected void handleDrop(DropTargetEvent event) {
 		String[] files = (String[])event.data;
-		ArrayList paths = new ArrayList();
+		ArrayList<Path> paths = new ArrayList<Path>();
 
 		for(int i = 0; i < files.length; i++) {
 			paths.add(new Path(files[i]));
 		}
 
 		if(paths.size() > 0) {
-			IPath[] ipaths = (IPath[])paths.toArray(new IPath[0]);
+			IPath[] ipaths = paths.toArray(new IPath[0]);
 			ScriptActionsViewEvent e = new ScriptActionsViewEvent(ScriptActionsViewEventTypes.DROP);
 
 			e.setPaths(ipaths);

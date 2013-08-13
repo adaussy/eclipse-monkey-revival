@@ -148,7 +148,7 @@ public class File extends ScriptableObject {
 	 */
 	public Scriptable jsFunction_readLines() {
 		Context cx = Context.getCurrentContext();
-		ArrayList lines = new ArrayList();
+		ArrayList<String> lines = new ArrayList<String>();
 		BufferedReader br = null;
 
 		try {

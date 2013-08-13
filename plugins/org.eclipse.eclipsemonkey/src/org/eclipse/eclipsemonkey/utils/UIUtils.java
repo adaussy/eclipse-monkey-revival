@@ -102,7 +102,7 @@ public class UIUtils {
 			/*
 			 * Fields
 			 */
-			public ArrayList targetView = new ArrayList();
+			public ArrayList<IWorkbenchPart> targetView = new ArrayList<IWorkbenchPart>();
 
 			/**
 			 * run
@@ -144,7 +144,7 @@ public class UIUtils {
 		Display display = Display.getDefault();
 		display.syncExec(getter);
 
-		IWorkbenchPart[] parts = (IWorkbenchPart[])getter.targetView.toArray(new IWorkbenchPart[0]);
+		IWorkbenchPart[] parts = getter.targetView.toArray(new IWorkbenchPart[0]);
 		return parts;
 	}
 

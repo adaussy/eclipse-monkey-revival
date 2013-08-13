@@ -28,7 +28,7 @@ import org.python.core.PySystemState;
  */
 public class PythonClassLoader extends ClassLoader {
 
-	private ArrayList _bundles;
+	private ArrayList<Bundle> _bundles;
 
 	/**
 	 * ScriptClassLoader
@@ -36,7 +36,7 @@ public class PythonClassLoader extends ClassLoader {
 	public PythonClassLoader() {
 		super(PythonClassLoader.class.getClassLoader());
 
-		this._bundles = new ArrayList();
+		this._bundles = new ArrayList<Bundle>();
 	}
 
 	/**
@@ -98,10 +98,10 @@ public class PythonClassLoader extends ClassLoader {
 		URL result = super.findResource(name);
 
 		if(result == null) {
-			Iterator iterator = this._bundles.iterator();
+			Iterator<Bundle> iterator = this._bundles.iterator();
 
 			while(iterator.hasNext()) {
-				Bundle bundle = (Bundle)iterator.next();
+				Bundle bundle = iterator.next();
 
 				result = bundle.getResource(name);
 
@@ -125,10 +125,10 @@ public class PythonClassLoader extends ClassLoader {
 		Enumeration result = super.findResources(name);
 
 		if(result == null) {
-			Iterator iterator = this._bundles.iterator();
+			Iterator<Bundle> iterator = this._bundles.iterator();
 
 			while(iterator.hasNext()) {
-				Bundle bundle = (Bundle)iterator.next();
+				Bundle bundle = iterator.next();
 
 				result = bundle.getResources(name);
 
@@ -203,10 +203,10 @@ public class PythonClassLoader extends ClassLoader {
 	 */
 	private Class loadClassFromBundles(String name) {
 		Class result = null;
-		Iterator iterator = this._bundles.iterator();
+		Iterator<Bundle> iterator = this._bundles.iterator();
 
 		while(iterator.hasNext()) {
-			Bundle bundle = (Bundle)iterator.next();
+			Bundle bundle = iterator.next();
 
 			try {
 				result = bundle.loadClass(name);

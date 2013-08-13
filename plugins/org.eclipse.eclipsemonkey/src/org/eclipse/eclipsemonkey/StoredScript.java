@@ -34,5 +34,5 @@ public class StoredScript {
 	/**
 	 * 
 	 */
-	public HashMap extra = new HashMap();
+	public HashMap<String, Object> extra = new HashMap<String, Object>();
 }

@@ -22,7 +22,7 @@ import org.osgi.framework.Bundle;
  */
 public class BundleClassLoader extends ClassLoader {
 
-	private ArrayList _bundles;
+	private ArrayList<Bundle> _bundles;
 
 	/**
 	 * ScriptClassLoader
@@ -30,7 +30,7 @@ public class BundleClassLoader extends ClassLoader {
 	public BundleClassLoader() {
 		super(BundleClassLoader.class.getClassLoader());
 
-		this._bundles = new ArrayList();
+		this._bundles = new ArrayList<Bundle>();
 	}
 
 	/**
@@ -55,8 +55,8 @@ public class BundleClassLoader extends ClassLoader {
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
-	protected Class findClass(String name) throws ClassNotFoundException {
-		Class result = this.loadClassFromBundles(name);
+	protected Class<?> findClass(String name) throws ClassNotFoundException {
+		Class<?> result = this.loadClassFromBundles(name);
 
 		if(result == null) {
 			throw new ClassNotFoundException(StringUtils.format("Messages.BundleClassLoader_UnableToFindClass", name));
@@ -75,7 +75,7 @@ public class BundleClassLoader extends ClassLoader {
 		URL result = super.findResource(name);
 
 		if(result == null) {
-			Iterator iterator = this._bundles.iterator();
+			Iterator<Bundle> iterator = this._bundles.iterator();
 
 			while(iterator.hasNext()) {
 				Bundle bundle = (Bundle)iterator.next();
@@ -99,10 +99,10 @@ public class BundleClassLoader extends ClassLoader {
 	 * @throws IOException
 	 */
 	protected Enumeration findResources(String name) throws IOException {
-		Enumeration result = super.findResources(name);
+		Enumeration<URL> result = super.findResources(name);
 
 		if(result == null) {
-			Iterator iterator = this._bundles.iterator();
+			Iterator<Bundle> iterator = this._bundles.iterator();
 
 			while(iterator.hasNext()) {
 				Bundle bundle = (Bundle)iterator.next();
@@ -174,7 +174,7 @@ public class BundleClassLoader extends ClassLoader {
 	 */
 	private Class loadClassFromBundles(String name) throws ClassNotFoundException {
 		Class result = null;
-		Iterator iterator = this._bundles.iterator();
+		Iterator<Bundle> iterator = this._bundles.iterator();
 
 		while(iterator.hasNext()) {
 			Bundle bundle = (Bundle)iterator.next();

@@ -68,7 +68,7 @@ public class JavaScriptGlobal extends ScriptableObject {
 
 	private JavaScriptPrintStream _err;
 
-	private Map _runningSetTimeouts = new HashMap();
+	private Map<Integer, Thread> _runningSetTimeouts = new HashMap<Integer, Thread>();
 
 	private int _setTimeoutIndex;
 

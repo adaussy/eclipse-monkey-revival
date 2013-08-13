@@ -56,9 +56,9 @@ public class ScriptMetadata {
 
 	private String scopeName;
 
-	private List doms = new ArrayList();
+	private List<DOMDescriptor> doms = new ArrayList<DOMDescriptor>();
 
-	private List subscriptions = new ArrayList();
+	private List<Subscription> subscriptions = new ArrayList<Subscription>();
 
 	private String accelerator;
 
@@ -122,7 +122,7 @@ public class ScriptMetadata {
 	/**
 	 * @return List
 	 */
-	public List getDOMs() {
+	public List<DOMDescriptor> getDOMs() {
 		return doms;
 	}
 
@@ -149,7 +149,7 @@ public class ScriptMetadata {
 	 * @return boolean
 	 */
 	public boolean containsDOM_by_plugin(String plugin_id) {
-		for(Iterator iter = doms.iterator(); iter.hasNext();) {
+		for(Iterator<DOMDescriptor> iter = doms.iterator(); iter.hasNext();) {
 			DOMDescriptor element = (DOMDescriptor)iter.next();
 			if(element.plugin_name.equals(plugin_id))
 				return true;
@@ -164,7 +164,7 @@ public class ScriptMetadata {
 	public boolean ensure_doms_are_loaded(IWorkbenchWindow window) {
 		String missing_plugin_names = "";
 		URLtoPluginMap missing_urls = new URLtoPluginMap();
-		for(Iterator iter = doms.iterator(); iter.hasNext();) {
+		for(Iterator<DOMDescriptor> iter = doms.iterator(); iter.hasNext();) {
 			DOMDescriptor element = (DOMDescriptor)iter.next();
 			Bundle b = Platform.getBundle(element.plugin_name);
 			if(b == null) {
@@ -190,17 +190,17 @@ public class ScriptMetadata {
 
 	class URLtoPluginMap {
 
-		Map map = new HashMap();
+		Map<String, Set<String>> map = new HashMap<String, Set<String>>();
 
-		Iterator iterator() {
+		Iterator<String> iterator() {
 			return map.keySet().iterator();
 		}
 
 		String getPluginNames(String url) {
-			Set ids = (Set)map.get(url);
+			Set<String> ids = map.get(url);
 			String idstr = "";
-			for(Iterator iterator = ids.iterator(); iterator.hasNext();) {
-				String id = (String)iterator.next();
+			for(Iterator<String> iterator = ids.iterator(); iterator.hasNext();) {
+				String id = iterator.next();
 				idstr += id + ", ";
 			}
 			idstr = idstr.substring(0, idstr.length() - 2);
@@ -208,9 +208,9 @@ public class ScriptMetadata {
 		}
 
 		void add(DOMDescriptor domdesc) {
-			Set ids = (Set)map.get(domdesc.url);
+			Set<String> ids = map.get(domdesc.url);
 			if(ids == null)
-				ids = new HashSet();
+				ids = new HashSet<String>();
 			ids.add(domdesc.plugin_name);
 			map.put(domdesc.url, ids);
 		}
@@ -232,8 +232,8 @@ public class ScriptMetadata {
 	private void launchUpdateInstaller(URLtoPluginMap missing_urls) {
 		UpdateSearchScope scope = new UpdateSearchScope();
 		String[] skips = {};
-		for(Iterator iter = missing_urls.iterator(); iter.hasNext();) {
-			String url = (String)iter.next();
+		for(Iterator<String> iter = missing_urls.iterator(); iter.hasNext();) {
+			String url = iter.next();
 			try {
 				String idstr = missing_urls.getPluginNames(url);
 				String plural2 = idstr.indexOf(",") >= 0 ? "s" : "";
@@ -281,7 +281,7 @@ public class ScriptMetadata {
 	/**
 	 * @return List
 	 */
-	public List getSubscriptions() {
+	public List<Subscription> getSubscriptions() {
 		return subscriptions;
 	}
 

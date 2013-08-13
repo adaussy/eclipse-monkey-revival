@@ -33,7 +33,7 @@ public class Editors extends ScriptableObject {
 	 */
 	private static final long serialVersionUID = -1034231442157154583L;
 
-	private Hashtable _editorsByType;
+	private Hashtable<String, EditorType> _editorsByType;
 
 	/*
 	 * Properties
@@ -89,7 +89,7 @@ public class Editors extends ScriptableObject {
 	 */
 	public static Scriptable getAll(ScriptableObject thisObj) {
 		final IWorkbench workbench = PlatformUI.getWorkbench();
-		final ArrayList editors = new ArrayList();
+		final ArrayList<Editor> editors = new ArrayList<Editor>();
 		Display display = workbench.getDisplay();
 		final Scriptable scope = thisObj.getParentScope();
 

@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit;resolution:=optional,
  org.eclipse.core.filesystem;bundle-version="1.4.0",
  com.google.guava;bundle-version="11.0.2"
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.eclipsemonkey,
  org.eclipse.eclipsemonkey.dom,
  org.eclipse.eclipsemonkey.language,

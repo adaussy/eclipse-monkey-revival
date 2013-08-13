@@ -26,14 +26,14 @@ public class DynamicState implements IDynamicState {
 
 	private static final String CONTEXT_ID_KEY = "The jaws that bite, the claws that catch!";
 
-	Stack context_stack = null;
+	Stack<Map<String, Object>> context_stack = null;
 
 	/**
 	 * DynamicState
 	 */
 	public DynamicState() {
-		context_stack = new Stack();
-		context_stack.push(new Hashtable());
+		context_stack = new Stack<Map<String, Object>>();
+		context_stack.push(new Hashtable<String, Object>());
 	}
 
 	/**
@@ -43,8 +43,8 @@ public class DynamicState implements IDynamicState {
 		top().put(name, value);
 	}
 
-	private Map top() {
-		return ((Map)(context_stack.lastElement()));
+	private Map<String, Object> top() {
+		return (context_stack.lastElement());
 	}
 
 	/**
@@ -58,10 +58,10 @@ public class DynamicState implements IDynamicState {
 	 * @see org.eclipse.eclipsemonkey.dom.IDynamicState#begin(java.lang.Object)
 	 */
 	public void begin(Object id) {
-		Map oldtop = top();
-		Map top = new Hashtable();
-		for(Iterator iter = oldtop.keySet().iterator(); iter.hasNext();) {
-			Object key = (Object)iter.next();
+		Map<String, Object> oldtop = top();
+		Map<String, Object> top = new Hashtable<String, Object>();
+		for(Iterator<String> iter = oldtop.keySet().iterator(); iter.hasNext();) {
+			String key = iter.next();
 			top.put(key, oldtop.get(key));
 		}
 		top.put(CONTEXT_ID_KEY, id);
@@ -73,8 +73,8 @@ public class DynamicState implements IDynamicState {
 	 */
 	public void end(Object id) {
 		Object to_remove = null;
-		for(Iterator iter = context_stack.iterator(); iter.hasNext();) {
-			Map element = (Map)iter.next();
+		for(Iterator<Map<String, Object>> iter = context_stack.iterator(); iter.hasNext();) {
+			Map<String, Object> element = iter.next();
 			if(element.get(CONTEXT_ID_KEY) == id)
 				to_remove = element;
 		}
