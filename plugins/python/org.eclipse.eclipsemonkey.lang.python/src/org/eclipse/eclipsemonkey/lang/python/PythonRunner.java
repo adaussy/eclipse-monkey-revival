@@ -15,6 +15,7 @@ package org.eclipse.eclipsemonkey.lang.python;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -25,6 +26,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.eclipsemonkey.EclipseMonkeyPlugin;
 import org.eclipse.eclipsemonkey.IMonkeyScriptRunner;
 import org.eclipse.eclipsemonkey.RunMonkeyException;
@@ -39,9 +41,8 @@ import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-
+import org.python.core.PyException;
 import org.python.util.PythonInterpreter;
-import org.python.core.*;
 
 /**
  *
@@ -87,8 +88,8 @@ public class PythonRunner implements IMonkeyScriptRunner {
 		Object result = null;
 		
 		try {
-			String fileName = this.path.toPortableString();
-			Map scriptStore = EclipseMonkeyPlugin.getDefault().getScriptStore();
+			URI fileName =org.eclipse.core.filesystem.URIUtil.toURI(this.path);
+			 Map<URI, StoredScript> scriptStore = EclipseMonkeyPlugin.getDefault().getScriptStore();
 
 			storedScript = (StoredScript) (scriptStore.get(fileName));
 			

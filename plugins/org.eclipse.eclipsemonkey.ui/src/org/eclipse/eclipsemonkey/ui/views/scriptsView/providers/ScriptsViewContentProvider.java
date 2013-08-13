@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.eclipsemonkey.ui.views.scriptsView.providers;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -37,15 +38,16 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 
 	private Pattern submenu_pattern = Pattern.compile("^(.+?)>(.*)$");
 
-	private ScriptActionsManager _scriptActionsManager = ScriptActionsManager.getInstance();
+	private ScriptActionsManager _scriptActionsManager = null;
 
-	private Viewer viewer;
+	public ScriptsViewContentProvider() {
+		_scriptActionsManager = ScriptActionsManager.getInstance();
+	}
 
 	/**
 	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		this.viewer = v;
 	}
 
 	/**
@@ -63,8 +65,6 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 
 		// Get actions and action sets
 		IScriptAction[] actions = _scriptActionsManager.getAll();
-		
-		viewer.refresh();
 		if(actions != null && actions.length > 0) {
 			return actions;
 		}
@@ -74,7 +74,7 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 	private void updateActionSets() {
 		ArrayList<String> foundItems = new ArrayList<String>();
 
-		Map scriptStore = EclipseMonkeyPlugin.getDefault().getScriptStore();
+		Map<URI, StoredScript> scriptStore = EclipseMonkeyPlugin.getDefault().getScriptStore();
 		Object[] scripts = scriptStore.values().toArray();
 
 		for(int i = 0; i < scripts.length; i++) {
@@ -91,7 +91,7 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 				Matcher match = submenu_pattern.matcher(menuName);
 
 				if(match.find()) {
-					
+
 					String primary_key = match.group(1).trim();
 					String secondary_key = match.group(2).trim();
 
@@ -165,4 +165,5 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 			return false;
 		}
 	}
+
 }

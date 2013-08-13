@@ -13,10 +13,12 @@
 package org.eclipse.eclipsemonkey.lang.javascript;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -96,10 +98,10 @@ public class JavaScriptRunner implements IMonkeyScriptRunner {
 			Context cx = Context.enter();
 
 			Scriptable sharedScope = null;
-			String fileName = this.path.toPortableString();
-			Map scriptStore = EclipseMonkeyPlugin.getDefault().getScriptStore();
+			URI uri = URIUtil.toURI(this.path.toPortableString());
+			Map<URI, StoredScript> scriptStore = EclipseMonkeyPlugin.getDefault().getScriptStore();
 
-			storedScript = (StoredScript)(scriptStore.get(fileName));
+			storedScript = (StoredScript)(scriptStore.get(uri));
 
 			if(!storedScript.metadata.ensure_doms_are_loaded(window)) {
 				return null;
@@ -108,7 +110,7 @@ public class JavaScriptRunner implements IMonkeyScriptRunner {
 			String sharedScopeName = storedScript.metadata.getScopeName();
 
 			if(sharedScopeName != null) {
-				Map scopeStore = EclipseMonkeyPlugin.getDefault().getScopeStore();
+				Map<String, Object> scopeStore = EclipseMonkeyPlugin.getDefault().getScopeStore();
 				sharedScope = (Scriptable)scopeStore.get(sharedScopeName);
 
 				if(sharedScope == null) {
@@ -139,20 +141,21 @@ public class JavaScriptRunner implements IMonkeyScriptRunner {
 
 				if(needs_compiling) {
 					String contents = Utilities.getFileContents(path);
-					Script compiledScript = cx.compileString(contents, fileName, 1, null);
+					Script compiledScript = cx.compileString(contents, URIUtil.toPath(uri).toPortableString(), 1, null);
 
 					// place path in script's global
 					compiledScope.put(JavaScriptGlobal.LOCATION_PROPERTY, compiledScope, this.path);
 
 					compiledScript.exec(cx, compiledScope);
 					storedScript.extra.put("compiledScript", compiledScript);
-					EclipseMonkeyPlugin.getDefault().notifyScriptsChanged();
+					//Ckeck if necessary?
+//					EclipseMonkeyPlugin.getDefault().notifyScriptsChanged();
 				}
 
 				Object fObj = compiledScope.get(entryName, compiledScope);
 
 				if(!(fObj instanceof Function)) {
-					throw new EvaluatorException("function " + entryName + "() is not defined in ", fileName, 0, "", 0);
+					throw new EvaluatorException("function " + entryName + "() is not defined in ", uri.getPath(), 0, "", 0);
 				} else {
 					Function f = (Function)fObj;
 					result = f.call(cx, compiledScope, compiledScope, functionArgs);

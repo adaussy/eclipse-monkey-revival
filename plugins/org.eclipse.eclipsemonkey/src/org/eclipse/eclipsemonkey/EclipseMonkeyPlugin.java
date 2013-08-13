@@ -13,6 +13,7 @@
 package org.eclipse.eclipsemonkey;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,13 +32,19 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+
+import com.google.common.collect.Lists;
+
 
 /**
  * The main plugin class to be used in the desktop.
@@ -59,13 +66,13 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	// The shared instance.
 	private static EclipseMonkeyPlugin plugin;
 
-	private static Map _scriptStore = new HashMap();
+	private static Map<URI,StoredScript> _scriptStore = new HashMap<URI,StoredScript>();
 
-	private static Set _storeListeners = new HashSet();
+	private static Set<IScriptStoreListener> _storeListeners = new HashSet<IScriptStoreListener>();
 
-	private static Map _languageStore = new HashMap();
+	private static Map<String,IMonkeyLanguageFactory> _languageStore = new HashMap<String,IMonkeyLanguageFactory>();
 
-	private static Map _scopeStore = new HashMap();
+	private static Map<String,Object> _scopeStore = new HashMap<String,Object>();
 
 	/**
 	 * 
@@ -80,7 +87,7 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	 * 
 	 * @return a map of loaded languages
 	 */
-	public Map getLanguageStore() {
+	public Map<String,IMonkeyLanguageFactory> getLanguageStore() {
 		return _languageStore;
 	}
 
@@ -89,7 +96,7 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	 * 
 	 * @return a map of loaded scripts
 	 */
-	public Map getScriptStore() {
+	public Map<URI,StoredScript> getScriptStore() {
 		return _scriptStore;
 	}
 
@@ -98,7 +105,7 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	 * 
 	 * @return a map of loaded scopes
 	 */
-	public Map getScopeStore() {
+	public Map<String,Object> getScopeStore() {
 		return _scopeStore;
 	}
 
@@ -144,12 +151,17 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	 * @see org.eclipse.ui.IStartup#earlyStartup()
 	 */
 	public void earlyStartup() {
-		String[] extensions = loadLanguageSupport();
+		ArrayList<String> extensions = Lists.newArrayList(loadLanguageSupport());
 		String[] alternateScriptPaths = findAlternateScriptPaths();
 
 		UpdateMonkeyActionsResourceChangeListener listener = new UpdateMonkeyActionsResourceChangeListener();
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(listener, IResourceChangeEvent.POST_CHANGE);
-		listener.rescanAllFiles(extensions, alternateScriptPaths);
+		try {
+			listener.rescanAllFiles( extensions, alternateScriptPaths);
+		} catch (CoreException e) {
+			e.printStackTrace();
+			ErrorDialog.openError(Display.getDefault().getActiveShell(), "Error searching for script", "An error occured during searching script in the workspace", new Status(Status.ERROR, EclipseMonkeyPlugin.PLUGIN_ID, e.getMessage()));
+		}
 
 		UpdateMonkeyActionsResourceChangeListener.setExtensions(extensions);
 		UpdateMonkeyActionsResourceChangeListener.createTheMonkeyMenu();
@@ -161,13 +173,13 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	 * @param name
 	 * @param script
 	 */
-	public void addScript(String name, StoredScript script) {
+	public void addScript(URI name, StoredScript script) {
 		/*
 		 * we are using the full file path as the key into the store
 		 * the consequence is that renames or moves are considered deletes and adds
 		 * is this what we want?
 		 */
-		Map store = getScriptStore();
+		Map<URI, StoredScript> store = getScriptStore();
 		StoredScript oldScript = (StoredScript)store.get(name);
 		if(oldScript != null) {
 			oldScript.metadata.unsubscribe();
@@ -180,8 +192,8 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	/**
 	 * @param name
 	 */
-	public void removeScript(String name) {
-		Map store = getScriptStore();
+	public void removeScript(URI name) {
+		Map<URI, StoredScript> store = getScriptStore();
 		StoredScript oldScript = (StoredScript)store.remove(name);
 		if(oldScript == null)
 			return;
@@ -193,8 +205,8 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	 * 
 	 */
 	public void clearScripts() {
-		for(Iterator iter = getScriptStore().values().iterator(); iter.hasNext();) {
-			StoredScript script = (StoredScript)iter.next();
+		for(Iterator<StoredScript> iter = getScriptStore().values().iterator(); iter.hasNext();) {
+			StoredScript script = iter.next();
 			script.metadata.unsubscribe();
 		}
 		getScriptStore().clear();
@@ -205,7 +217,7 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	 * 
 	 */
 	public void notifyScriptsChanged() {
-		for(Iterator iter = _storeListeners.iterator(); iter.hasNext();) {
+		for(Iterator<IScriptStoreListener> iter = _storeListeners.iterator(); iter.hasNext();) {
 			IScriptStoreListener element = (IScriptStoreListener)iter.next();
 			element.storeChanged();
 		}
@@ -232,8 +244,8 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 			public void run() {
-				for(Iterator iter = getDefault().getScriptStore().values().iterator(); iter.hasNext();) {
-					StoredScript script = (StoredScript)iter.next();
+				for(Iterator<StoredScript> iter = getDefault().getScriptStore().values().iterator(); iter.hasNext();) {
+					StoredScript script = iter.next();
 					String onLoadFunction = script.metadata.getOnLoadFunction();
 					if(onLoadFunction != null) {
 						MenuRunMonkeyScript runner = new MenuRunMonkeyScript(script.scriptPath);
@@ -255,7 +267,7 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	 * @return List of alternate paths to use to find scripts
 	 */
 	private String[] findAlternateScriptPaths() {
-		ArrayList list = new ArrayList();
+		ArrayList<String> list = new ArrayList<String>();
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint point = registry.getExtensionPoint("org.eclipse.eclipsemonkey.scriptpath");

@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.eclipsemonkey.ui,
  org.eclipse.ui.console,
  org.junit;resolution:=optional,
- org.mozilla.javascript;bundle-version="1.6.2"
+ org.mozilla.javascript;bundle-version="1.6.2",
+ org.eclipse.core.filesystem;bundle-version="1.4.0"
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.eclipsemonkey.lang.javascript,
  org.eclipse.eclipsemonkey.lang.javascript.doms,

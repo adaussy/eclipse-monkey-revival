@@ -114,6 +114,16 @@
                tooltip="Paste Script from Clipboard"/>
       </objectContribution>
    </extension>
+   <extension
+         id="Eclipse_Monkey_Nature"
+         name="Eclipse Monkey Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.eclipse.eclipsemonkey.EclipseMonkeyProjectNature">
+         </run>
+      </runtime>
+   </extension>
   
 
 

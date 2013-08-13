@@ -14,17 +14,22 @@ package org.eclipse.eclipsemonkey;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.net.URI;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
+import org.eclipse.core.filesystem.URIUtil;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -33,6 +38,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.eclipsemonkey.actions.RecreateMonkeyMenuAction;
 import org.eclipse.eclipsemonkey.dom.Utilities;
 import org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory;
+import org.eclipse.eclipsemonkey.utils.URIScriptUtils;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -41,27 +47,20 @@ import org.eclipse.ui.PlatformUI;
  */
 public class UpdateMonkeyActionsResourceChangeListener implements IResourceChangeListener {
 
-	/**
-	 * Valid default monkey exceptions
-	 */
-	public static String extensions = "js|em";
+	protected static Set<String> extensionsSet = null;
+	static {
+		extensionsSet = new HashSet<String>();
+		extensionsSet.add("js");
+		extensionsSet.add("em");
+	}
 
 	/**
 	 * @param exts
 	 */
-	public static void setExtensions(String[] exts) {
+	public static void setExtensions(Collection<String> exts) {
 		if(exts == null)
 			return;
-
-		String extPattern = "";
-
-		for(int i = 0; i < exts.length; i++) {
-			extPattern += exts[i];
-			if(i < exts.length - 1)
-				extPattern += "|";
-		}
-
-		extensions = extPattern;
+		extensionsSet.addAll(exts);
 	}
 
 	/**
@@ -77,47 +76,56 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 				changes[0] = new Boolean(true);
 			}
 
-			private Pattern monkey_file_pattern = Pattern.compile("/.+/(monkey|scripts)/(.+\\.(" + extensions + "))");
 
-			public boolean visit(IResourceDelta delta) {
-				String fullPath = delta.getFullPath().toString();
-				Matcher matcher = monkey_file_pattern.matcher(fullPath);
-				if(matcher.matches()) {
-					IFile file = (IFile)delta.getResource();
-					fullPath = file.getLocation().toPortableString();
+			public boolean visit(IResourceDelta delta) throws CoreException {
+				IResource resource = delta.getResource();
+				if(resource instanceof IFile) {
+					IFile file = (IFile)resource;
+					if(EclipseMonkeyProjectNature.isEclipseMonkeyResource(file)) {
+						handleScriptResourceChange(delta, file);
+					} else if(".project".equals(file.getName())) {
+						//When the .project is modify then look for scripts
+						if(delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.CHANGED)
+						findScriptsInContainer(resource.getProject());
+					}
+				}
+				return true;
+			}
 
+			private void handleScriptResourceChange(IResourceDelta delta, IFile file) {
+				if(extensionsSet.contains(file.getFileExtension())) {
+					URI fileURI = URIScriptUtils.getAbsoluteURI(delta);
 					switch(delta.getKind()) {
 					case IResourceDelta.ADDED:
-						processNewOrChangedScript(fullPath, file.getLocation());
+						processNewOrChangedScript(fileURI, file.getLocation());
 						found_a_change();
 						break;
 					case IResourceDelta.REMOVED:
-						processRemovedScript(fullPath, file.getLocation());
+						processRemovedScript(fileURI, file.getLocation());
 						found_a_change();
 						break;
 					case IResourceDelta.CHANGED:
 						if((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
-							processRemovedScript(delta.getMovedFromPath().toString(), file.getLocation());
-							processNewOrChangedScript(fullPath, file.getLocation());
+							processRemovedScript(URIUtil.toURI(delta.getMovedFromPath()), file.getLocation());
+							processNewOrChangedScript(fileURI, file.getLocation());
 							found_a_change();
 						}
 						if((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
-							processRemovedScript(fullPath, file.getLocation());
-							processNewOrChangedScript(delta.getMovedToPath().toString(), file.getLocation());
+							processRemovedScript(fileURI, file.getLocation());
+							processNewOrChangedScript(URIUtil.toURI(delta.getMovedToPath()), file.getLocation());
 							found_a_change();
 						}
 						if((delta.getFlags() & IResourceDelta.REPLACED) != 0) {
-							processNewOrChangedScript(fullPath, file.getLocation());
+							processNewOrChangedScript(fileURI, file.getLocation());
 							found_a_change();
 						}
 						if((delta.getFlags() & IResourceDelta.CONTENT) != 0) {
-							processNewOrChangedScript(fullPath, file.getLocation());
+							processNewOrChangedScript(fileURI, file.getLocation());
 							found_a_change();
 						}
 						break;
 					}
 				}
-				return true;
 			}
 		};
 		try {
@@ -131,7 +139,7 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 		}
 	}
 
-	private void processNewOrChangedScript(String name, IPath path) {
+	private void processNewOrChangedScript(URI uri, IPath path) {
 		StoredScript store = new StoredScript();
 		store.scriptPath = path;
 		try {
@@ -143,27 +151,26 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 			store.metadata = new ScriptMetadata();
 			// log an error in the error log
 		}
-		EclipseMonkeyPlugin.getDefault().addScript(name, store);
+		EclipseMonkeyPlugin.getDefault().addScript(uri, store);
 	}
 
-	private void processRemovedScript(String name, IPath path) {
+	private void processRemovedScript(URI name, IPath path) {
 		EclipseMonkeyPlugin.getDefault().removeScript(name);
 	}
 
 	/**
 	 * @param extensions
 	 * @param alternatePaths
+	 * @throws CoreException
 	 */
-	public void rescanAllFiles(String[] extensions, String[] alternatePaths) {
+	public void rescanAllFiles(Collection<String> extensions, String[] alternatePaths) throws CoreException {
 		EclipseMonkeyPlugin.getDefault().clearScripts();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-
-		findScriptsInProjects("scripts", extensions, workspace);
-		findScriptsInProjects("monkey", extensions, workspace);
-		findScriptsInFolder(extensions, alternatePaths);
+		findScriptsInContainer(extensions, workspace.getRoot());
+		findScriptsInalternatePath(extensions, alternatePaths);
 	}
 
-	private void findScriptsInFolder(String[] extensions, String[] alternatePaths) {
+	private void findScriptsInalternatePath(Collection<String> extensions, String[] alternatePaths) {
 		for(int i = 0; i < alternatePaths.length; i++) {
 			String path = alternatePaths[i];
 
@@ -176,11 +183,12 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 				File f = new File(fullPath);
 
 				if(f.isFile()) {
-					for(int k = 0; k < extensions.length; k++) {
-						String ext = extensions[k].toLowerCase();
+					Iterator<String> extensionIterator = extensions.iterator();
+					while(extensionIterator.hasNext()) {
+						String ext = (String)extensionIterator.next();
 						if(f.getName().toLowerCase().endsWith("." + ext)) {
 							Path p = new Path(f.getAbsolutePath());
-							processNewOrChangedScript(p.toPortableString(), p);
+							processNewOrChangedScript(URIUtil.toURI(f.getAbsolutePath()), p);
 						}
 					}
 				}
@@ -188,32 +196,29 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 		}
 	}
 
-	private void findScriptsInProjects(String folderName, String[] extensions, IWorkspace workspace) {
-		for(int i = 0; i < workspace.getRoot().getProjects().length; i++) {
-			IProject project = workspace.getRoot().getProjects()[i];
-			IFolder folder = project.getFolder(folderName);
-			if(folder == null)
-				continue;
-			try {
-				for(int j = 0; j < folder.members().length; j++) {
-					IResource resource = folder.members()[j];
-					if(resource instanceof IFile) {
-						IFile file = (IFile)resource;
+	protected void findScriptsInContainer(IContainer container) throws CoreException {
+		findScriptsInContainer(extensionsSet, container);
+	}
 
-						for(int k = 0; k < extensions.length; k++) {
-							String ext = extensions[k].toLowerCase();
+	protected void findScriptsInContainer(final Collection<String> extensions, IContainer container) throws CoreException {
+		container.accept(new IResourceVisitor() {
 
-							if(file.getName().toLowerCase().endsWith("." + ext)) {
-								String fullPath = file.getLocation().toPortableString();
-								processNewOrChangedScript(fullPath, new Path(fullPath));
-							}
-						}
+			@Override
+			public boolean visit(IResource resource) throws CoreException {
+				if(resource instanceof IProject) {
+					IProject p = (IProject)resource;
+					return EclipseMonkeyProjectNature.isEclipseMonkeyProject(p);
+				} else if(resource instanceof IFile) {
+					IFile file = (IFile)resource;
+					if(extensions.contains(file.getFileExtension())) {
+						IPath location = file.getLocation();
+						URI scriptURI = URIUtil.toURI(location);
+						processNewOrChangedScript(scriptURI, location);
 					}
 				}
-			} catch (CoreException x) {
-				// ignore folders we cannot access
+				return true;
 			}
-		}
+		});
 	}
 
 	private ScriptMetadata getMetadataFrom(IPath path) throws CoreException, IOException {

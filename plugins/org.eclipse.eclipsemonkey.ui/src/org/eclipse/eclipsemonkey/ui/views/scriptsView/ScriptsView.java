@@ -174,7 +174,9 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 				public void run() {
 					if(viewer.getControl().isDisposed())
 						return;
+					_scriptActionsManager.clearAll();
 					viewer.refresh();
+					viewer.expandAll();
 				}
 			});
 		}

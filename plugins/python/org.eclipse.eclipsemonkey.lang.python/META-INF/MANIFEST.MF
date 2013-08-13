@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.eclipsemonkey,
  org.eclipse.eclipsemonkey.doms,
  org.eclipse.eclipsemonkey.ui,
- org.eclipse.ui.console
+ org.eclipse.ui.console,
+ org.eclipse.core.filesystem;bundle-version="1.4.0"
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: José Fonseca
