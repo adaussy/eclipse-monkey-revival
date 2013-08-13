@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.eclipsemonkey.EclipseMonkeyPlugin;
 import org.eclipse.eclipsemonkey.IMonkeyScriptRunner;
 import org.eclipse.eclipsemonkey.RunMonkeyException;
@@ -50,13 +49,16 @@ import org.python.util.PythonInterpreter;
 public class PythonRunner implements IMonkeyScriptRunner {
 
 	IPath path;
+
 	IWorkbenchWindow window;
+
 	StoredScript storedScript;
 
 	static MessageConsole console;
+
 	static MessageConsoleStream consoleOutStream;
+
 	static MessageConsoleStream consoleErrStream;
-	
 
 	/**
 	 * 
@@ -66,12 +68,12 @@ public class PythonRunner implements IMonkeyScriptRunner {
 	public PythonRunner(IPath path, IWorkbenchWindow window) {
 		this.path = path;
 		if(window == null) {
-			this.window =  PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			this.window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		} else {
 			this.window = window;
 		}
 	}
-	
+
 	/**
 	 * @see org.eclipse.eclipsemonkey.IMonkeyScriptRunner#getStoredScript()
 	 */
@@ -82,18 +84,17 @@ public class PythonRunner implements IMonkeyScriptRunner {
 	/**
 	 * @see org.eclipse.eclipsemonkey.IMonkeyScriptRunner#run(java.lang.String, java.lang.Object[])
 	 */
-	public Object run(String entryName, Object[] functionArgs) 
-			throws RunMonkeyException {
-		
-		Object result = null;
-		
-		try {
-			URI fileName =org.eclipse.core.filesystem.URIUtil.toURI(this.path);
-			 Map<URI, StoredScript> scriptStore = EclipseMonkeyPlugin.getDefault().getScriptStore();
+	public Object run(String entryName, Object[] functionArgs) throws RunMonkeyException {
 
-			storedScript = (StoredScript) (scriptStore.get(fileName));
-			
-			if (!storedScript.metadata.ensure_doms_are_loaded(window)) {
+		Object result = null;
+
+		try {
+			URI fileName = org.eclipse.core.filesystem.URIUtil.toURI(this.path);
+			Map<URI, StoredScript> scriptStore = EclipseMonkeyPlugin.getDefault().getScriptStore();
+
+			storedScript = (StoredScript)(scriptStore.get(fileName));
+
+			if(!storedScript.metadata.ensure_doms_are_loaded(window)) {
 				return null;
 			}
 
@@ -104,24 +105,20 @@ public class PythonRunner implements IMonkeyScriptRunner {
 
 				defineStandardGlobalVariables(interp);
 				defineExtensionGlobalVariables(interp, storedScript.metadata);
-				
+
 				interp.setOut(getConsoleOutStream());
 				interp.setErr(getConsoleErrStream());
-				
+
 				interp.execfile(new FileInputStream(path.toFile()), path.toPortableString());
-			}
-			finally {
+			} finally {
 				undefineDynamicVariables(path);
 			}
-		}
-		catch (PyException x) {
+		} catch (PyException x) {
+			error(x, this.path.toString(), x.toString());
+		} catch (IOException x) {
 			error(x, this.path.toString(), x.toString());
 		}
-		catch (IOException x)
-		{
-			error(x, this.path.toString(), x.toString());
-		}
-		
+
 		return result;
 	}
 
@@ -130,37 +127,29 @@ public class PythonRunner implements IMonkeyScriptRunner {
 		//interp.set("loadBundle", this.loadBundle)
 	}
 
-	private void defineExtensionGlobalVariables(PythonInterpreter interp,
-			ScriptMetadata metadata) throws IOException 
-	{
+	private void defineExtensionGlobalVariables(PythonInterpreter interp, ScriptMetadata metadata) throws IOException {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint point = registry
-				.getExtensionPoint("org.eclipse.eclipsemonkey.dom");
-		if (point != null) {
+		IExtensionPoint point = registry.getExtensionPoint("org.eclipse.eclipsemonkey.dom");
+		if(point != null) {
 			IExtension[] extensions = point.getExtensions();
-			for (int i = 0; i < extensions.length; i++) {
+			for(int i = 0; i < extensions.length; i++) {
 				IExtension extension = extensions[i];
-				IConfigurationElement[] configurations = extension
-						.getConfigurationElements();
-				for (int j = 0; j < configurations.length; j++) {
+				IConfigurationElement[] configurations = extension.getConfigurationElements();
+				for(int j = 0; j < configurations.length; j++) {
 					IConfigurationElement element = configurations[j];
 					try {
 						IExtension declaring = element.getDeclaringExtension();
 
-						String declaring_plugin_id = declaring
-								.getDeclaringPluginDescriptor()
-								.getUniqueIdentifier();
-//						String declaring_plugin_id = declaring.getNamespaceIdentifier();
-						
-						if (metadata.containsDOM_by_plugin(declaring_plugin_id)) {
-							String variableName = element
-									.getAttribute("variableName");
-							Object object = element
-									.createExecutableExtension("class");
-							IMonkeyDOMFactory factory = (IMonkeyDOMFactory) object;
-							
+						String declaring_plugin_id = declaring.getDeclaringPluginDescriptor().getUniqueIdentifier();
+						//						String declaring_plugin_id = declaring.getNamespaceIdentifier();
+
+						if(metadata.containsDOM_by_plugin(declaring_plugin_id)) {
+							String variableName = element.getAttribute("variableName");
+							Object object = element.createExecutableExtension("class");
+							IMonkeyDOMFactory factory = (IMonkeyDOMFactory)object;
+
 							Object rootObject = factory.getDOMroot();
-							
+
 							interp.set(variableName, rootObject);
 						}
 					} catch (InvalidRegistryObjectException x) {
@@ -172,7 +161,7 @@ public class PythonRunner implements IMonkeyScriptRunner {
 			}
 		}
 	}
-	
+
 	private void defineDynamicVariables(IPath path) {
 		Utilities.state().begin(path);
 		Utilities.state().set(Utilities.SCRIPT_NAME, path.toPortableString());
@@ -182,37 +171,36 @@ public class PythonRunner implements IMonkeyScriptRunner {
 		Utilities.state().end(path);
 	}
 
-	private void error(Exception x, String fileName, String string)
-			throws RunMonkeyException {
+	private void error(Exception x, String fileName, String string) throws RunMonkeyException {
 
-		RunMonkeyException e = new RunMonkeyException(x.getClass().getName(), fileName, null,
-				string);
+		RunMonkeyException e = new RunMonkeyException(x.getClass().getName(), fileName, null, string);
 
-		MessageConsoleStream cs = getConsoleErrStream();		
+		MessageConsoleStream cs = getConsoleErrStream();
 		cs.println(e.toString());
 
 		throw e;
 	}
-	
+
 	/**
 	 * Returns a reference to the current console, initializing it if it's not created
 	 * 
 	 * @return A console stream
 	 */
 	public static MessageConsole getConsole() {
-		if (console == null) {
+		if(console == null) {
 			console = new MessageConsole("Eclipse Monkey Python Console", null);
 			consoleOutStream = console.newMessageStream();
 			consoleErrStream = console.newMessageStream();
 
 			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+
 				public void run() {
 					consoleOutStream.setColor(PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_BLACK));
 					consoleErrStream.setColor(PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_RED));
 				}
 			});
 
-			ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[] { console });
+			ConsolePlugin.getDefault().getConsoleManager().addConsoles(new IConsole[]{ console });
 		}
 
 		return console;

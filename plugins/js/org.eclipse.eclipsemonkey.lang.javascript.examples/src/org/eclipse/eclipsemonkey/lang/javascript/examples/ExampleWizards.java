@@ -18,26 +18,24 @@ import org.osgi.framework.Bundle;
 
 /**
  * Wizard to create the default eclipse monkey scrip
+ * 
  * @author adaussy
- *
+ * 
  */
 public class ExampleWizards extends AbstractEclipseMonkeyNewSampleWizard implements INewWizard {
 
 	public ExampleWizards() {
 	}
 
-
 	@Override
 	protected String getManifestPath() {
 		return "samples/manifest.txt";
 	}
 
-
 	@Override
 	protected String getScriptContainerFolder() {
 		return "samples/";
 	}
-
 
 	@Override
 	protected Bundle getBundle() {

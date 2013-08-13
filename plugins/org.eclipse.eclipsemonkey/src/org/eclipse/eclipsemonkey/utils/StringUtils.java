@@ -9,7 +9,6 @@
  */
 package org.eclipse.eclipsemonkey.utils;
 
-
 import java.text.MessageFormat;
 
 /**

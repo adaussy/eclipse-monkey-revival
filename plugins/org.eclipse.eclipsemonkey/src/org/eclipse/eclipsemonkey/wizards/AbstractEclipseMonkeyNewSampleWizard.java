@@ -38,8 +38,9 @@ import org.osgi.framework.Bundle;
 
 /**
  * Base class used to define a wizard for sample creation
+ * 
  * @author adaussy
- *
+ * 
  */
 public abstract class AbstractEclipseMonkeyNewSampleWizard extends BasicNewProjectResourceWizard {
 
@@ -53,10 +54,11 @@ public abstract class AbstractEclipseMonkeyNewSampleWizard extends BasicNewProje
 
 	/**
 	 * Path to manifest file to find scripts (Relative path to the bundle)
+	 * 
 	 * @return
 	 */
 	protected abstract String getManifestPath();
-	
+
 	protected abstract Bundle getBundle();
 
 	public boolean performFinish() {
@@ -81,14 +83,14 @@ public abstract class AbstractEclipseMonkeyNewSampleWizard extends BasicNewProje
 				if(string.length() > 0)
 					manifest.add(string);
 			}
-	
+
 			if(!project.exists()) {
 				project.create(null);
 			}
 			if(!project.isOpen()) {
 				project.open(null);
 			}
-	
+
 			String errors = "";
 			for(Iterator<String> iter = manifest.iterator(); iter.hasNext();) {
 				try {
@@ -104,8 +106,8 @@ public abstract class AbstractEclipseMonkeyNewSampleWizard extends BasicNewProje
 							folder.create(IResource.NONE, true, null);
 					}
 					IPath path = new Path(getScriptContainerFolder() + name);
-					
-					InputStream stream =  FileLocator.openStream(getBundle(), path, true);
+
+					InputStream stream = FileLocator.openStream(getBundle(), path, true);
 					IFile file = folder.getFile(words[words.length - 1]);
 					file.create(stream, false, null);
 					stream.close();

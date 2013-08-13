@@ -21,19 +21,19 @@ import org.eclipse.eclipsemonkey.DOMDescriptor;
 import org.eclipse.eclipsemonkey.IMonkeyScriptRunner;
 import org.eclipse.eclipsemonkey.ScriptMetadata;
 import org.eclipse.eclipsemonkey.Subscription;
-import org.eclipse.eclipsemonkey.lang.python.PythonRunner;
 import org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory;
 import org.eclipse.ui.IWorkbenchWindow;
 
 /**
  * @author José Fonseca
  * @author Paul Colton (Aptana, Inc.)
- *
+ * 
  */
 public class PythonLanguageFactory implements IMonkeyLanguageFactory {
 
 	/**
-	 * @see org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory#getRunMonkeyScript(org.eclipse.core.runtime.IPath, org.eclipse.ui.IWorkbenchWindow)
+	 * @see org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory#getRunMonkeyScript(org.eclipse.core.runtime.IPath,
+	 *      org.eclipse.ui.IWorkbenchWindow)
 	 */
 	public IMonkeyScriptRunner getRunMonkeyScript(IPath path, IWorkbenchWindow window) {
 		return new PythonRunner(path, window);
@@ -58,14 +58,14 @@ public class PythonLanguageFactory implements IMonkeyLanguageFactory {
 		Pattern domPattern = Pattern.compile("DOM:\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)", Pattern.DOTALL);
 		Pattern listenerPattern = Pattern.compile("Listener:\\s*(\\w+)\\(\\)\\.(\\w+)", Pattern.DOTALL);
 		Matcher cm = commentPattern.matcher(contents);
-		while (cm.find()) {
+		while(cm.find()) {
 			String comment = cm.group();
 			Matcher m = menuPattern.matcher(comment);
-			if (m.find()) {
+			if(m.find()) {
 				metadata.setMenuName(m.group(1));
 			}
 			m = onloadPattern.matcher(comment);
-			if (m.find()) {
+			if(m.find()) {
 				String funct = m.group(1);
 				// [IM] Listener takes an ending (), so we allow it here just to be consistent
 				if(funct.endsWith("()")) {
@@ -74,19 +74,19 @@ public class PythonLanguageFactory implements IMonkeyLanguageFactory {
 				metadata.setOnLoadFunction(funct);
 			}
 			m = keyPattern.matcher(comment);
-			if (m.find()) {
+			if(m.find()) {
 				metadata.setKey(m.group(1));
 			}
 			m = scopePattern.matcher(comment);
-			if (m.find()) {
+			if(m.find()) {
 				metadata.setScopeName(m.group(1));
 			}
 			m = domPattern.matcher(comment);
-			while (m.find()) {
+			while(m.find()) {
 				metadata.getDOMs().add(new DOMDescriptor(m.group(1), m.group(2)));
 			}
 			m = listenerPattern.matcher(comment);
-			while (m.find()) {
+			while(m.find()) {
 				metadata.getSubscriptions().add(new Subscription(m.group(1), m.group(2)));
 			}
 		}

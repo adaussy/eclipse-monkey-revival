@@ -17,10 +17,8 @@ import java.util.Properties;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-
-import org.osgi.framework.BundleContext;
 import org.osgi.framework.Bundle;
-
+import org.osgi.framework.BundleContext;
 import org.python.core.PySystemState;
 
 /**
@@ -40,12 +38,12 @@ public class PythonPlugin extends AbstractUIPlugin {
 		Properties preProperties = System.getProperties();
 
 		Properties postProperties = new Properties();
-		postProperties.put("python.home",getPluginRootDir());
+		postProperties.put("python.home", getPluginRootDir());
 
 		PythonClassLoader classLoader = new PythonClassLoader();
-		
+
 		PySystemState.initialize(preProperties, postProperties, new String[0], classLoader);
-		
+
 		Bundle[] bundles = context.getBundles();
 		for(int i = 0; i < bundles.length; ++i) {
 			classLoader.addBundle(bundles[i]);
@@ -53,14 +51,14 @@ public class PythonPlugin extends AbstractUIPlugin {
 	}
 
 	private String getPluginRootDir() {
-        try {
-        	Bundle bundle = getBundle();
+		try {
+			Bundle bundle = getBundle();
 			URL bundleURL = Platform.find(bundle, new Path("."));
-		    URL fileURL = Platform.asLocalURL(bundleURL);
-	        return fileURL.getPath();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+			URL fileURL = Platform.asLocalURL(bundleURL);
+			return fileURL.getPath();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 }

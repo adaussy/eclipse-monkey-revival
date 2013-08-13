@@ -12,7 +12,6 @@
 
 package org.eclipse.eclipsemonkey.actions;
 
-
 /**
  * PublishScriptForBlogger
  */

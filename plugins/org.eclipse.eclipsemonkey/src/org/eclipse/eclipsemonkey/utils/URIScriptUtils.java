@@ -19,17 +19,18 @@ import org.eclipse.core.runtime.URIUtil;
 
 /**
  * Utils class to handle URI
+ * 
  * @author adaussy
- *
+ * 
  */
 public class URIScriptUtils {
 
 	public static URI getAbsoluteURI(IResourceDelta delta) {
 		IResource resource = delta.getResource();
 		URI worspaceURI = resource.getWorkspace().getRoot().getLocationURI();
-		
+
 		try {
-			return URIUtil.makeAbsolute(new URI(delta.getFullPath().toString()),worspaceURI);
+			return URIUtil.makeAbsolute(new URI(delta.getFullPath().toString()), worspaceURI);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}

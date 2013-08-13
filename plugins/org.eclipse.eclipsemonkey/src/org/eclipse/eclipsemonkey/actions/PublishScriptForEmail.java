@@ -15,7 +15,6 @@ package org.eclipse.eclipsemonkey.actions;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
  * PublishScriptForEmail
  */

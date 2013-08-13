@@ -13,8 +13,9 @@ package org.eclipse.eclipsemonkey.ui;
 
 /**
  * Interface used to store all icons path
+ * 
  * @author adaussy
- *
+ * 
  */
 public interface IconPath {
 

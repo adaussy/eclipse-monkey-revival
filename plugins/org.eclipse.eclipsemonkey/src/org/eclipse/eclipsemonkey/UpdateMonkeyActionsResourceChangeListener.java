@@ -76,7 +76,6 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 				changes[0] = new Boolean(true);
 			}
 
-
 			public boolean visit(IResourceDelta delta) throws CoreException {
 				IResource resource = delta.getResource();
 				if(resource instanceof IFile) {
@@ -86,7 +85,7 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 					} else if(".project".equals(file.getName())) {
 						//When the .project is modify then look for scripts
 						if(delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.CHANGED)
-						findScriptsInContainer(resource.getProject());
+							findScriptsInContainer(resource.getProject());
 					}
 				}
 				return true;

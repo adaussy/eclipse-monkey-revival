@@ -303,7 +303,6 @@ public abstract class BrowserView extends ViewPart {
 		updateNavigationActionsState();
 	}
 
-
 	/**
 	 * Retrieves the image descriptor associated with resource from the image
 	 * descriptor registry. If the image descriptor cannot be retrieved, attempt

@@ -31,7 +31,7 @@ public class ScriptActionsManager {
 
 	private ArrayList<ScriptAction> _scriptActions = new ArrayList<ScriptAction>();
 
-	private HashMap<String,ScriptActionSet> _scriptActionSets = new HashMap<String,ScriptActionSet>();
+	private HashMap<String, ScriptActionSet> _scriptActionSets = new HashMap<String, ScriptActionSet>();
 
 	/**
 	 * Constructor

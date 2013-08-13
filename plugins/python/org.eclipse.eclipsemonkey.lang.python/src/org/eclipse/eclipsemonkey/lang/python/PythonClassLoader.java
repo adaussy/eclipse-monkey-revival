@@ -21,21 +21,19 @@ import java.util.Enumeration;
 import java.util.Iterator;
 
 import org.osgi.framework.Bundle;
-
 import org.python.core.PySystemState;
 
 /**
  * @author Kevin Lindsey based on code by Patrick Mueller
  */
-public class PythonClassLoader extends ClassLoader
-{
+public class PythonClassLoader extends ClassLoader {
+
 	private ArrayList _bundles;
 
 	/**
 	 * ScriptClassLoader
 	 */
-	public PythonClassLoader()
-	{
+	public PythonClassLoader() {
 		super(PythonClassLoader.class.getClassLoader());
 
 		this._bundles = new ArrayList();
@@ -43,31 +41,28 @@ public class PythonClassLoader extends ClassLoader
 
 	/**
 	 * addBundle
-	 *
+	 * 
 	 * @param bundle
 	 */
-	public void addBundle(Bundle bundle)
-	{
-		if (bundle == null)
-		{
+	public void addBundle(Bundle bundle) {
+		if(bundle == null) {
 			throw new IllegalArgumentException("ScriptClassLoader_Bundle_Not_Defined");
 		}
-		
-		if (this._bundles.contains(bundle) == false)
-		{
+
+		if(this._bundles.contains(bundle) == false) {
 			this._bundles.add(bundle);
-			
-			String packages = (String) bundle.getHeaders().get("Provide-Package");
-			if (packages != null) {
+
+			String packages = (String)bundle.getHeaders().get("Provide-Package");
+			if(packages != null) {
 				String[] names = packages.split(",");
-				for (int j = 0; j < names.length; ++j) {
+				for(int j = 0; j < names.length; ++j) {
 					PySystemState.add_package(names[j].trim());
 				}
 			}
-			packages = (String) bundle.getHeaders().get("Export-Package");
-			if (packages != null) {
+			packages = (String)bundle.getHeaders().get("Export-Package");
+			if(packages != null) {
 				String[] names = packages.split(",");
-				for (int j = 0; j < names.length; ++j) {
+				for(int j = 0; j < names.length; ++j) {
 					PySystemState.add_package(names[j].trim());
 				}
 			}
@@ -81,42 +76,36 @@ public class PythonClassLoader extends ClassLoader
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
-	protected Class findClass(String name) throws ClassNotFoundException
-	{
+	protected Class findClass(String name) throws ClassNotFoundException {
 		Class result = this.loadClassFromBundles(name);
 
-		if (result == null)
-		{
+		if(result == null) {
 			String message = "ScriptClassLoader_Unable_To_Find_Class: " + name;
-			
+
 			throw new ClassNotFoundException(message);
 		}
 
 		return result;
 	}
-	
+
 	/**
 	 * findResource
 	 * 
 	 * @param name
 	 * @return URL
 	 */
-	protected URL findResource(String name)
-	{
+	protected URL findResource(String name) {
 		URL result = super.findResource(name);
 
-		if (result == null)
-		{
+		if(result == null) {
 			Iterator iterator = this._bundles.iterator();
-			
-			while (iterator.hasNext())
-			{
-				Bundle bundle = (Bundle) iterator.next();
-				
+
+			while(iterator.hasNext()) {
+				Bundle bundle = (Bundle)iterator.next();
+
 				result = bundle.getResource(name);
 
-				if (result != null)
-				{
+				if(result != null) {
 					break;
 				}
 			}
@@ -132,31 +121,26 @@ public class PythonClassLoader extends ClassLoader
 	 * @return Enumeration
 	 * @throws IOException
 	 */
-	protected Enumeration findResources(String name) throws IOException
-	{
+	protected Enumeration findResources(String name) throws IOException {
 		Enumeration result = super.findResources(name);
 
-		if (result == null)
-		{
+		if(result == null) {
 			Iterator iterator = this._bundles.iterator();
-			
-			while (iterator.hasNext())
-			{
-				Bundle bundle = (Bundle) iterator.next();
-				
+
+			while(iterator.hasNext()) {
+				Bundle bundle = (Bundle)iterator.next();
+
 				result = bundle.getResources(name);
 
-				if (result != null)
-				{
+				if(result != null) {
 					break;
 				}
 			}
 		}
 
-		if (result == null)
-		{
+		if(result == null) {
 			String message = "ScriptClassLoader_Unable_To_Find_Resource: " + name;
-			
+
 			throw new IOException(message);
 		}
 
@@ -170,19 +154,16 @@ public class PythonClassLoader extends ClassLoader
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
-	public Class loadClass(String name) throws ClassNotFoundException
-	{
+	public Class loadClass(String name) throws ClassNotFoundException {
 		Class result = super.loadClass(name);
 
-		if (result == null)
-		{
+		if(result == null) {
 			result = this.loadClassFromBundles(name);
 		}
 
-		if (result == null)
-		{
+		if(result == null) {
 			String message = "ScriptClassLoader_Unable_To_Load_Class: " + name;
-			
+
 			throw new ClassNotFoundException(message);
 		}
 
@@ -197,19 +178,16 @@ public class PythonClassLoader extends ClassLoader
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
-	protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException
-	{
+	protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
 		Class result = super.loadClass(name, resolve);
 
-		if (result == null)
-		{
+		if(result == null) {
 			result = this.loadClassFromBundles(name);
 		}
 
-		if (result == null)
-		{
+		if(result == null) {
 			String message = "ScriptClassLoader_Unable_To_Load_Class: " + name;
-			
+
 			throw new ClassNotFoundException(message);
 		}
 
@@ -223,25 +201,19 @@ public class PythonClassLoader extends ClassLoader
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
-	private Class loadClassFromBundles(String name)
-	{
+	private Class loadClassFromBundles(String name) {
 		Class result = null;
 		Iterator iterator = this._bundles.iterator();
 
-		while (iterator.hasNext())
-		{
-			Bundle bundle = (Bundle) iterator.next();
+		while(iterator.hasNext()) {
+			Bundle bundle = (Bundle)iterator.next();
 
-			try
-			{
+			try {
 				result = bundle.loadClass(name);
-			}
-			catch(ClassNotFoundException e)
-			{
+			} catch (ClassNotFoundException e) {
 			}
 
-			if (result != null)
-			{
+			if(result != null) {
 				break;
 			}
 		}
@@ -249,4 +221,3 @@ public class PythonClassLoader extends ClassLoader
 		return result;
 	}
 }
-

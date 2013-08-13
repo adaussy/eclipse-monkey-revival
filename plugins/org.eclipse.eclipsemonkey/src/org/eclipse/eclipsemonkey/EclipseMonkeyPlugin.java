@@ -45,7 +45,6 @@ import org.osgi.framework.BundleContext;
 
 import com.google.common.collect.Lists;
 
-
 /**
  * The main plugin class to be used in the desktop.
  */
@@ -60,19 +59,19 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	 * Marker indicating the end of an Eclipse Monkey script
 	 */
 	public static final String PUBLISH_AFTER_MARKER = "--- And burbled as it ran! ---";
-	
-	public static final String PLUGIN_ID ="org.eclipse.eclipsemonkey";
+
+	public static final String PLUGIN_ID = "org.eclipse.eclipsemonkey";
 
 	// The shared instance.
 	private static EclipseMonkeyPlugin plugin;
 
-	private static Map<URI,StoredScript> _scriptStore = new HashMap<URI,StoredScript>();
+	private static Map<URI, StoredScript> _scriptStore = new HashMap<URI, StoredScript>();
 
 	private static Set<IScriptStoreListener> _storeListeners = new HashSet<IScriptStoreListener>();
 
-	private static Map<String,IMonkeyLanguageFactory> _languageStore = new HashMap<String,IMonkeyLanguageFactory>();
+	private static Map<String, IMonkeyLanguageFactory> _languageStore = new HashMap<String, IMonkeyLanguageFactory>();
 
-	private static Map<String,Object> _scopeStore = new HashMap<String,Object>();
+	private static Map<String, Object> _scopeStore = new HashMap<String, Object>();
 
 	/**
 	 * 
@@ -87,7 +86,7 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	 * 
 	 * @return a map of loaded languages
 	 */
-	public Map<String,IMonkeyLanguageFactory> getLanguageStore() {
+	public Map<String, IMonkeyLanguageFactory> getLanguageStore() {
 		return _languageStore;
 	}
 
@@ -96,7 +95,7 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	 * 
 	 * @return a map of loaded scripts
 	 */
-	public Map<URI,StoredScript> getScriptStore() {
+	public Map<URI, StoredScript> getScriptStore() {
 		return _scriptStore;
 	}
 
@@ -105,7 +104,7 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 	 * 
 	 * @return a map of loaded scopes
 	 */
-	public Map<String,Object> getScopeStore() {
+	public Map<String, Object> getScopeStore() {
 		return _scopeStore;
 	}
 
@@ -157,7 +156,7 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 		UpdateMonkeyActionsResourceChangeListener listener = new UpdateMonkeyActionsResourceChangeListener();
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(listener, IResourceChangeEvent.POST_CHANGE);
 		try {
-			listener.rescanAllFiles( extensions, alternateScriptPaths);
+			listener.rescanAllFiles(extensions, alternateScriptPaths);
 		} catch (CoreException e) {
 			e.printStackTrace();
 			ErrorDialog.openError(Display.getDefault().getActiveShell(), "Error searching for script", "An error occured during searching script in the workspace", new Status(Status.ERROR, EclipseMonkeyPlugin.PLUGIN_ID, e.getMessage()));
@@ -259,7 +258,6 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 			}
 		});
 	}
-
 
 	/**
 	 * findAlternateScriptPaths

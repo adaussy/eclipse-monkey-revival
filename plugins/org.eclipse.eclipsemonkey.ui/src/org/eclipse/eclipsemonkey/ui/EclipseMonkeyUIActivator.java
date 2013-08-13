@@ -75,7 +75,7 @@ public class EclipseMonkeyUIActivator extends AbstractUIPlugin {
 		}
 		return image;
 	}
-	
+
 	public static Image getLocalPluginIconImage(String iconPath) {
 		return getPluginIconImage(PLUGIN_ID, iconPath);
 	}
@@ -83,10 +83,9 @@ public class EclipseMonkeyUIActivator extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String pluginId, String iconPath) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin(pluginId, iconPath);
 	}
-	
-	public static ImageDescriptor getLocalImageDescriptor( String iconPath) {
+
+	public static ImageDescriptor getLocalImageDescriptor(String iconPath) {
 		return getImageDescriptor(PLUGIN_ID, iconPath);
-	} 
-	
+	}
 
 }
