@@ -101,7 +101,7 @@ public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
 		UpdateMonkeyActionsResourceChangeListener listener = new UpdateMonkeyActionsResourceChangeListener();
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(listener, IResourceChangeEvent.POST_CHANGE);
 		try {
-			listener.rescanAllFiles(extensions, alternateScriptPaths);
+			listener.rescanAllFiles(extensions, alternateScriptPaths, true);
 		} catch (CoreException e) {
 			e.printStackTrace();
 			ErrorDialog.openError(Display.getDefault().getActiveShell(), "Error searching for script", "An error occured during searching script in the workspace", new Status(Status.ERROR, EclipseMonkeyPlugin.PLUGIN_ID, e.getMessage()));

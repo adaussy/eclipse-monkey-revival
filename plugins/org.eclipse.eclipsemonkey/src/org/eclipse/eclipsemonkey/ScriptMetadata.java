@@ -14,8 +14,6 @@
 
 package org.eclipse.eclipsemonkey;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,17 +28,11 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.eclipsemonkey.utils.UIUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
-import org.eclipse.update.search.UpdateSearchRequest;
-import org.eclipse.update.search.UpdateSearchScope;
-import org.eclipse.update.ui.UpdateJob;
-import org.eclipse.update.ui.UpdateManagerUI;
 import org.osgi.framework.Bundle;
 
 /**
@@ -230,22 +222,7 @@ public class ScriptMetadata {
 	}
 
 	private void launchUpdateInstaller(URLtoPluginMap missing_urls) {
-		UpdateSearchScope scope = new UpdateSearchScope();
-		String[] skips = {};
-		for(Iterator<String> iter = missing_urls.iterator(); iter.hasNext();) {
-			String url = iter.next();
-			try {
-				String idstr = missing_urls.getPluginNames(url);
-				String plural2 = idstr.indexOf(",") >= 0 ? "s" : "";
-				scope.addSearchSite("Site providing DOM" + plural2 + " (" + idstr + ")", new URL(url), skips);
-			} catch (MalformedURLException x) {
-				// ignore
-			}
-		}
-		UpdateSearchRequest request = new UpdateSearchRequest(UpdateSearchRequest.createDefaultSiteSearchCategory(), scope);
-		UpdateJob job = new UpdateJob("Install Eclipse Monkey DOMs", request);
-		Shell shell = Workbench.getInstance().getWorkbenchWindows()[0].getShell();
-		UpdateManagerUI.openInstaller(shell, job);
+		throw new RuntimeException("The dynamique installation of dom has been disable for know. Will be reimplemented later");
 	}
 
 	private String notifyMissingDOMs(String missing_plugin_names) {

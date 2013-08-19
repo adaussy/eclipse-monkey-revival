@@ -69,7 +69,7 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 					} else if(".project".equals(file.getName())) {
 						//When the .project is modify then look for scripts
 						if(delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.CHANGED) {
-							findScriptsInContainer(resource.getProject());
+							findScriptsInContainer(resource.getProject(), true);
 							found_a_change();
 						}
 					}
@@ -81,7 +81,7 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 				URI fileURI = URIScriptUtils.getAbsoluteURI(delta);
 				switch(delta.getKind()) {
 				case IResourceDelta.ADDED:
-					processNewOrChangedScript(fileURI, file.getLocation());
+					processNewOrChangedScript(fileURI, file.getLocation(), true);
 					found_a_change();
 					break;
 				case IResourceDelta.REMOVED:
@@ -91,20 +91,20 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 				case IResourceDelta.CHANGED:
 					if((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
 						processRemovedScript(URIUtil.toURI(delta.getMovedFromPath()), file.getLocation());
-						processNewOrChangedScript(fileURI, file.getLocation());
+						processNewOrChangedScript(fileURI, file.getLocation(), true);
 						found_a_change();
 					}
 					if((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
 						processRemovedScript(fileURI, file.getLocation());
-						processNewOrChangedScript(URIUtil.toURI(delta.getMovedToPath()), file.getLocation());
+						processNewOrChangedScript(URIUtil.toURI(delta.getMovedToPath()), file.getLocation(), true);
 						found_a_change();
 					}
 					if((delta.getFlags() & IResourceDelta.REPLACED) != 0) {
-						processNewOrChangedScript(fileURI, file.getLocation());
+						processNewOrChangedScript(fileURI, file.getLocation(), true);
 						found_a_change();
 					}
 					if((delta.getFlags() & IResourceDelta.CONTENT) != 0) {
-						processNewOrChangedScript(fileURI, file.getLocation());
+						processNewOrChangedScript(fileURI, file.getLocation(), true);
 						found_a_change();
 					}
 					break;
@@ -122,7 +122,7 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 		}
 	}
 
-	private void processNewOrChangedScript(URI uri, IPath path) {
+	private void processNewOrChangedScript(URI uri, IPath path, boolean notify) {
 		StoredScript store = new StoredScript();
 		store.scriptPath = path;
 		try {
@@ -134,7 +134,7 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 			store.metadata = new ScriptMetadata();
 			// log an error in the error log
 		}
-		ScriptService.getInstance().addScript(uri, store);
+		ScriptService.getInstance().addScript(uri, store, notify);
 	}
 
 	private void processRemovedScript(URI name, IPath path) {
@@ -146,14 +146,17 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 	 * @param alternatePaths
 	 * @throws CoreException
 	 */
-	public void rescanAllFiles(Collection<String> extensions, Collection<URI> alternatePaths) throws CoreException {
+	public void rescanAllFiles(Collection<String> extensions, Collection<URI> alternatePaths, boolean notify) throws CoreException {
 		ScriptService.getInstance().clearScripts();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		findScriptsInContainer(extensions, workspace.getRoot());
-		findScriptsInalternatePath(extensions, alternatePaths);
+		findScriptsInContainer(extensions, workspace.getRoot(), false);
+		findScriptsInalternatePath(extensions, alternatePaths, false);
+		if(notify) {
+			ScriptService.getInstance().notifyScriptsChanged();
+		}
 	}
 
-	private void findScriptsInalternatePath(Collection<String> extensions, Collection<URI> alternatePaths) {
+	private void findScriptsInalternatePath(Collection<String> extensions, Collection<URI> alternatePaths, boolean notify) {
 		for(Iterator<URI> iterator = alternatePaths.iterator(); iterator.hasNext();) {
 			URI path = (URI)iterator.next();
 
@@ -171,7 +174,7 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 						String ext = (String)extensionIterator.next();
 						if(f.getName().toLowerCase().endsWith("." + ext)) {
 							Path p = new Path(f.getAbsolutePath());
-							processNewOrChangedScript(URIUtil.toURI(f.getAbsolutePath()), p);
+							processNewOrChangedScript(URIUtil.toURI(f.getAbsolutePath()), p, notify);
 						}
 					}
 				}
@@ -179,11 +182,11 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 		}
 	}
 
-	protected Collection<IFile> findScriptsInContainer(IContainer container) throws CoreException {
-		return findScriptsInContainer(ScriptService.getInstance().getLanguageStore().keySet(), container);
+	protected Collection<IFile> findScriptsInContainer(IContainer container, boolean notify) throws CoreException {
+		return findScriptsInContainer(ScriptService.getInstance().getLanguageStore().keySet(), container, notify);
 	}
 
-	protected Collection<IFile> findScriptsInContainer(final Collection<String> extensions, IContainer container) throws CoreException {
+	protected Collection<IFile> findScriptsInContainer(final Collection<String> extensions, IContainer container, final boolean notify) throws CoreException {
 		final Collection<IFile> scripts = new ArrayList<IFile>();
 
 		container.accept(new IResourceVisitor() {
@@ -198,7 +201,7 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 					if(extensions.contains(file.getFileExtension())) {
 						IPath location = file.getLocation();
 						URI scriptURI = URIUtil.toURI(location);
-						processNewOrChangedScript(scriptURI, location);
+						processNewOrChangedScript(scriptURI, location, notify);
 						scripts.add(file);
 					}
 				}

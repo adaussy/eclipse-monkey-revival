@@ -113,6 +113,10 @@ public class ScriptService {
 	 * @param script
 	 */
 	public void addScript(URI name, StoredScript script) {
+		addScript(name, script, true);
+	}
+
+	public void addScript(URI name, StoredScript script, boolean notify) {
 		/*
 		 * we are using the full file path as the key into the store
 		 * the consequence is that renames or moves are considered deletes and adds
@@ -125,19 +129,27 @@ public class ScriptService {
 		}
 		store.put(name, script);
 		script.metadata.subscribe();
-		this.notifyScriptsChanged();
+		if(notify) {
+			this.notifyScriptsChanged();
+		}
 	}
 
 	/**
 	 * @param name
 	 */
 	public void removeScript(URI name) {
+		removeScript(name, true);
+	}
+
+	public void removeScript(URI name, boolean notify) {
 		Map<URI, StoredScript> store = _scriptStore;
 		StoredScript oldScript = (StoredScript)store.remove(name);
 		if(oldScript == null)
 			return;
 		oldScript.metadata.unsubscribe();
-		this.notifyScriptsChanged();
+		if(notify) {
+			this.notifyScriptsChanged();
+		}
 	}
 
 	/**
