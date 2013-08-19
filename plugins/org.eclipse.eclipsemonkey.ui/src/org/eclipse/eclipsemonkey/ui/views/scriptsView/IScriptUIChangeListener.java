@@ -12,12 +12,12 @@ package org.eclipse.eclipsemonkey.ui.views.scriptsView;
 /**
  * @author Paul Colton
  */
-public interface IScriptActionChangeListener {
+public interface IScriptUIChangeListener {
 
 	/**
 	 * onActionChanged
 	 * 
 	 * @param a
 	 */
-	void onScriptActionChanged(IScriptAction a);
+	void onScriptActionChanged(IScriptUI a);
 }

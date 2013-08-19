@@ -13,6 +13,7 @@
 package org.eclipse.eclipsemonkey.ui.views.scriptsView.providers;
 
 import org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptAction;
+import org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptUI;
 import org.eclipse.eclipsemonkey.ui.views.scriptsView.ScriptAction;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -44,8 +45,8 @@ public class ScriptsViewSorterProvider extends ViewerSorter {
 		int cat2 = category(e2);
 
 		if(cat1 == cat2) {
-			IScriptAction action1 = (IScriptAction)e1;
-			IScriptAction action2 = (IScriptAction)e2;
+			IScriptUI action1 = (IScriptUI)e1;
+			IScriptUI action2 = (IScriptUI)e2;
 
 			return action1.getName().compareTo(action2.getName());
 		} else {

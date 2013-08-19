@@ -14,6 +14,10 @@ package org.eclipse.eclipsemonkey.ui.views.scriptsView.providers;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +25,8 @@ import java.util.regex.Pattern;
 import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.StoredScript;
 import org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptAction;
+import org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptActionSet;
+import org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptUI;
 import org.eclipse.eclipsemonkey.ui.views.scriptsView.ScriptAction;
 import org.eclipse.eclipsemonkey.ui.views.scriptsView.ScriptActionSet;
 import org.eclipse.eclipsemonkey.ui.views.scriptsView.ScriptActionsManager;
@@ -64,9 +70,9 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 		updateActionSets();
 
 		// Get actions and action sets
-		IScriptAction[] actions = _scriptActionsManager.getAll();
-		if(actions != null && actions.length > 0) {
-			return actions;
+		Collection<IScriptUI> actions = _scriptActionsManager.getAll();
+		if(actions != null && !actions.isEmpty()) {
+			return actions.toArray();
 		}
 		return new Object[0];
 	}
@@ -95,7 +101,7 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 					String primary_key = match.group(1).trim();
 					String secondary_key = match.group(2).trim();
 
-					ScriptActionSet as = _scriptActionsManager.createScriptActionSet(primary_key);
+					IScriptActionSet as = _scriptActionsManager.createScriptActionSet(primary_key);
 					as.addScriptAction(secondary_key, s);
 				} else {
 					_scriptActionsManager.addScriptAction(menuName, s);
@@ -108,21 +114,28 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 
 	private void pruneUnusedActions(ArrayList<String> foundItems) {
 
-		ScriptAction[] actions = _scriptActionsManager.getScriptActions();
-		ScriptActionSet[] sets = _scriptActionsManager.getScriptActionSets();
-
-		for(int i = 0; i < actions.length; i++) {
-			String name = actions[i].getStoredScript().metadata.getMenuName();
-			if(foundItems.contains(name) == false)
-				_scriptActionsManager.removeScriptAction(actions[i]);
+		List<IScriptAction> actions = new ArrayList<IScriptAction>(_scriptActionsManager.getScriptActions());
+		List<IScriptActionSet> sets = new ArrayList<IScriptActionSet>(_scriptActionsManager.getScriptActionSets());
+		Iterator<IScriptAction> actionIte = actions.iterator();
+		while(actionIte.hasNext()) {
+			ScriptAction scriptAction = (ScriptAction)actionIte.next();
+			String name = scriptAction.getStoredScript().metadata.getMenuName();
+			if(foundItems.contains(name) == false) {
+				_scriptActionsManager.removeScriptAction(scriptAction);
+			}
+			actionIte.remove();
 		}
-
-		for(int i = 0; i < sets.length; i++) {
-			actions = sets[i].getScriptActions();
-			for(int j = 0; j < actions.length; j++) {
-				String name = actions[j].getStoredScript().metadata.getMenuName();
-				if(foundItems.contains(name) == false)
-					_scriptActionsManager.removeScriptActionSet(name);
+		ListIterator<IScriptActionSet> setsIte = sets.listIterator();
+		while(setsIte.hasNext()) {
+			IScriptActionSet scriptActionSet = (ScriptActionSet)setsIte.next();
+			actions = scriptActionSet.getScriptActions();
+			while(actionIte.hasNext()) {
+				ScriptAction scriptAction = (ScriptAction)actionIte.next();
+				String name = scriptAction.getStoredScript().metadata.getMenuName();
+				if(foundItems.contains(name) == false) {
+					_scriptActionsManager.removeScriptAction(scriptAction);
+				}
+				actionIte.remove();
 			}
 		}
 	}
@@ -132,10 +145,10 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 	 */
 	public Object[] getChildren(Object parentElement) {
 		if(parentElement instanceof ScriptActionSet) {
-			ScriptActionSet actionSet = (ScriptActionSet)parentElement;
-			ScriptAction[] actions = actionSet.getScriptActions();
+			IScriptActionSet actionSet = (IScriptActionSet)parentElement;
+			List<IScriptAction> actions = actionSet.getScriptActions();
 
-			return actions;
+			return actions.toArray();
 		} else {
 			return new Object[0];
 		}
@@ -158,9 +171,9 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 	 */
 	public boolean hasChildren(Object element) {
 		if(element instanceof ScriptActionSet) {
-			ScriptActionSet actionSet = (ScriptActionSet)element;
+			IScriptActionSet actionSet = (IScriptActionSet)element;
 
-			return actionSet.getScriptActions().length > 0;
+			return actionSet.getScriptActions().size() > 0;
 		} else {
 			return false;
 		}

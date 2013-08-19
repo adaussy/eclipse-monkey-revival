@@ -10,13 +10,14 @@
 package org.eclipse.eclipsemonkey.ui.views.scriptsView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.eclipsemonkey.StoredScript;
 
 /**
  * @author Paul Colton
  */
-public class ScriptActionSet implements IScriptAction {
+public class ScriptActionSet implements IScriptActionSet {
 
 	/*
 	 * Fields
@@ -79,22 +80,22 @@ public class ScriptActionSet implements IScriptAction {
 		return this._scriptActions.size();
 	}
 
-	/**
-	 * getActions
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @return Action[]
+	 * @see org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptActionSet#getScriptActions()
 	 */
-	public ScriptAction[] getScriptActions() {
-		return (ScriptAction[])this._scriptActions.toArray(new ScriptAction[0]);
+	@Override
+	public List<IScriptAction> getScriptActions() {
+		return this._scriptActions;
 	}
 
-	/**
-	 * addScriptAction
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param name
-	 * @param script
-	 * @return Action
+	 * @see org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptActionSet#addScriptAction(java.lang.String, org.eclipse.eclipsemonkey.StoredScript)
 	 */
+	@Override
 	public ScriptAction addScriptAction(String name, StoredScript script) {
 		ScriptAction a = findScriptAction(name);
 
@@ -110,11 +111,12 @@ public class ScriptActionSet implements IScriptAction {
 		return a;
 	}
 
-	/**
-	 * removeScriptAction
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param name
+	 * @see org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptActionSet#removeScriptAction(java.lang.String)
 	 */
+	@Override
 	public void removeScriptAction(String name) {
 		for(int i = 0; i < this._scriptActions.size(); i++) {
 			ScriptAction a = (ScriptAction)this._scriptActions.get(i);
@@ -126,12 +128,12 @@ public class ScriptActionSet implements IScriptAction {
 		}
 	}
 
-	/**
-	 * findScriptAction
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param name
-	 * @return ScriptAction
+	 * @see org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptActionSet#findScriptAction(java.lang.String)
 	 */
+	@Override
 	public ScriptAction findScriptAction(String name) {
 		for(int i = 0; i < this._scriptActions.size(); i++) {
 			ScriptAction a = (ScriptAction)this._scriptActions.get(i);

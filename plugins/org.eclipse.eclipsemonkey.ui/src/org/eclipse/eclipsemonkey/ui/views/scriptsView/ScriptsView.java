@@ -7,7 +7,10 @@ package org.eclipse.eclipsemonkey.ui.views.scriptsView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -274,7 +277,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 			if(w != null) {
 				TreeItem item = (TreeItem)w;
 				Object element = item.getData();
-				IScriptAction action = null;
+				IScriptUI action = null;
 
 				if(element instanceof ScriptActionSet) {
 					action = (ScriptActionSet)element;
@@ -413,21 +416,23 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 				if(selection != null && selection instanceof IStructuredSelection) {
 					IStructuredSelection structuredSelection = (IStructuredSelection)selection;
 					Object element = structuredSelection.getFirstElement();
-					IScriptAction[] actions;
+					Collection<? extends IScriptUI> actions;
 
 					if(element instanceof ScriptAction) {
-						actions = new IScriptAction[]{ (IScriptAction)element };
+						actions = Collections.singleton((IScriptAction)element);
 						executeScript((ScriptAction)element);
 					} else if(element instanceof ScriptActionSet) {
-						actions = ((ScriptActionSet)element).getScriptActions();
-						for(int i = 0; i < actions.length; i++) {
-							executeScript(actions[i]);
+						List<IScriptAction> actions2 = ((IScriptActionSet)element).getScriptActions();
+						for(Iterator<IScriptAction> iterator = actions2.iterator(); iterator.hasNext();) {
+							IScriptAction iScriptAction = (IScriptAction)iterator.next();
+							executeScript(iScriptAction);
 						}
+						actions = actions2;
 					} else {
-						actions = new IScriptAction[0];
+						actions = Collections.emptyList();
 					}
 
-					e.setActions(actions);
+					e.getUIScript().addAll(actions);
 				}
 
 				fireActionsViewEvent(e);
@@ -551,9 +556,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 					toggleElementState(firstElement);
 				} else if(firstElement instanceof IScriptAction) {
 					ScriptActionsViewEvent e = new ScriptActionsViewEvent(ScriptActionsViewEventTypes.EXECUTE);
-					IScriptAction[] actions = new IScriptAction[]{ (IScriptAction)firstElement };
-
-					e.setActions(actions);
+					e.getUIScript().add((IScriptAction)firstElement);
 
 					fireActionsViewEvent(e);
 
@@ -615,17 +618,19 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 			fireActionsViewEvent(e);
 		} else {
 
-			ArrayList actionsList = new ArrayList();
+			ArrayList<IScriptUI> actionsList = new ArrayList<IScriptUI>();
 
 			for(Iterator iter = ((StructuredSelection)selection).iterator(); iter.hasNext();) {
-				actionsList.add(iter.next());
+				Object s = iter.next();
+				if(s instanceof IScriptUI) {
+					IScriptUI scriptUI = (IScriptUI)s;
+					actionsList.add(scriptUI);
+				}
 			}
 
-			ScriptAction[] actions = (ScriptAction[])actionsList.toArray(new ScriptAction[0]);
-
-			if(actions.length > 0) {
+			if(actionsList.size() > 0) {
 				ScriptActionsViewEvent e = new ScriptActionsViewEvent(ScriptActionsViewEventTypes.DELETE);
-				e.setActions(actions);
+				e.getUIScript().addAll(actionsList);
 				fireActionsViewEvent(e);
 			}
 		}
@@ -768,8 +773,8 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 	 *        The action set name to find
 	 * @return Returns the matching action set or null;
 	 */
-	public ScriptActionSet findActionSet(String name) {
-		ScriptActionSet result = null;
+	public IScriptActionSet findActionSet(String name) {
+		IScriptActionSet result = null;
 		TreeItem[] treeItems = viewer.getTree().getItems();
 
 		for(int i = 0; i < treeItems.length; i++) {
@@ -794,8 +799,8 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 	 * @param path
 	 * @return IAction
 	 */
-	public ScriptAction findAction(String path) {
-		ScriptAction result = null;
+	public IScriptAction findAction(String path) {
+		IScriptAction result = null;
 
 		if(path != null && path.length() > 0 && path.charAt(0) == '/') {
 			int slashIndex = path.indexOf('/', 1);
@@ -804,16 +809,14 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 				String actionSetName = path.substring(1, slashIndex);
 				String actionName = path.substring(slashIndex + 1);
 
-				ScriptActionSet actionSet = findActionSet(actionSetName);
+				IScriptActionSet actionSet = findActionSet(actionSetName);
 
 				if(actionSet != null) {
-					ScriptAction[] actions = actionSet.getScriptActions();
-
-					for(int i = 0; i < actions.length; i++) {
-						ScriptAction action = actions[i];
-
-						if(action.getName().equals(actionName)) {
-							result = action;
+					List<IScriptAction> actions = actionSet.getScriptActions();
+					for(Iterator iterator = actions.iterator(); iterator.hasNext();) {
+						IScriptAction iScriptAction = (IScriptAction)iterator.next();
+						if(iScriptAction.getName().equals(actionName)) {
+							result = iScriptAction;
 							break;
 						}
 					}
@@ -834,8 +837,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 
 		if(action != null) {
 			ScriptActionsViewEvent actionEvent = new ScriptActionsViewEvent(ScriptActionsViewEventTypes.EXECUTE);
-			IScriptAction[] actions = new IScriptAction[]{ action };
-			actionEvent.setActions(actions);
+			actionEvent.getUIScript().add(action);
 			fireActionsViewEvent(actionEvent);
 		}
 	}
@@ -901,7 +903,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 	 */
 	private void reloadAction(final IScriptAction a) {
 		ScriptActionsViewEvent e = new ScriptActionsViewEvent(ScriptActionsViewEventTypes.RELOAD);
-		e.setActions(new IScriptAction[]{ a });
+		e.getUIScript().add(a);
 		fireActionsViewEvent(e);
 	}
 }

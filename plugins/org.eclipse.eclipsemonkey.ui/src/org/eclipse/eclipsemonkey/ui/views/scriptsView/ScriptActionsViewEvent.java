@@ -9,6 +9,9 @@
  */
 package org.eclipse.eclipsemonkey.ui.views.scriptsView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IPath;
 
 /**
@@ -21,7 +24,7 @@ public class ScriptActionsViewEvent {
 	 */
 	private int _eventType = -1;
 
-	private IScriptAction[] _scriptActions = null;
+	private List<IScriptUI> _scriptActions = new ArrayList<IScriptUI>();
 
 	private IPath[] _paths = null;
 
@@ -64,18 +67,18 @@ public class ScriptActionsViewEvent {
 	 * 
 	 * @return Action[]
 	 */
-	public IScriptAction[] getActions() {
+	public List<IScriptUI> getUIScript() {
 		return this._scriptActions;
 	}
 
-	/**
-	 * setActions
-	 * 
-	 * @param actions
-	 */
-	public void setActions(IScriptAction[] actions) {
-		this._scriptActions = actions;
-	}
+	//	/**
+	//	 * setActions
+	//	 * 
+	//	 * @param actions
+	//	 */
+	//	public void setActions(IScriptUI[] actions) {
+	//		this._scriptActions = actions;
+	//	}
 
 	/**
 	 * getName

@@ -14,21 +14,7 @@ import org.eclipse.eclipsemonkey.StoredScript;
 /**
  * @author Paul Colton
  */
-public interface IScriptAction {
-
-	/**
-	 * getName
-	 * 
-	 * @return String
-	 */
-	String getName();
-
-	/**
-	 * setName
-	 * 
-	 * @param name
-	 */
-	void setName(String name);
+public interface IScriptAction extends IScriptUI {
 
 	/**
 	 * getStoredScript

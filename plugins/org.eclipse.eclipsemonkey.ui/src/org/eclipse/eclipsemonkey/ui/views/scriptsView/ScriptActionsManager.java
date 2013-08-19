@@ -10,7 +10,9 @@
 package org.eclipse.eclipsemonkey.ui.views.scriptsView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.eclipsemonkey.StoredScript;
 
@@ -27,11 +29,11 @@ public class ScriptActionsManager {
 	/*
 	 * Fields
 	 */
-	private ArrayList<IScriptActionChangeListener> _listeners = new ArrayList<IScriptActionChangeListener>();
+	private ArrayList<IScriptUIChangeListener> _listeners = new ArrayList<IScriptUIChangeListener>();
 
-	private ArrayList<ScriptAction> _scriptActions = new ArrayList<ScriptAction>();
+	private ArrayList<IScriptAction> _scriptActions = new ArrayList<IScriptAction>();
 
-	private HashMap<String, ScriptActionSet> _scriptActionSets = new HashMap<String, ScriptActionSet>();
+	private HashMap<String, IScriptActionSet> _scriptActionSets = new HashMap<String, IScriptActionSet>();
 
 	/**
 	 * Constructor
@@ -61,8 +63,8 @@ public class ScriptActionsManager {
 	 * @param name
 	 * @return ScriptActionSet
 	 */
-	public ScriptActionSet getScriptActionSet(String name) {
-		return (ScriptActionSet)this._scriptActionSets.get(name);
+	public IScriptActionSet getScriptActionSet(String name) {
+		return (IScriptActionSet)this._scriptActionSets.get(name);
 	}
 
 	/**
@@ -70,22 +72,16 @@ public class ScriptActionsManager {
 	 * 
 	 * @return IScriptAction[]
 	 */
-	public IScriptAction[] getAll() {
-		ScriptAction[] actions = getScriptActions();
-		ScriptActionSet[] sets = getScriptActionSets();
-		IScriptAction[] results = new IScriptAction[actions.length + sets.length];
+	public Collection<IScriptUI> getAll() {
+		List<IScriptAction> actions = getScriptActions();
+		Collection<IScriptActionSet> sets = getScriptActionSets();
+		Collection<IScriptUI> result = new ArrayList<IScriptUI>(actions.size() + sets.size());
 
 		int index = 0;
+		result.addAll(actions);
+		result.addAll(sets);
 
-		for(int i = 0; i < actions.length; i++) {
-			results[index++] = actions[i];
-		}
-
-		for(int i = 0; i < sets.length; i++) {
-			results[index++] = sets[i];
-		}
-
-		return results;
+		return result;
 	}
 
 	/*
@@ -97,9 +93,9 @@ public class ScriptActionsManager {
 	 * 
 	 * @param a
 	 */
-	public void fireScriptActionsChangeEvent(IScriptAction a) {
+	public void fireScriptActionsChangeEvent(IScriptUI a) {
 		for(int i = 0; i < this._listeners.size(); i++) {
-			IScriptActionChangeListener listener = this._listeners.get(i);
+			IScriptUIChangeListener listener = this._listeners.get(i);
 			listener.onScriptActionChanged(a);
 		}
 	}
@@ -109,7 +105,7 @@ public class ScriptActionsManager {
 	 * 
 	 * @param l
 	 */
-	public void addScriptActionsChangeListener(IScriptActionChangeListener l) {
+	public void addScriptActionsChangeListener(IScriptUIChangeListener l) {
 		this._listeners.add(l);
 	}
 
@@ -118,7 +114,7 @@ public class ScriptActionsManager {
 	 * 
 	 * @param l
 	 */
-	public void removeScriptActionsChangeListener(IScriptActionChangeListener l) {
+	public void removeScriptActionsChangeListener(IScriptUIChangeListener l) {
 		this._listeners.remove(l);
 	}
 
@@ -182,7 +178,7 @@ public class ScriptActionsManager {
 	 * @param name
 	 * @return ScriptActionSet
 	 */
-	public ScriptActionSet createScriptActionSet(String name) {
+	public IScriptActionSet createScriptActionSet(String name) {
 		ScriptActionSet a;
 
 		if(this._scriptActionSets.containsKey(name)) {
@@ -215,8 +211,8 @@ public class ScriptActionsManager {
 	 * 
 	 * @return ScriptAction[]
 	 */
-	public ScriptAction[] getScriptActions() {
-		return (ScriptAction[])this._scriptActions.toArray(new ScriptAction[0]);
+	public List<IScriptAction> getScriptActions() {
+		return this._scriptActions;
 	}
 
 	/**
@@ -224,15 +220,15 @@ public class ScriptActionsManager {
 	 * 
 	 * @return ScriptActionSet[]
 	 */
-	public ScriptActionSet[] getScriptActionSets() {
-		return (ScriptActionSet[])this._scriptActionSets.values().toArray(new ScriptActionSet[0]);
+	public Collection<IScriptActionSet> getScriptActionSets() {
+		return this._scriptActionSets.values();
 	}
 
 	/**
 	 * clearAll
 	 */
 	public void clearAll() {
-		this._scriptActions = new ArrayList<ScriptAction>();
-		this._scriptActionSets = new HashMap<String, ScriptActionSet>();
+		this._scriptActions = new ArrayList<IScriptAction>();
+		this._scriptActionSets = new HashMap<String, IScriptActionSet>();
 	}
 }
