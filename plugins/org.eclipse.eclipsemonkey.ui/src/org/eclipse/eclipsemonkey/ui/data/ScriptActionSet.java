@@ -10,7 +10,11 @@
 package org.eclipse.eclipsemonkey.ui.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.eclipsemonkey.StoredScript;
 import org.eclipse.eclipsemonkey.ui.IScriptAction;
@@ -30,6 +34,8 @@ public class ScriptActionSet implements IScriptActionSet {
 	private ArrayList<IScriptAction> _scriptActions = new ArrayList<IScriptAction>();
 
 	private boolean _executable = false;
+
+	private Map<String, IScriptActionSet> subSet = new HashMap<String, IScriptActionSet>();
 
 	/*
 	 * Constructors
@@ -92,7 +98,7 @@ public class ScriptActionSet implements IScriptActionSet {
 	 */
 	@Override
 	public List<IScriptAction> getScriptActions() {
-		return this._scriptActions;
+		return Collections.unmodifiableList(this._scriptActions);
 	}
 
 	/*
@@ -167,6 +173,51 @@ public class ScriptActionSet implements IScriptActionSet {
 	 */
 	public void setExecutable(boolean b) {
 		this._executable = b;
+	}
+
+	@Override
+	public Collection<IScriptActionSet> getSubSet() {
+		return Collections.unmodifiableCollection(subSet.values());
+	}
+
+	//
+	//	@Override
+	//	public void addSubActionSet(IScriptActionSet set) {
+	//		subSet.put(set.getName(), set);
+	//		ScriptActionsManager.getInstance().fireScriptActionsChangeEvent(set);
+	//
+	//	}
+	//
+	//	@Override
+	//	public void removeSubActionSet(IScriptActionSet set) {
+	//		subSet.remove(set.getName());
+	//		ScriptActionsManager.getInstance().fireScriptActionsChangeEvent(set);
+	//	}
+
+	@Override
+	public IScriptActionSet findSubSet(String name) {
+		return subSet.get(name);
+
+	}
+
+	@Override
+	public IScriptActionSet addSubActionSet(String setName) {
+		IScriptActionSet result = subSet.get(setName);
+		if(result == null) {
+			ScriptActionSet value = new ScriptActionSet(setName);
+			subSet.put(setName, value);
+			result = value;
+		}
+		ScriptActionsManager.getInstance().fireScriptActionsChangeEvent(result);
+		return result;
+	}
+
+	@Override
+	public void removeSubActionSet(String name) {
+		if(subSet.containsKey(name)) {
+			subSet.remove(name);
+			ScriptActionsManager.getInstance().fireScriptActionsChangeEvent(this);
+		}
 	}
 
 }

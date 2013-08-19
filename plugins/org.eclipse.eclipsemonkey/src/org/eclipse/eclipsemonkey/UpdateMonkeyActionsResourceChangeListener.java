@@ -81,7 +81,7 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 				URI fileURI = URIScriptUtils.getAbsoluteURI(delta);
 				switch(delta.getKind()) {
 				case IResourceDelta.ADDED:
-					processNewOrChangedScript(fileURI, file.getLocation(), true);
+					processNewOrChangedScript(fileURI, file.getLocation(), false);
 					found_a_change();
 					break;
 				case IResourceDelta.REMOVED:
@@ -91,20 +91,20 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 				case IResourceDelta.CHANGED:
 					if((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
 						processRemovedScript(URIUtil.toURI(delta.getMovedFromPath()), file.getLocation());
-						processNewOrChangedScript(fileURI, file.getLocation(), true);
+						processNewOrChangedScript(fileURI, file.getLocation(), false);
 						found_a_change();
 					}
 					if((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
 						processRemovedScript(fileURI, file.getLocation());
-						processNewOrChangedScript(URIUtil.toURI(delta.getMovedToPath()), file.getLocation(), true);
+						processNewOrChangedScript(URIUtil.toURI(delta.getMovedToPath()), file.getLocation(), false);
 						found_a_change();
 					}
 					if((delta.getFlags() & IResourceDelta.REPLACED) != 0) {
-						processNewOrChangedScript(fileURI, file.getLocation(), true);
+						processNewOrChangedScript(fileURI, file.getLocation(), false);
 						found_a_change();
 					}
 					if((delta.getFlags() & IResourceDelta.CONTENT) != 0) {
-						processNewOrChangedScript(fileURI, file.getLocation(), true);
+						processNewOrChangedScript(fileURI, file.getLocation(), false);
 						found_a_change();
 					}
 					break;
@@ -113,6 +113,9 @@ public class UpdateMonkeyActionsResourceChangeListener implements IResourceChang
 		};
 		try {
 			event.getDelta().accept(visitor);
+			if(changes[0] == true) {
+				ScriptService.getInstance().notifyScriptsChanged();
+			}
 		} catch (CoreException x) {
 			// log an error in the error log
 		}

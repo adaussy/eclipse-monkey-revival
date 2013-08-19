@@ -1,5 +1,5 @@
 #
-# Menu: Py > Hello > Jose
+# Menu: Examples >Hello >  Py > Jose
 # Kudos: Ward Cunningham & Bjorn Freeman-Benson
 # License: EPL 1.0
 #

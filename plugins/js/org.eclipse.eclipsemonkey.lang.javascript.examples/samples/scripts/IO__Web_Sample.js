@@ -1,5 +1,5 @@
 /*
- * Menu: JS > IO > Web Sample
+ * Menu: Examples > IO > JS > Web Sample
  * Kudos: Paul Colton, Aptana, Inc.
  * License: EPL 1.0
  * DOM: http://download.eclipse.org/technology/dash/update/org.eclipse.eclipsemonkey.lang.javascript

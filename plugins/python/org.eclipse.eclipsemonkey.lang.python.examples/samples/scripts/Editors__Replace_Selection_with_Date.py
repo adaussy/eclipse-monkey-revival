@@ -1,5 +1,5 @@
 #
-# Menu: Py > Editors > Replace Selecton with Date
+# Menu: Examples >Editors > Py > Replace Selecton with Date
 # Kudos: Jose Fonseca & Paul Colton
 # License: EPL 1.0
 #

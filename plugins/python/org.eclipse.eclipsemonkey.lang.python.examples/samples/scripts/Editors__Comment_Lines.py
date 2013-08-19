@@ -1,5 +1,5 @@
 #
-# Menu: Py > Editors > Comment Lines
+# Menu: Examples > Editors > Py > Comment Lines
 # Kudos: Jose Fonseca & Paul Colton
 # License: EPL 1.0
 #

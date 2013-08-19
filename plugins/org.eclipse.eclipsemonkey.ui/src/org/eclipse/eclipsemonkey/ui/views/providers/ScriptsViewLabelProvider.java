@@ -13,7 +13,7 @@
 package org.eclipse.eclipsemonkey.ui.views.providers;
 
 import org.eclipse.eclipsemonkey.ui.EclipseMonkeyUIActivator;
-import org.eclipse.eclipsemonkey.ui.IScriptAction;
+import org.eclipse.eclipsemonkey.ui.IScriptUI;
 import org.eclipse.eclipsemonkey.ui.IconPath;
 import org.eclipse.eclipsemonkey.ui.data.ScriptAction;
 import org.eclipse.eclipsemonkey.ui.data.ScriptActionSet;
@@ -33,8 +33,8 @@ public class ScriptsViewLabelProvider extends LabelProvider {
 	 */
 	@Override
 	public String getText(Object element) {
-		if(element instanceof IScriptAction) {
-			IScriptAction profile = (IScriptAction)element;
+		if(element instanceof IScriptUI) {
+			IScriptUI profile = (IScriptUI)element;
 			return profile.getName();
 		} else {
 			return null;

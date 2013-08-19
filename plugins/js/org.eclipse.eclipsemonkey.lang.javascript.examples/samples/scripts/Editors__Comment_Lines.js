@@ -1,5 +1,5 @@
 /*
- * Menu: JS > Editors > Comment Lines
+ * Menu: Examples > Editors > JS >Comment Lines
  * Kudos: Paul Colton (Aptana, Inc.)
  * License: EPL 1.0
  * DOM: http://download.eclipse.org/technology/dash/update/org.eclipse.eclipsemonkey.lang.javascript

@@ -1,5 +1,5 @@
 #
-# Menu: Py > IO > File Sample
+# Menu: Examples > IO > Py > File Sample
 # Kudos: Paul Colton, Aptana, Inc.
 # License: EPL 1.0
 #

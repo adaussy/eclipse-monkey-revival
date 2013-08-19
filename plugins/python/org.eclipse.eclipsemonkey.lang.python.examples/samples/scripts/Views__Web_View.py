@@ -1,5 +1,5 @@
 #
-# Menu: Py > Views > Google Web View
+# Menu: Examples > Views > Py > Google Web View
 # Kudos: Paul Colton
 # License: EPL 1.0
 #

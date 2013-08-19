@@ -1,5 +1,5 @@
 #
-# Menu: Py > Find System Prints
+# Menu: Examples > Py > Find System Prints
 # Kudos: Bjorn Freeman-Benson & Ward Cunningham
 # License: EPL 1.0
 # DOM: http://download.eclipse.org/technology/dash/update/org.eclipse.eclipsemonkey.doms

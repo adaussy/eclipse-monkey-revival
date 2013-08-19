@@ -1,5 +1,5 @@
 /*
- * Menu: JS > Editors > Replace Selecton with Date
+ * Menu:   Examples > Editors > JS > Replace Selecton with Date
  * Kudos: Paul Colton (Aptana, Inc.)
  * License: EPL 1.0
  * DOM: http://download.eclipse.org/technology/dash/update/org.eclipse.eclipsemonkey.lang.javascript

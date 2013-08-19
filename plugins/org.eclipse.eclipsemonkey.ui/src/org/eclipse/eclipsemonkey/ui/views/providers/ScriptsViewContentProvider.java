@@ -19,8 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.StoredScript;
@@ -33,6 +31,8 @@ import org.eclipse.eclipsemonkey.ui.data.ScriptActionSet;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import com.google.common.collect.Lists;
+
 /**
  * The content provider class is responsible for providing objects to the
  * view. It can wrap existing objects in adapters or simply return objects
@@ -41,8 +41,6 @@ import org.eclipse.jface.viewers.Viewer;
  * example).
  */
 public class ScriptsViewContentProvider implements ITreeContentProvider {
-
-	private Pattern submenu_pattern = Pattern.compile("^(.+?)>(.*)$");
 
 	private ScriptActionsManager _scriptActionsManager = null;
 
@@ -97,17 +95,24 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 
 				foundItems.add(menuName);
 
-				Matcher match = submenu_pattern.matcher(menuName);
-
-				if(match.find()) {
-
-					String primary_key = match.group(1).trim();
-					String secondary_key = match.group(2).trim();
-
-					IScriptActionSet as = _scriptActionsManager.createScriptActionSet(primary_key);
-					as.addScriptAction(secondary_key, s);
-				} else {
-					_scriptActionsManager.addScriptAction(menuName, s);
+				ArrayList<String> path = Lists.newArrayList(menuName.split(">"));
+				ListIterator<String> pathIte = path.listIterator();
+				IScriptActionSet parent = null;
+				while(pathIte.hasNext()) {
+					String string = (String)pathIte.next().trim();
+					if(pathIte.hasNext()) {
+						if(parent == null) {
+							parent = _scriptActionsManager.createOrGetScriptActionSet(string);
+						} else {
+							parent = parent.addSubActionSet(string);
+						}
+					} else {
+						if(parent == null) {
+							_scriptActionsManager.addScriptAction(string, s);
+						} else {
+							parent.addScriptAction(string, s);
+						}
+					}
 				}
 			}
 		}
@@ -150,8 +155,8 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 	public Object[] getChildren(Object parentElement) {
 		if(parentElement instanceof ScriptActionSet) {
 			IScriptActionSet actionSet = (IScriptActionSet)parentElement;
-			List<IScriptAction> actions = actionSet.getScriptActions();
-
+			List<IScriptUI> actions = new ArrayList<IScriptUI>(actionSet.getSubSet());
+			actions.addAll(actionSet.getScriptActions());
 			return actions.toArray();
 		} else {
 			return new Object[0];
@@ -179,7 +184,7 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 		if(element instanceof ScriptActionSet) {
 			IScriptActionSet actionSet = (IScriptActionSet)element;
 
-			return actionSet.getScriptActions().size() > 0;
+			return actionSet.getScriptActions().size() > 0 || !actionSet.getSubSet().isEmpty();
 		} else {
 			return false;
 		}

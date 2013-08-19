@@ -1,5 +1,5 @@
 /*
- * Menu: JS > Views > Google Web View
+ * Menu: Examples > Views > JS > Google Web View
  * Kudos: Paul Colton
  * License: EPL 1.0
  * DOM: http://localhost/org.eclipse.eclipsemonkey.lang.javascript

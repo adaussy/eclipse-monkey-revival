@@ -179,7 +179,7 @@ public class ScriptActionsManager {
 	 * @param name
 	 * @return ScriptActionSet
 	 */
-	public IScriptActionSet createScriptActionSet(String name) {
+	public IScriptActionSet createOrGetScriptActionSet(String name) {
 		ScriptActionSet a;
 
 		if(this._scriptActionSets.containsKey(name)) {

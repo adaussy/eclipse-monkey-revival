@@ -1,5 +1,5 @@
 /*
- * Menu: JS > Hello > Bjorn
+ * Menu: Examples > Hello > JS > Bjorn
  * Kudos: Ward Cunningham & Bjorn Freeman-Benson
  * License: EPL 1.0
  */

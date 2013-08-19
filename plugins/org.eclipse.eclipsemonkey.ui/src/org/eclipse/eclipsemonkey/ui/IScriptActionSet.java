@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.eclipsemonkey.ui;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.eclipsemonkey.StoredScript;
@@ -22,7 +23,15 @@ public interface IScriptActionSet extends IScriptUI {
 	 * 
 	 * @return Action[]
 	 */
-	public abstract List<IScriptAction> getScriptActions();
+	public List<IScriptAction> getScriptActions();
+
+	public Collection<IScriptActionSet> getSubSet();
+
+	public IScriptActionSet addSubActionSet(String setName);
+
+	public void removeSubActionSet(String name);
+
+	public IScriptActionSet findSubSet(String name);
 
 	/**
 	 * addScriptAction
@@ -31,14 +40,14 @@ public interface IScriptActionSet extends IScriptUI {
 	 * @param script
 	 * @return Action
 	 */
-	public abstract ScriptAction addScriptAction(String name, StoredScript script);
+	public ScriptAction addScriptAction(String name, StoredScript script);
 
 	/**
 	 * removeScriptAction
 	 * 
 	 * @param name
 	 */
-	public abstract void removeScriptAction(String name);
+	public void removeScriptAction(String name);
 
 	/**
 	 * findScriptAction
@@ -46,6 +55,6 @@ public interface IScriptActionSet extends IScriptUI {
 	 * @param name
 	 * @return ScriptAction
 	 */
-	public abstract ScriptAction findScriptAction(String name);
+	public ScriptAction findScriptAction(String name);
 
 }
