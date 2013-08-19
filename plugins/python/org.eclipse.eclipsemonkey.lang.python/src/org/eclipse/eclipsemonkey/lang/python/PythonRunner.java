@@ -16,6 +16,9 @@ package org.eclipse.eclipsemonkey.lang.python;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -33,6 +36,8 @@ import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.StoredScript;
 import org.eclipse.eclipsemonkey.dom.IMonkeyDOMFactory;
 import org.eclipse.eclipsemonkey.dom.Utilities;
+import org.eclipse.eclipsemonkey.lang.python.preferences.IPreferenceConstants;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -41,6 +46,8 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.python.core.PyException;
+import org.python.core.PyList;
+import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
 /**
@@ -84,6 +91,16 @@ public class PythonRunner implements IMonkeyScriptRunner {
 	/**
 	 * @see org.eclipse.eclipsemonkey.IMonkeyScriptRunner#run(java.lang.String, java.lang.Object[])
 	 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.eclipsemonkey.IMonkeyScriptRunner#run(java.lang.String, java.lang.Object[])
+	 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.eclipsemonkey.IMonkeyScriptRunner#run(java.lang.String, java.lang.Object[])
+	 */
 	public Object run(String entryName, Object[] functionArgs) throws RunMonkeyException {
 
 		Object result = null;
@@ -105,11 +122,24 @@ public class PythonRunner implements IMonkeyScriptRunner {
 
 				defineStandardGlobalVariables(interp);
 				defineExtensionGlobalVariables(interp, storedScript.metadata);
+				//Update library path
+				/*
+				 * This will not remove libraries removed from preference.
+				 * TODO : Do it later
+				 */
 
+				for(String libraryPath : getPythonLibrairies()) {
+					PyString element = new PyString(libraryPath);
+					PyList systemPath = interp.getSystemState().path;
+					if(!systemPath.contains(element)) {
+						systemPath.add(0, element);
+					}
+				}
 				interp.setOut(getConsoleOutStream());
 				interp.setErr(getConsoleErrStream());
 
 				interp.execfile(new FileInputStream(path.toFile()), path.toPortableString());
+
 			} finally {
 				undefineDynamicVariables(path);
 			}
@@ -120,6 +150,25 @@ public class PythonRunner implements IMonkeyScriptRunner {
 		}
 
 		return result;
+	}
+
+	private Collection<String> getPythonLibrairies() {
+		List<String> result = new ArrayList<String>();
+		IPreferenceStore preferences = PythonPlugin.getDefault().getPreferenceStore();
+		String libraries = preferences.getString(IPreferenceConstants.PYTHON_LIBRARIES);
+		String[] libs = libraries.split(";");
+		for(String lib : libs) {
+			result.add(lib);
+		}
+		return result;
+	}
+
+	private String getCurrentModuleLibraryPath() {
+		return path.toOSString().replace(path.lastSegment(), "Lib\\");
+	}
+
+	private String getCurrentModulePath() {
+		return path.toOSString().replace(path.lastSegment(), "");
 	}
 
 	private void defineStandardGlobalVariables(PythonInterpreter interp) {
@@ -163,8 +212,10 @@ public class PythonRunner implements IMonkeyScriptRunner {
 	}
 
 	private void defineDynamicVariables(IPath path) {
+		path.toPortableString().replace(path.lastSegment(), "");
 		Utilities.state().begin(path);
 		Utilities.state().set(Utilities.SCRIPT_NAME, path.toPortableString());
+
 	}
 
 	private void undefineDynamicVariables(IPath path) {

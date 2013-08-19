@@ -23,6 +23,9 @@ import java.util.Iterator;
 import org.osgi.framework.Bundle;
 import org.python.core.PySystemState;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 /**
  * @author Kevin Lindsey based on code by Patrick Mueller
  */
@@ -50,20 +53,36 @@ public class PythonClassLoader extends ClassLoader {
 		}
 
 		if(this._bundles.contains(bundle) == false) {
-			this._bundles.add(bundle);
+			addPackagesFromBundle(bundle);
+		}
+	}
 
-			String packages = (String)bundle.getHeaders().get("Provide-Package");
-			if(packages != null) {
-				String[] names = packages.split(",");
-				for(int j = 0; j < names.length; ++j) {
-					PySystemState.add_package(names[j].trim());
-				}
-			}
-			packages = (String)bundle.getHeaders().get("Export-Package");
-			if(packages != null) {
-				String[] names = packages.split(",");
-				for(int j = 0; j < names.length; ++j) {
-					PySystemState.add_package(names[j].trim());
+	private void addPackagesFromBundle(Bundle bundle) {
+		this._bundles.add(bundle);
+		addPackage(bundle, "Provide-Package");
+		addPackage(bundle, "Export-Package");
+	}
+
+	private static Multimap<String, Bundle> packageToBundle = null;
+
+	protected Multimap<String, Bundle> getMapPackageToBundle() {
+		if(packageToBundle == null) {
+			packageToBundle = ArrayListMultimap.create();
+		}
+		return packageToBundle;
+	}
+
+	private void addPackage(Bundle b, String propName) {
+		String packages = (String)b.getHeaders().get(propName);
+		if(packages != null) {
+			String[] names = packages.split(",");
+			for(int j = 0; j < names.length; ++j) {
+				String packageSpec = names[j];
+				PySystemState.add_package(packageSpec);
+				String[] pacakgeProperty = packageSpec.split(";");
+				if(pacakgeProperty != null && pacakgeProperty.length > 0) {
+					String packageName = pacakgeProperty[0].trim();
+					getMapPackageToBundle().put(packageName, b);
 				}
 			}
 		}
@@ -155,9 +174,10 @@ public class PythonClassLoader extends ClassLoader {
 	 * @throws ClassNotFoundException
 	 */
 	public Class loadClass(String name) throws ClassNotFoundException {
-		Class result = super.loadClass(name);
-
-		if(result == null) {
+		Class result = null;
+		try {
+			result = super.loadClass(name);
+		} catch (ClassNotFoundException e) {
 			result = this.loadClassFromBundles(name);
 		}
 
@@ -201,23 +221,26 @@ public class PythonClassLoader extends ClassLoader {
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
-	private Class loadClassFromBundles(String name) {
+	private Class loadClassFromBundles(String name) throws ClassNotFoundException {
 		Class result = null;
-		Iterator<Bundle> iterator = this._bundles.iterator();
-
-		while(iterator.hasNext()) {
-			Bundle bundle = iterator.next();
-
-			try {
-				result = bundle.loadClass(name);
-			} catch (ClassNotFoundException e) {
-			}
-
-			if(result != null) {
-				break;
+		String pacakgeName = getPackageName(name);
+		if(pacakgeName != null) {
+			for(Bundle b : getMapPackageToBundle().get(pacakgeName)) {
+				result = b.loadClass(name);
+				if(result != null) {
+					return result;
+				}
 			}
 		}
-
 		return result;
+	}
+
+	protected String getPackageName(String name) {
+		String[] segments = name.split("\\.");
+		if(segments != null && segments.length > 0) {
+			String pacakgeName = name.replace("." + segments[segments.length - 1], "");
+			return pacakgeName;
+		}
+		return null;
 	}
 }

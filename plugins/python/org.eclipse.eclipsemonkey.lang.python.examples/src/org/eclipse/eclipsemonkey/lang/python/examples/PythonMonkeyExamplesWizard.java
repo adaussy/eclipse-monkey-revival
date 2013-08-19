@@ -20,4 +20,9 @@ public class PythonMonkeyExamplesWizard extends AbstractEclipseMonkeyNewSampleWi
 		return "samples/";
 	}
 
+	@Override
+	protected String getInitalProjectName() {
+		return "Eclipse Monkey Python scripts Example";
+	}
+
 }

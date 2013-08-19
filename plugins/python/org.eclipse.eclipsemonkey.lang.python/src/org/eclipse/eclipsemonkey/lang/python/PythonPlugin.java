@@ -14,8 +14,8 @@ package org.eclipse.eclipsemonkey.lang.python;
 import java.net.URL;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -26,6 +26,19 @@ import org.python.core.PySystemState;
  */
 public class PythonPlugin extends AbstractUIPlugin {
 
+	public static final String PLUGIN_ID = "org.eclipse.eclipsemonkey.lang.python";
+
+	private static PythonPlugin plugin;
+
+	/**
+	 * Returns the shared instance
+	 * 
+	 * @return the shared instance
+	 */
+	public static PythonPlugin getDefault() {
+		return plugin;
+	}
+
 	/**
 	 * The constructor
 	 */
@@ -34,7 +47,7 @@ public class PythonPlugin extends AbstractUIPlugin {
 
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-
+		plugin = this;
 		Properties preProperties = System.getProperties();
 
 		Properties postProperties = new Properties();
@@ -48,17 +61,22 @@ public class PythonPlugin extends AbstractUIPlugin {
 		for(int i = 0; i < bundles.length; ++i) {
 			classLoader.addBundle(bundles[i]);
 		}
+
+	}
+
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		plugin = null;
+		super.stop(context);
 	}
 
 	private String getPluginRootDir() {
 		try {
 			Bundle bundle = getBundle();
-			URL bundleURL = Platform.find(bundle, new Path("."));
-			URL fileURL = Platform.asLocalURL(bundleURL);
-			return fileURL.getPath();
+			URL fileURL = FileLocator.find(bundle, new Path("."), null);
+			return FileLocator.toFileURL(fileURL).getFile();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
-
 }

@@ -631,13 +631,6 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 		}
 	}
 
-	// private void showMessage(String message) {
-	// MessageDialog.openInformation(
-	// viewer.getControl().getShell(),
-	// "File Explorer",
-	// message);
-	// }
-
 	/**
 	 * hookDoubleClickAction
 	 */

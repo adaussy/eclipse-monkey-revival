@@ -1,6 +1,6 @@
 #
 # Menu: Py > Editors > Replace Selecton with Date
-# Kudos: José Fonseca & Paul Colton
+# Kudos: Jose Fonseca & Paul Colton
 # License: EPL 1.0
 #
 

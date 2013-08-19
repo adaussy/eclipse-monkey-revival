@@ -9,5 +9,13 @@
             languageName="Python">
       </language>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.eclipse.eclipsemonkey.lang.python.PythonLibraryPreferencePage"
+            id="org.eclipse.eclipsemonkey.lang.python.librairyPreferencePage"
+            name="Eclipse Monkey: Python">
+      </page>
+   </extension>
 
 </plugin>

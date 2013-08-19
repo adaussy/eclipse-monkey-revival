@@ -42,4 +42,9 @@ public class ExampleWizards extends AbstractEclipseMonkeyNewSampleWizard impleme
 		return Activator.getDefault().getBundle();
 	}
 
+	@Override
+	protected String getInitalProjectName() {
+		return "Eclipse Monkey Java Script Example";
+	}
+
 }

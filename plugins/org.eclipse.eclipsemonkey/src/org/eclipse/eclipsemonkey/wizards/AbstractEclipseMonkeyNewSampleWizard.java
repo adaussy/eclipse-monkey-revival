@@ -33,6 +33,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.eclipsemonkey.EclipseMonkeyPlugin;
 import org.eclipse.eclipsemonkey.utils.ScriptResourceUtils;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.osgi.framework.Bundle;
 
@@ -51,6 +53,17 @@ public abstract class AbstractEclipseMonkeyNewSampleWizard extends BasicNewProje
 	protected void openError(String message) {
 		ErrorDialog.openError(getShell(), "Eclipse Monkey example error", "Unable to create the Examples project\n" + message, new Status(Status.ERROR, EclipseMonkeyPlugin.PLUGIN_ID, message));
 	}
+
+	@Override
+	public void addPage(IWizardPage page) {
+		super.addPage(page);
+		IWizardPage mainPage = getPage("basicNewProjectPage");
+		if(mainPage instanceof WizardNewProjectCreationPage) {
+			((WizardNewProjectCreationPage)mainPage).setInitialProjectName(getInitalProjectName().replace(" ", "_"));
+		}
+	}
+
+	protected abstract String getInitalProjectName();
 
 	/**
 	 * Path to manifest file to find scripts (Relative path to the bundle)
