@@ -84,6 +84,7 @@ public class PythonRunner implements IMonkeyScriptRunner {
 	/**
 	 * @see org.eclipse.eclipsemonkey.IMonkeyScriptRunner#getStoredScript()
 	 */
+	@Override
 	public StoredScript getStoredScript() {
 		return storedScript;
 	}
@@ -101,6 +102,7 @@ public class PythonRunner implements IMonkeyScriptRunner {
 	 * 
 	 * @see org.eclipse.eclipsemonkey.IMonkeyScriptRunner#run(java.lang.String, java.lang.Object[])
 	 */
+	@Override
 	public Object run(String entryName, Object[] functionArgs) throws RunMonkeyException {
 
 		Object result = null;
@@ -245,6 +247,7 @@ public class PythonRunner implements IMonkeyScriptRunner {
 
 			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					consoleOutStream.setColor(PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_BLACK));
 					consoleErrStream.setColor(PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_RED));

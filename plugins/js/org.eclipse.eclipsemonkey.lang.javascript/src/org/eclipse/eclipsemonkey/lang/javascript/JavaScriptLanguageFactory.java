@@ -30,6 +30,7 @@ public class JavaScriptLanguageFactory implements IMonkeyLanguageFactory {
 	 * @see org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory#getRunMonkeyScript(org.eclipse.core.runtime.IPath,
 	 *      org.eclipse.ui.IWorkbenchWindow)
 	 */
+	@Override
 	public IMonkeyScriptRunner getRunMonkeyScript(IPath path, IWorkbenchWindow window) {
 		return new JavaScriptRunner(path, window);
 	}
@@ -37,6 +38,7 @@ public class JavaScriptLanguageFactory implements IMonkeyLanguageFactory {
 	/**
 	 * @see org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory#init(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void init(String pluginID, String languageName) {
 	}
 
@@ -44,6 +46,7 @@ public class JavaScriptLanguageFactory implements IMonkeyLanguageFactory {
 	 * @param contents
 	 * @return ScriptMetadata
 	 */
+	@Override
 	public ScriptMetadata getScriptMetadata(String contents) {
 		ScriptMetadata metadata = new ScriptMetadata();
 		Pattern p = Pattern.compile("^\\s*\\/\\*.*?\\*\\/", Pattern.DOTALL);

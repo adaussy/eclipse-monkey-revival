@@ -51,6 +51,7 @@ public class WebRequest extends ScriptableObject {
 	/**
 	 * @see org.mozilla.javascript.Scriptable#getClassName()
 	 */
+	@Override
 	public String getClassName() {
 		return "WebRequest";
 	}

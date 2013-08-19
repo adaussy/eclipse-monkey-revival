@@ -84,6 +84,7 @@ public class JavaScriptRunner implements IMonkeyScriptRunner {
 	/**
 	 * @see org.eclipse.eclipsemonkey.IMonkeyScriptRunner#getStoredScript()
 	 */
+	@Override
 	public StoredScript getStoredScript() {
 		return storedScript;
 	}
@@ -91,6 +92,7 @@ public class JavaScriptRunner implements IMonkeyScriptRunner {
 	/**
 	 * @see org.eclipse.eclipsemonkey.IMonkeyScriptRunner#run(java.lang.String, java.lang.Object[])
 	 */
+	@Override
 	public Object run(String entryName, Object[] functionArgs) throws RunMonkeyException {
 		Object result = null;
 

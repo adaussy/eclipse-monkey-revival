@@ -168,12 +168,14 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 	/**
 	 * @see org.eclipse.eclipsemonkey.IScriptStoreListener#storeChanged()
 	 */
+	@Override
 	public void storeChanged() {
 
 		Display display = viewer.getControl().getDisplay();
 		if(!display.isDisposed()) {
 			display.asyncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					if(viewer.getControl().isDisposed())
 						return;
@@ -188,6 +190,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 	/**
 	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
 	 */
+	@Override
 	public void dispose() {
 		if(infoLabelFont != null) {
 			infoLabelFont.dispose();
@@ -202,6 +205,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 	 * 
 	 * @param parent
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 
 		layout = new StackLayout();
@@ -230,6 +234,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 		labeldt.setTransfer(new Transfer[]{ FileTransfer.getInstance() });
 		labeldt.addDropListener(new DropTargetAdapter() {
 
+			@Override
 			public void drop(DropTargetEvent event) {
 				handleDrop(event);
 			}
@@ -239,6 +244,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 		dt.setTransfer(new Transfer[]{ FileTransfer.getInstance() });
 		dt.addDropListener(new DropTargetAdapter() {
 
+			@Override
 			public void drop(DropTargetEvent event) {
 				handleDrop(event);
 			}
@@ -299,6 +305,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				ISelection selection = viewer.getSelection();
 				Object firstElement = ((IStructuredSelection)selection).getFirstElement();
@@ -375,6 +382,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 
 		actionRefresh = new PushButtonAction("Refresh") {
 
+			@Override
 			public void run() {
 				_scriptActionsManager.clearAll();
 				viewer.refresh();
@@ -385,6 +393,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 
 		actionMakeExecutable = new org.eclipse.jface.action.Action() {
 
+			@Override
 			public void run() {
 				ISelection selection = viewer.getSelection();
 
@@ -409,6 +418,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 
 		actionExecute = new org.eclipse.jface.action.Action() {
 
+			@Override
 			public void run() {
 				ScriptActionsViewEvent e = new ScriptActionsViewEvent(ScriptActionsViewEventTypes.EXECUTE);
 				ISelection selection = viewer.getSelection();
@@ -443,6 +453,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 
 		actionAddCurrentFile = new org.eclipse.jface.action.Action() {
 
+			@Override
 			public void run() {
 				ScriptActionsViewEvent e = new ScriptActionsViewEvent(ScriptActionsViewEventTypes.ADD_CURRENT_FILE);
 				ISelection selection = viewer.getSelection();
@@ -461,6 +472,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 
 		actionNewActionSet = new org.eclipse.jface.action.Action() {
 
+			@Override
 			public void run() {
 				InputDialog input = new InputDialog(getSite().getShell(), "New Action Set Name", "Please enter new Action Set name", org.eclipse.eclipsemonkey.utils.StringUtils.EMPTY, null);
 
@@ -477,6 +489,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 
 		actionEdit = new org.eclipse.jface.action.Action() {
 
+			@Override
 			public void run() {
 				ISelection selection = viewer.getSelection();
 
@@ -494,6 +507,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 
 		actionReload = new org.eclipse.jface.action.Action() {
 
+			@Override
 			public void run() {
 				ISelection selection = viewer.getSelection();
 
@@ -511,6 +525,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 
 		actionAdd = new org.eclipse.jface.action.Action() {
 
+			@Override
 			public void run() {
 				FileDialog fileDialog = new FileDialog(viewer.getControl().getShell(), SWT.MULTI);
 				fileDialog.setFilterExtensions(FILTER_EXTENSIONS);
@@ -538,6 +553,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 
 		actionDelete = new org.eclipse.jface.action.Action() {
 
+			@Override
 			public void run() {
 				removeFiles(viewer.getSelection());
 			}
@@ -548,6 +564,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 
 		actionDoubleClick = new org.eclipse.jface.action.Action() {
 
+			@Override
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				Object firstElement = ((IStructuredSelection)selection).getFirstElement();
@@ -642,6 +659,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				actionDoubleClick.run();
 			}
@@ -656,12 +674,14 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 	private void hookKeyActions(Control control) {
 		control.addKeyListener(new KeyListener() {
 
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.character == SWT.DEL) {
 					removeFiles(viewer.getSelection());
 				}
 			}
 
+			@Override
 			public void keyReleased(KeyEvent e) {
 			}
 		});
@@ -670,6 +690,7 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}

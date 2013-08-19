@@ -60,6 +60,7 @@ public class EditorType extends EventTarget {
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
+	@Override
 	public String getClassName() {
 		return "EditorType";
 	}

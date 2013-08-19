@@ -89,6 +89,7 @@ public class JavaScriptGlobal extends ScriptableObject {
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
+	@Override
 	public String getClassName() {
 		return "JavaScriptGlobal";
 	}
@@ -105,6 +106,7 @@ public class JavaScriptGlobal extends ScriptableObject {
 
 			PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					_consoleStream.setColor(PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_BLUE));
 				}
@@ -270,6 +272,7 @@ public class JavaScriptGlobal extends ScriptableObject {
 		if(currentDisplay != null) {
 			currentDisplay.syncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					Shell shell = currentDisplay.getActiveShell();
 
@@ -323,6 +326,7 @@ public class JavaScriptGlobal extends ScriptableObject {
 		if(currentDisplay != null) {
 			currentDisplay.syncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					Shell shell = currentDisplay.getActiveShell();
 
@@ -541,6 +545,7 @@ public class JavaScriptGlobal extends ScriptableObject {
 		if(currentDisplay != null) {
 			currentDisplay.syncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					Shell shell = currentDisplay.getActiveShell();
 
@@ -601,6 +606,7 @@ public class JavaScriptGlobal extends ScriptableObject {
 
 		Thread thread = new Thread(new Runnable() {
 
+			@Override
 			public void run() {
 				boolean active = true;
 
@@ -631,6 +637,7 @@ public class JavaScriptGlobal extends ScriptableObject {
 						// execute callback in the correct thread
 						display.asyncExec(new Runnable() {
 
+							@Override
 							public void run() {
 								Scriptable scope = function.getParentScope();
 								Context cx = Context.enter();

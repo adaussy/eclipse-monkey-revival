@@ -62,6 +62,7 @@ public class ScriptAction implements IScriptAction {
 	 * @param name
 	 *        The name to set.
 	 */
+	@Override
 	public void setName(String name) {
 		this._name = name;
 	}
@@ -71,6 +72,7 @@ public class ScriptAction implements IScriptAction {
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String getName() {
 		return this._name;
 	}
@@ -90,6 +92,7 @@ public class ScriptAction implements IScriptAction {
 	 * @param s
 	 *        StoredScript
 	 */
+	@Override
 	public void setStoredScript(StoredScript s) {
 		_storedScript = s;
 	}
@@ -99,6 +102,7 @@ public class ScriptAction implements IScriptAction {
 	 * 
 	 * @return StoredScript
 	 */
+	@Override
 	public StoredScript getStoredScript() {
 		return _storedScript;
 	}

@@ -23,6 +23,7 @@ public class WorkspaceDOMFactory implements IMonkeyDOMFactory {
 	/**
 	 * @see org.eclipse.eclipsemonkey.dom.IMonkeyDOMFactory#getDOMroot()
 	 */
+	@Override
 	public Object getDOMroot() {
 		return ResourcesPlugin.getWorkspace();
 	}

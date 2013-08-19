@@ -31,6 +31,7 @@ public class ScriptsViewLabelProvider extends LabelProvider {
 	/**
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 	 */
+	@Override
 	public String getText(Object element) {
 		if(element instanceof IScriptAction) {
 			IScriptAction profile = (IScriptAction)element;
@@ -43,6 +44,7 @@ public class ScriptsViewLabelProvider extends LabelProvider {
 	/**
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 	 */
+	@Override
 	public Image getImage(Object obj) {
 		if(obj instanceof ScriptActionSet) {
 			ScriptActionSet set = (ScriptActionSet)obj;

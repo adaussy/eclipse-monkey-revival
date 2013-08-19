@@ -45,6 +45,7 @@ public class ScriptableView extends View {
 	/**
 	 * @return getView
 	 */
+	@Override
 	public IWorkbenchPart getView() {
 		IWorkbenchPart result = super.getView();
 
@@ -60,6 +61,7 @@ public class ScriptableView extends View {
 	/**
 	 * @param view
 	 */
+	@Override
 	public void setView(IWorkbenchPart view) {
 		IWorkbenchPart currentView = this.getView();
 
@@ -90,6 +92,7 @@ public class ScriptableView extends View {
 				// create listener
 				this._viewListener = new LocationListener() {
 
+					@Override
 					public void changing(LocationEvent innerEvent) {
 						LocationChangingEvent event = new LocationChangingEvent(this, innerEvent);
 
@@ -101,6 +104,7 @@ public class ScriptableView extends View {
 						}
 					}
 
+					@Override
 					public void changed(LocationEvent innerEvent) {
 						LocationChangedEvent event = new LocationChangedEvent(this, innerEvent);
 
@@ -116,6 +120,7 @@ public class ScriptableView extends View {
 
 			display.syncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					pview.getBrowser().addLocationListener(_viewListener);
 				}
@@ -126,6 +131,7 @@ public class ScriptableView extends View {
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
+	@Override
 	public String getClassName() {
 		return "ScriptableView"; //$NON-NLS-1$
 	}
@@ -169,6 +175,7 @@ public class ScriptableView extends View {
 
 		display.syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
@@ -196,6 +203,7 @@ public class ScriptableView extends View {
 
 			display.asyncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					GenericScriptableView view = (GenericScriptableView)part;
 					view.setViewTitle(title);
@@ -218,6 +226,7 @@ public class ScriptableView extends View {
 
 			display.asyncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					GenericScriptableView view = (GenericScriptableView)part;
 					view.setText(html);
@@ -240,6 +249,7 @@ public class ScriptableView extends View {
 
 			display.syncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					GenericScriptableView view = (GenericScriptableView)part;
 					view.execute(script);
@@ -269,6 +279,7 @@ public class ScriptableView extends View {
 
 			display.asyncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					GenericScriptableView view = (GenericScriptableView)part;
 					view.setUrl(finalUrl);
@@ -301,6 +312,7 @@ public class ScriptableView extends View {
 
 			display.syncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					GenericScriptableView view = (GenericScriptableView)part;
 					String val = view.getUrl();

@@ -36,6 +36,7 @@ public class Views extends EventTarget {
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
+	@Override
 	public String getClassName() {
 		return "Views"; //$NON-NLS-1$
 	}

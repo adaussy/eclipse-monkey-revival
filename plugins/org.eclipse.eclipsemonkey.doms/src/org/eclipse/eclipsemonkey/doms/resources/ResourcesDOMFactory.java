@@ -20,6 +20,7 @@ public class ResourcesDOMFactory implements IMonkeyDOMFactory {
 	/**
 	 * @see org.eclipse.eclipsemonkey.dom.IMonkeyDOMFactory#getDOMroot()
 	 */
+	@Override
 	public Object getDOMroot() {
 		return new Resources();
 	}

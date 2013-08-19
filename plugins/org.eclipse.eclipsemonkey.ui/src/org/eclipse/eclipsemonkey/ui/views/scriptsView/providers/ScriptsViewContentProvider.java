@@ -53,18 +53,21 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 	/**
 	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 	}
 
 	/**
 	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 	 */
+	@Override
 	public void dispose() {
 	}
 
 	/**
 	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 	 */
+	@Override
 	public Object[] getElements(Object parent) {
 
 		updateActionSets();
@@ -143,6 +146,7 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 	/**
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
 	 */
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if(parentElement instanceof ScriptActionSet) {
 			IScriptActionSet actionSet = (IScriptActionSet)parentElement;
@@ -157,6 +161,7 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 	/**
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
 	 */
+	@Override
 	public Object getParent(Object element) {
 		if(element instanceof ScriptAction) {
 			return ((ScriptAction)element).getParent();
@@ -169,6 +174,7 @@ public class ScriptsViewContentProvider implements ITreeContentProvider {
 	/**
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
 	 */
+	@Override
 	public boolean hasChildren(Object element) {
 		if(element instanceof ScriptActionSet) {
 			IScriptActionSet actionSet = (IScriptActionSet)element;

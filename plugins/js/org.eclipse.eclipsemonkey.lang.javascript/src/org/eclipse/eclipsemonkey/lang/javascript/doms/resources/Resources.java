@@ -37,6 +37,7 @@ public class Resources extends ScriptableObject {
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
+	@Override
 	public String getClassName() {
 		return "Resources";
 	}

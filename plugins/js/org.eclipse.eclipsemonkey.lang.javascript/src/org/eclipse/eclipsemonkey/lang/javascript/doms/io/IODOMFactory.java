@@ -24,6 +24,7 @@ public class IODOMFactory implements IJavaScriptDOMFactory {
 	/**
 	 * @see org.eclipse.eclipsemonkey.lang.javascript.doms.IJavaScriptDOMFactory#getDOMroot(org.mozilla.javascript.Scriptable)
 	 */
+	@Override
 	public Object getDOMroot(Scriptable scope) {
 		initIO(scope);
 

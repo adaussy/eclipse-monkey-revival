@@ -50,6 +50,7 @@ public class GenericScriptableView extends BrowserView {
 	 * @param memento
 	 * @throws PartInitException
 	 */
+	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, null);
 	}
@@ -57,6 +58,7 @@ public class GenericScriptableView extends BrowserView {
 	/**
 	 * @return String
 	 */
+	@Override
 	public String getStartUrl() {
 		return null;
 	}
@@ -115,6 +117,7 @@ public class GenericScriptableView extends BrowserView {
 
 	/**
 	 */
+	@Override
 	protected void addToolBarActions() {
 	}
 
@@ -130,6 +133,7 @@ public class GenericScriptableView extends BrowserView {
 	/**
 	 * @return The ID of the part
 	 */
+	@Override
 	public String getPartId() {
 		return "ScriptableViewId"; //$NON-NLS-1$
 	}
@@ -137,6 +141,7 @@ public class GenericScriptableView extends BrowserView {
 	/**
 	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		// TODO Auto-generated method stub
 		super.createPartControl(parent);

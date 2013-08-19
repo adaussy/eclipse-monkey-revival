@@ -50,18 +50,21 @@ public class ScriptsInfoView extends ViewPart implements IScriptStoreListener {
 		/**
 		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
+		@Override
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 
 		/**
 		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 		 */
+		@Override
 		public void dispose() {
 		}
 
 		/**
 		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
 		 */
+		@Override
 		public Object[] getElements(Object parent) {
 			Map<URI, StoredScript> scriptStore = ScriptService.getInstance().getScriptStore();
 			return scriptStore.keySet().toArray();
@@ -73,6 +76,7 @@ public class ScriptsInfoView extends ViewPart implements IScriptStoreListener {
 		/**
 		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
 		 */
+		@Override
 		public String getColumnText(Object obj, int index) {
 			if(index == 0)
 				return getText(obj);
@@ -104,6 +108,7 @@ public class ScriptsInfoView extends ViewPart implements IScriptStoreListener {
 		/**
 		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
 		 */
+		@Override
 		public Image getColumnImage(Object obj, int index) {
 			return getImage(obj);
 		}
@@ -111,6 +116,7 @@ public class ScriptsInfoView extends ViewPart implements IScriptStoreListener {
 		/**
 		 * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
 		 */
+		@Override
 		public Image getImage(Object obj) {
 			return null;
 		}
@@ -128,6 +134,7 @@ public class ScriptsInfoView extends ViewPart implements IScriptStoreListener {
 	/**
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		Table table = new Table(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
 		TableLayout layout = new TableLayout();
@@ -173,6 +180,7 @@ public class ScriptsInfoView extends ViewPart implements IScriptStoreListener {
 	/**
 	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
 	 */
+	@Override
 	public void dispose() {
 		ScriptService.getInstance().removeScriptStoreListener(this);
 	}
@@ -180,11 +188,13 @@ public class ScriptsInfoView extends ViewPart implements IScriptStoreListener {
 	/**
 	 * @see org.eclipse.eclipsemonkey.IScriptStoreListener#storeChanged()
 	 */
+	@Override
 	public void storeChanged() {
 		Display display = viewer.getControl().getDisplay();
 		if(!display.isDisposed()) {
 			display.asyncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					if(viewer.getControl().isDisposed())
 						return;
@@ -277,6 +287,7 @@ public class ScriptsInfoView extends ViewPart implements IScriptStoreListener {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}

@@ -29,6 +29,7 @@ public class ScriptsViewSorterProvider extends ViewerSorter {
 	/**
 	 * @see org.eclipse.jface.viewers.ViewerSorter#category(java.lang.Object)
 	 */
+	@Override
 	public int category(Object element) {
 		if(element instanceof ScriptAction) {
 			return 0;
@@ -40,6 +41,7 @@ public class ScriptsViewSorterProvider extends ViewerSorter {
 	/**
 	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		int cat1 = category(e1);
 		int cat2 = category(e2);

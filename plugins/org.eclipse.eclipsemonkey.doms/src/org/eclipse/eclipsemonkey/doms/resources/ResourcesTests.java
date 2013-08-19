@@ -39,6 +39,7 @@ public class ResourcesTests extends TestCase {
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	public void setUp() throws Exception {
 		IWorkspace w = ResourcesPlugin.getWorkspace();
 		IProject project = w.getRoot().getProject("Eclipse Monkey Resources DOM Test");
@@ -66,6 +67,7 @@ public class ResourcesTests extends TestCase {
 	/**
 	 * @see junit.framework.TestCase#tearDown()
 	 */
+	@Override
 	public void tearDown() throws Exception {
 		IWorkspace w = ResourcesPlugin.getWorkspace();
 		IProject project = w.getRoot().getProject("Eclipse Monkey Resources DOM Test");

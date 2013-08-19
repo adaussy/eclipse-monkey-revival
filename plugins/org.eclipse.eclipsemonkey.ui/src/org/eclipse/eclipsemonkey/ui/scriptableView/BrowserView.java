@@ -88,6 +88,7 @@ public abstract class BrowserView extends ViewPart {
 			setDisabledImageDescriptor(BrowserView.getImageDescriptor("icons/backward_nav_off.gif")); //$NON-NLS-1$
 		}
 
+		@Override
 		public void run() {
 			navigateBackward();
 		}
@@ -104,6 +105,7 @@ public abstract class BrowserView extends ViewPart {
 			setDisabledImageDescriptor(BrowserView.getImageDescriptor("icons/forward_nav_off.gif")); //$NON-NLS-1$
 		}
 
+		@Override
 		public void run() {
 			navigateForward();
 		}
@@ -127,6 +129,7 @@ public abstract class BrowserView extends ViewPart {
 			setDisabledImageDescriptor(BrowserView.getImageDescriptor("icons/home_nav_off.gif")); //$NON-NLS-1$
 		}
 
+		@Override
 		public void run() {
 			navigateHome();
 		}
@@ -150,6 +153,7 @@ public abstract class BrowserView extends ViewPart {
 	/**
 	 * @see org.eclipse.ui.IViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
 	 */
+	@Override
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 
@@ -162,6 +166,7 @@ public abstract class BrowserView extends ViewPart {
 	/**
 	 * @see org.eclipse.ui.IPersistable#saveState(org.eclipse.ui.IMemento)
 	 */
+	@Override
 	public void saveState(IMemento memento) {
 		if(url != null) {
 			memento.putString(partId, url);
@@ -173,6 +178,7 @@ public abstract class BrowserView extends ViewPart {
 	 * 
 	 * @param parent
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		browser = new Browser(parent, SWT.NONE);
 		if(this.url != null) {
@@ -191,10 +197,12 @@ public abstract class BrowserView extends ViewPart {
 		// listener to filter out redundant navigations due to frames.
 		browser.addProgressListener(new ProgressListener() {
 
+			@Override
 			public void changed(ProgressEvent event) {
 				// no-op
 			}
 
+			@Override
 			public void completed(ProgressEvent event) {
 				urlListener.flagEndOfNavigation();
 				urlListener.flagEndOfFrameNavigation();
@@ -237,6 +245,7 @@ public abstract class BrowserView extends ViewPart {
 	/**
 	 * Passing the focus request to the viewer's control.
 	 */
+	@Override
 	public void setFocus() {
 		browser.setFocus();
 	}
@@ -345,6 +354,7 @@ public abstract class BrowserView extends ViewPart {
 		/**
 		 * @see org.eclipse.swt.browser.LocationListener#changed(org.eclipse.swt.browser.LocationEvent)
 		 */
+		@Override
 		public void changed(LocationEvent event) {
 			String url = event.location;
 			if(url == null) {
@@ -366,6 +376,7 @@ public abstract class BrowserView extends ViewPart {
 		 * 
 		 * @param event
 		 */
+		@Override
 		public void changing(LocationEvent event) {
 			String url = event.location;
 			if(url == null) {

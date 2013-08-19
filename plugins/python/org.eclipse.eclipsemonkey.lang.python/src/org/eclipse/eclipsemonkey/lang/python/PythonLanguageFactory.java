@@ -35,6 +35,7 @@ public class PythonLanguageFactory implements IMonkeyLanguageFactory {
 	 * @see org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory#getRunMonkeyScript(org.eclipse.core.runtime.IPath,
 	 *      org.eclipse.ui.IWorkbenchWindow)
 	 */
+	@Override
 	public IMonkeyScriptRunner getRunMonkeyScript(IPath path, IWorkbenchWindow window) {
 		return new PythonRunner(path, window);
 	}
@@ -42,12 +43,14 @@ public class PythonLanguageFactory implements IMonkeyLanguageFactory {
 	/**
 	 * @see org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory#init(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void init(String pluginID, String languageName) {
 	}
 
 	/**
 	 * @see org.eclipse.eclipsemonkey.language.IMonkeyLanguageFactory#getScriptMetadata(java.lang.String)
 	 */
+	@Override
 	public ScriptMetadata getScriptMetadata(String contents) {
 		ScriptMetadata metadata = new ScriptMetadata();
 		Pattern commentPattern = Pattern.compile("^\\s*#.*$", Pattern.MULTILINE);

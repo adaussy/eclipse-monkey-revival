@@ -33,6 +33,7 @@ public class JavaScriptPrintStream extends ScriptableObject {
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
+	@Override
 	public String getClassName() {
 		return "PrintStream"; //$NON-NLS-1$
 	}

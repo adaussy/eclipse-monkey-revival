@@ -42,6 +42,7 @@ public class Editors extends ScriptableObject {
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
+	@Override
 	public String getClassName() {
 		return "Editors";
 	}
@@ -95,6 +96,7 @@ public class Editors extends ScriptableObject {
 
 		display.syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 				IWorkbenchPage[] pages = window.getPages();
@@ -158,6 +160,7 @@ public class Editors extends ScriptableObject {
 
 		display.syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 
@@ -226,6 +229,7 @@ public class Editors extends ScriptableObject {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return super.toString();
 	}

@@ -28,6 +28,7 @@ public class Event extends ScriptableObject {
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
+	@Override
 	public String getClassName() {
 		return "Event";
 	}

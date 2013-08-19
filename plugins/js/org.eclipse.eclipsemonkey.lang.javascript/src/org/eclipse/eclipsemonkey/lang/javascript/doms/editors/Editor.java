@@ -48,6 +48,7 @@ public class Editor extends EventTarget {
 	/**
 	 * @see org.mozilla.javascript.ScriptableObject#getClassName()
 	 */
+	@Override
 	public String getClassName() {
 		return "Editor";
 	}
@@ -135,6 +136,7 @@ public class Editor extends EventTarget {
 
 		display.asyncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				ITextEditor editor = getTextEditor();
 				editor.selectAndReveal(offset, length);
@@ -162,6 +164,7 @@ public class Editor extends EventTarget {
 
 		display.syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				ITextSelection ts = (ITextSelection)getTextEditor().getSelectionProvider().getSelection();
 
@@ -376,6 +379,7 @@ public class Editor extends EventTarget {
 
 		display.syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				try {
 					r.result = getDocument().getLineOffset(line);
@@ -393,6 +397,7 @@ public class Editor extends EventTarget {
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String toString() {
 		return "[object Editor]";
 	}

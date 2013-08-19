@@ -35,6 +35,7 @@ public class View extends EventTarget {
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String getClassName() {
 		return "View"; //$NON-NLS-1$
 	}

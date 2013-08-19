@@ -95,6 +95,7 @@ public class PythonClassLoader extends ClassLoader {
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
+	@Override
 	protected Class findClass(String name) throws ClassNotFoundException {
 		Class result = this.loadClassFromBundles(name);
 
@@ -113,6 +114,7 @@ public class PythonClassLoader extends ClassLoader {
 	 * @param name
 	 * @return URL
 	 */
+	@Override
 	protected URL findResource(String name) {
 		URL result = super.findResource(name);
 
@@ -140,6 +142,7 @@ public class PythonClassLoader extends ClassLoader {
 	 * @return Enumeration
 	 * @throws IOException
 	 */
+	@Override
 	protected Enumeration findResources(String name) throws IOException {
 		Enumeration result = super.findResources(name);
 
@@ -173,6 +176,7 @@ public class PythonClassLoader extends ClassLoader {
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
+	@Override
 	public Class loadClass(String name) throws ClassNotFoundException {
 		Class result = null;
 		try {
@@ -198,6 +202,7 @@ public class PythonClassLoader extends ClassLoader {
 	 * @return Class
 	 * @throws ClassNotFoundException
 	 */
+	@Override
 	protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
 		Class result = super.loadClass(name, resolve);
 

@@ -51,6 +51,7 @@ public class ScriptActionSet implements IScriptActionSet {
 	 * @param name
 	 *        The name to set.
 	 */
+	@Override
 	public void setName(String name) {
 		this._name = name;
 	}
@@ -60,6 +61,7 @@ public class ScriptActionSet implements IScriptActionSet {
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String getName() {
 		return this._name;
 	}
@@ -164,20 +166,4 @@ public class ScriptActionSet implements IScriptActionSet {
 		this._executable = b;
 	}
 
-	/**
-	 * getStoredScript
-	 * 
-	 * @return StoredScript
-	 */
-	public StoredScript getStoredScript() {
-		return null;
-	}
-
-	/**
-	 * setStoredScript
-	 * 
-	 * @param s
-	 */
-	public void setStoredScript(StoredScript s) {
-	}
 }

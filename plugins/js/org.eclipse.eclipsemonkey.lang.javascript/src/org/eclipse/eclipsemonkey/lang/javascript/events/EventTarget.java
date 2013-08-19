@@ -50,6 +50,7 @@ public abstract class EventTarget extends ScriptableObject implements IEventTarg
 	/**
 	 * @param event
 	 */
+	@Override
 	public void fireEventListeners(Event event) {
 		this.fireEventListeners(event.getType(), new Object[]{ event });
 	}
@@ -58,6 +59,7 @@ public abstract class EventTarget extends ScriptableObject implements IEventTarg
 	 * @param eventType
 	 * @param args
 	 */
+	@Override
 	public void fireEventListeners(String eventType, Object[] args) {
 		if(this._events != null && this._events.containsKey(eventType)) {
 			ArrayList handlers = _events.get(eventType);
@@ -76,6 +78,7 @@ public abstract class EventTarget extends ScriptableObject implements IEventTarg
 					// execute callback in the correct thread
 					display.syncExec(new Runnable() {
 
+						@Override
 						public void run() {
 							Context cx = Context.enter();
 
@@ -97,6 +100,7 @@ public abstract class EventTarget extends ScriptableObject implements IEventTarg
 	 * @param eventType
 	 * @param eventHandler
 	 */
+	@Override
 	public void addEventListener(String eventType, Object eventHandler) {
 		if(this._events == null) {
 			this._events = new Hashtable<String, ArrayList>();
@@ -115,6 +119,7 @@ public abstract class EventTarget extends ScriptableObject implements IEventTarg
 	 * @param eventType
 	 * @param eventHandler
 	 */
+	@Override
 	public void removeEventListener(String eventType, Object eventHandler) {
 		if(this._events != null) {
 			if(this._events.containsKey(eventType)) {
