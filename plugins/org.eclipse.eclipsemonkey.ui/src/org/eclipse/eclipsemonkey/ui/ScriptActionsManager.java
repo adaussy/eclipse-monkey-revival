@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
  * this entire header must remain intact.
  */
-package org.eclipse.eclipsemonkey.ui.views.scriptsView;
+package org.eclipse.eclipsemonkey.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.eclipsemonkey.StoredScript;
+import org.eclipse.eclipsemonkey.ui.data.ScriptAction;
+import org.eclipse.eclipsemonkey.ui.data.ScriptActionSet;
 
 /**
  * @author Paul Colton
@@ -77,7 +79,6 @@ public class ScriptActionsManager {
 		Collection<IScriptActionSet> sets = getScriptActionSets();
 		Collection<IScriptUI> result = new ArrayList<IScriptUI>(actions.size() + sets.size());
 
-		int index = 0;
 		result.addAll(actions);
 		result.addAll(sets);
 

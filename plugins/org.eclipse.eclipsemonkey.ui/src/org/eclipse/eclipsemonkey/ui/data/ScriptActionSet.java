@@ -7,12 +7,15 @@
  * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
  * this entire header must remain intact.
  */
-package org.eclipse.eclipsemonkey.ui.views.scriptsView;
+package org.eclipse.eclipsemonkey.ui.data;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.eclipsemonkey.StoredScript;
+import org.eclipse.eclipsemonkey.ui.IScriptAction;
+import org.eclipse.eclipsemonkey.ui.IScriptActionSet;
+import org.eclipse.eclipsemonkey.ui.ScriptActionsManager;
 
 /**
  * @author Paul Colton

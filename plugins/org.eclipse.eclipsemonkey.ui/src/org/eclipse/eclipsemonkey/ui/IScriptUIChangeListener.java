@@ -7,17 +7,17 @@
  * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
  * this entire header must remain intact.
  */
-package org.eclipse.eclipsemonkey.ui.views.scriptsView;
+package org.eclipse.eclipsemonkey.ui;
 
 /**
  * @author Paul Colton
  */
-public interface IScriptActionsViewEventListener {
+public interface IScriptUIChangeListener {
 
 	/**
-	 * onActionsViewEvent
+	 * onActionChanged
 	 * 
-	 * @param event
+	 * @param a
 	 */
-	void onScriptActionsViewEvent(ScriptActionsViewEvent event);
+	void onScriptActionChanged(IScriptUI a);
 }

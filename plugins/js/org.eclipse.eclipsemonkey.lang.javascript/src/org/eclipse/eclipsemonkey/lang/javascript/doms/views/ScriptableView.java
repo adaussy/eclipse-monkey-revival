@@ -11,7 +11,7 @@ package org.eclipse.eclipsemonkey.lang.javascript.doms.views;
 
 import org.eclipse.eclipsemonkey.lang.javascript.events.LocationChangedEvent;
 import org.eclipse.eclipsemonkey.lang.javascript.events.LocationChangingEvent;
-import org.eclipse.eclipsemonkey.ui.scriptableView.GenericScriptableView;
+import org.eclipse.eclipsemonkey.ui.views.GenericScriptableView;
 import org.eclipse.eclipsemonkey.utils.StringUtils;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;

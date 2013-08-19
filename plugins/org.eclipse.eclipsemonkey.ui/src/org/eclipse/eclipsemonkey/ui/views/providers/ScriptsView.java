@@ -3,7 +3,7 @@
  * available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code, this entire header must remain intact.
  */
-package org.eclipse.eclipsemonkey.ui.views.scriptsView;
+package org.eclipse.eclipsemonkey.ui.views.providers;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,10 +21,16 @@ import org.eclipse.eclipsemonkey.MenuRunMonkeyScript;
 import org.eclipse.eclipsemonkey.RunMonkeyException;
 import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.ui.EclipseMonkeyUIActivator;
+import org.eclipse.eclipsemonkey.ui.IScriptAction;
+import org.eclipse.eclipsemonkey.ui.IScriptActionSet;
+import org.eclipse.eclipsemonkey.ui.IScriptActionsViewEventListener;
+import org.eclipse.eclipsemonkey.ui.IScriptUI;
 import org.eclipse.eclipsemonkey.ui.IconPath;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.providers.ScriptsViewContentProvider;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.providers.ScriptsViewLabelProvider;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.providers.ScriptsViewSorterProvider;
+import org.eclipse.eclipsemonkey.ui.ScriptActionsManager;
+import org.eclipse.eclipsemonkey.ui.data.ScriptAction;
+import org.eclipse.eclipsemonkey.ui.data.ScriptActionSet;
+import org.eclipse.eclipsemonkey.ui.event.ScriptActionsViewEvent;
+import org.eclipse.eclipsemonkey.ui.event.ScriptActionsViewEventTypes;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;

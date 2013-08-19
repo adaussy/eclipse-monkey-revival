@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
  * this entire header must remain intact.
  */
-package org.eclipse.eclipsemonkey.ui.scriptableView;
+package org.eclipse.eclipsemonkey.ui.views;
 
 import org.eclipse.osgi.util.NLS;
 

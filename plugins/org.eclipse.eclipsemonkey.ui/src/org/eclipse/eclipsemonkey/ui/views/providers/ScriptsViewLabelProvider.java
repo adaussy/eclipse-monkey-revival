@@ -10,13 +10,13 @@
  *     Ward Cunningham - initial implementation
  *     Arthur Daussy - Contributor
  *******************************************************************************/
-package org.eclipse.eclipsemonkey.ui.views.scriptsView.providers;
+package org.eclipse.eclipsemonkey.ui.views.providers;
 
 import org.eclipse.eclipsemonkey.ui.EclipseMonkeyUIActivator;
+import org.eclipse.eclipsemonkey.ui.IScriptAction;
 import org.eclipse.eclipsemonkey.ui.IconPath;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptAction;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.ScriptAction;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.ScriptActionSet;
+import org.eclipse.eclipsemonkey.ui.data.ScriptAction;
+import org.eclipse.eclipsemonkey.ui.data.ScriptActionSet;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 

@@ -12,9 +12,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.editors,
  org.mozilla.javascript;bundle-version="1.6.2"
 Eclipse-LazyStart: true
-Export-Package: org.eclipse.eclipsemonkey.ui.scriptableView,
+Export-Package: org.eclipse.eclipsemonkey.ui,
+ org.eclipse.eclipsemonkey.ui.event,
  org.eclipse.eclipsemonkey.ui.views,
- org.eclipse.eclipsemonkey.ui.views.scriptsView
+ org.eclipse.eclipsemonkey.ui.views.providers
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Activator: org.eclipse.eclipsemonkey.ui.EclipseMonkeyUIActivator

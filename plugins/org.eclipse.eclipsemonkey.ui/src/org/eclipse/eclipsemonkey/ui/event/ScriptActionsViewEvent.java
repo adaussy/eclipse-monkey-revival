@@ -7,12 +7,13 @@
  * http://www.eclipse.org/legal/epl-v10.html. If redistributing this code,
  * this entire header must remain intact.
  */
-package org.eclipse.eclipsemonkey.ui.views.scriptsView;
+package org.eclipse.eclipsemonkey.ui.event;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.eclipsemonkey.ui.IScriptUI;
 
 /**
  * @author Paul Colton

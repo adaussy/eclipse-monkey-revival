@@ -17,14 +17,14 @@
       </view>
       <view
             category="monkey"
-            class="org.eclipse.eclipsemonkey.ui.views.scriptsView.ScriptsView"
+            class="org.eclipse.eclipsemonkey.ui.views.providers.ScriptsView"
             icon="icons/monkey.gif"
             id="org.eclipse.eclipsemonkey.views.ScriptsView"
             name="Scripts"/>
       <view
             allowMultiple="true"
             category="monkey"
-            class="org.eclipse.eclipsemonkey.ui.scriptableView.GenericScriptableView"
+            class="org.eclipse.eclipsemonkey.ui.views.GenericScriptableView"
             icon="icons/web_view.gif"
             id="org.eclipse.eclipsemonkey.ui.scriptableView.GenericScriptableView"
             name="Web View"/>

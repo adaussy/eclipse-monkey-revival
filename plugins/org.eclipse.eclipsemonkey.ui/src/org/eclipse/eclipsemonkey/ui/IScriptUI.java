@@ -8,7 +8,7 @@
  * Contributors:
  *     Arthur Daussy - initial implementation
  *******************************************************************************/
-package org.eclipse.eclipsemonkey.ui.views.scriptsView;
+package org.eclipse.eclipsemonkey.ui;
 
 /**
  * All ui element that shoul be represent in ui

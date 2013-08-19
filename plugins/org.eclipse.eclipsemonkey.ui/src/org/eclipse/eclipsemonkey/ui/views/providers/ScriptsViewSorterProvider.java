@@ -10,11 +10,11 @@
  *     Ward Cunningham - initial implementation
  *     Arthur Daussy - Contributor
  *******************************************************************************/
-package org.eclipse.eclipsemonkey.ui.views.scriptsView.providers;
+package org.eclipse.eclipsemonkey.ui.views.providers;
 
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptAction;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptUI;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.ScriptAction;
+import org.eclipse.eclipsemonkey.ui.IScriptAction;
+import org.eclipse.eclipsemonkey.ui.IScriptUI;
+import org.eclipse.eclipsemonkey.ui.data.ScriptAction;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 

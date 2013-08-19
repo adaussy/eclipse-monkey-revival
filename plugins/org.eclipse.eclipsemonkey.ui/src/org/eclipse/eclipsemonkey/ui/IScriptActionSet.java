@@ -8,11 +8,12 @@
  * Contributors:
  *     Arthur Daussy - initial implementation
  *******************************************************************************/
-package org.eclipse.eclipsemonkey.ui.views.scriptsView;
+package org.eclipse.eclipsemonkey.ui;
 
 import java.util.List;
 
 import org.eclipse.eclipsemonkey.StoredScript;
+import org.eclipse.eclipsemonkey.ui.data.ScriptAction;
 
 public interface IScriptActionSet extends IScriptUI {
 

@@ -10,7 +10,7 @@
  *     Ward Cunningham - initial implementation
  *     Arthur Daussy - Contributor
  *******************************************************************************/
-package org.eclipse.eclipsemonkey.ui.views.scriptsView.providers;
+package org.eclipse.eclipsemonkey.ui.views.providers;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -24,12 +24,12 @@ import java.util.regex.Pattern;
 
 import org.eclipse.eclipsemonkey.ScriptService;
 import org.eclipse.eclipsemonkey.StoredScript;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptAction;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptActionSet;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.IScriptUI;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.ScriptAction;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.ScriptActionSet;
-import org.eclipse.eclipsemonkey.ui.views.scriptsView.ScriptActionsManager;
+import org.eclipse.eclipsemonkey.ui.IScriptAction;
+import org.eclipse.eclipsemonkey.ui.IScriptActionSet;
+import org.eclipse.eclipsemonkey.ui.IScriptUI;
+import org.eclipse.eclipsemonkey.ui.ScriptActionsManager;
+import org.eclipse.eclipsemonkey.ui.data.ScriptAction;
+import org.eclipse.eclipsemonkey.ui.data.ScriptActionSet;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
