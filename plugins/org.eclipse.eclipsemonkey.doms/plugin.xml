@@ -12,4 +12,18 @@
             variableName="workspace">
       </dom>
    </extension>
+   
+      <extension
+         point="org.eclipse.eclipsemonkey.dom">
+      <dom
+            class="org.eclipse.eclipsemonkey.doms.input.DOMFactory"
+            resource="org.eclipse.eclipsemonkey.doms.input.InputDOM"
+            variableName="input">
+      </dom>
+      <dom
+            class="org.eclipse.eclipsemonkey.doms.output.DOMFactory"
+            resource="org.eclipse.eclipsemonkey.doms.output.OutputDOM"
+            variableName="output">
+      </dom>
+   </extension>
  </plugin>

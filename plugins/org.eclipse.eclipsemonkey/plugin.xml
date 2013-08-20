@@ -116,7 +116,14 @@
          </run>
       </runtime>
    </extension>
-  
+   <extension
+         point="org.eclipse.ui.console.consoleFactories">
+      <consoleFactory
+            class="org.eclipse.eclipsemonkey.console.ScriptConsoleFactory"
+            icon="icons/eclipse_monkey_console.png"
+            label="Topcased Scripts Console">
+      </consoleFactory>
+   </extension>
 
 
 </plugin>
