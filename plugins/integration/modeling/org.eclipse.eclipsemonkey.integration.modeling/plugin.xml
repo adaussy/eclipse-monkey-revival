@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="getSelection" name="Editor Selection Getter" schema="schema/getSelection.exsd"/>
+   <extension
+         point="org.eclipse.eclipsemonkey.dom">
+      <dom
+            class="org.eclipse.eclipsemonkey.integration.modeling.input.DOMFactory"
+            resource="org.eclipse.eclipsemonkey.integration.modeling.input.InputDOM"
+            variableName="input">
+      </dom>
+      <dom
+            class="org.eclipse.eclipsemonkey.integration.modeling.output.DOMFactory"
+            resource="org.eclipse.eclipsemonkey.integration.modeling.output.OutputDOM"
+            variableName="output">
+      </dom>
+   </extension>
+
+
+</plugin>

@@ -187,7 +187,6 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 						return;
 					_scriptActionsManager.clearAll();
 					viewer.refresh();
-					viewer.expandAll();
 				}
 			});
 		}
