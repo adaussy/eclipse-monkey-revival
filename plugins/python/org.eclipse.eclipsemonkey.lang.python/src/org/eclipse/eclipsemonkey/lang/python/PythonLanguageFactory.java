@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.eclipsemonkey.DOMDescriptor;
+import org.eclipse.eclipsemonkey.IMetadaPattern;
 import org.eclipse.eclipsemonkey.IMonkeyScriptRunner;
 import org.eclipse.eclipsemonkey.ScriptMetadata;
 import org.eclipse.eclipsemonkey.Subscription;
@@ -60,6 +61,8 @@ public class PythonLanguageFactory implements IMonkeyLanguageFactory {
 		Pattern scopePattern = Pattern.compile("Scope:\\s*((\\p{Graph}| )+)", Pattern.DOTALL);
 		Pattern domPattern = Pattern.compile("DOM:\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)", Pattern.DOTALL);
 		Pattern listenerPattern = Pattern.compile("Listener:\\s*(\\w+)\\(\\)\\.(\\w+)", Pattern.DOTALL);
+		Pattern descriptionMetadata = Pattern.compile(IMetadaPattern.DESCRIPTION_METADA_PATTERN, Pattern.DOTALL);
+
 		Matcher cm = commentPattern.matcher(contents);
 		while(cm.find()) {
 			String comment = cm.group();
@@ -91,6 +94,10 @@ public class PythonLanguageFactory implements IMonkeyLanguageFactory {
 			m = listenerPattern.matcher(comment);
 			while(m.find()) {
 				metadata.getSubscriptions().add(new Subscription(m.group(1), m.group(2)));
+			}
+			m = descriptionMetadata.matcher(comment);
+			while(m.find()) {
+				metadata.setDescription(m.group(1));
 			}
 		}
 		return metadata;

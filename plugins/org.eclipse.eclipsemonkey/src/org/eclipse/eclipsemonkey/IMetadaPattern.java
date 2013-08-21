@@ -1,4 +1,4 @@
-package org.eclipse.eclipsemonkey.lang.javascript;
+package org.eclipse.eclipsemonkey;
 
 /**
  * Store all pattern to find metadata
@@ -20,5 +20,5 @@ public interface IMetadaPattern {
 
 	public static final String LISTENER_METADA_PATTERN = "Listener:\\s*((\\p{Graph}| )+)";
 
-	public static final String DESCRIPTION_METADA_PATTERN = "Description:\\s*\\{(.+)\\}";
+	public static final String DESCRIPTION_METADA_PATTERN = "Description:\\s*((\\p{Graph}| )+)";
 }

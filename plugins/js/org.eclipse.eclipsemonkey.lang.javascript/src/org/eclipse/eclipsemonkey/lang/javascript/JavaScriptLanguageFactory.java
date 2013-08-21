@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.eclipsemonkey.DOMDescriptor;
+import org.eclipse.eclipsemonkey.IMetadaPattern;
 import org.eclipse.eclipsemonkey.IMonkeyScriptRunner;
 import org.eclipse.eclipsemonkey.ScriptMetadata;
 import org.eclipse.eclipsemonkey.Subscription;

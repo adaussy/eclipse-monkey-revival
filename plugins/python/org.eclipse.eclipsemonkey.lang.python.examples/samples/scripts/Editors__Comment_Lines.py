@@ -1,6 +1,7 @@
 #
 # Menu: Examples > Editors > Py > Comment Lines
 # Kudos: Jose Fonseca & Paul Colton
+# Description: You can use this script to comment a line in the current active editor.(Only work with text editor)
 # License: EPL 1.0
 #
 
