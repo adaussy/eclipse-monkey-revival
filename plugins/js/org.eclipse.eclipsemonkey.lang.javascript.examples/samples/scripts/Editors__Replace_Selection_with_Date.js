@@ -1,7 +1,7 @@
 /*
  * Menu:   Examples > Editors > JS > Replace Selecton with Date
  * Kudos: Paul Colton (Aptana, Inc.)
- * Description: {You can use this script to replace the current seleciton of the active text editorwith the current date}
+ * Description: You can use this script to replace the current seleciton of the active text editorwith the current date
  * License: EPL 1.0
  * DOM: http://download.eclipse.org/technology/dash/update/org.eclipse.eclipsemonkey.lang.javascript
  */

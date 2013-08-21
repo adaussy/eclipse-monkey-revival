@@ -7,7 +7,7 @@
  */
 
 /**
- * This script lists the attribute anywhere in the current model which do not
+ * Description : This script lists the attribute anywhere in the current model which do not
  * have a specified type. It illustrates how to obtain the top-level Model from
  * the currently selected element, how to navigate inside a whole model
  * (recursively) and detect elements which match some criterion, and how to

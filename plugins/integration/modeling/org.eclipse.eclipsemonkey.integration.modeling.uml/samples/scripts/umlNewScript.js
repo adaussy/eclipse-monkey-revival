@@ -7,7 +7,7 @@
  */
 
 /**
- * This script create a new Topcased script properly configured for UML.
+ * Description :  This script create a new Topcased script properly configured for UML.
  */
 function main()
 {

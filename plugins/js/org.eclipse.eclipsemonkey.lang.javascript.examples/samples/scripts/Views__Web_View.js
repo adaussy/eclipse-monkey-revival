@@ -2,6 +2,7 @@
  * Menu: Examples > Views > JS > Google Web View
  * Kudos: Paul Colton
  * License: EPL 1.0
+ * Description : You can use this script to open the Web View.
  * DOM: http://localhost/org.eclipse.eclipsemonkey.lang.javascript
  */
 

@@ -1,6 +1,7 @@
 #
 # Menu: Examples > IO > Py > File Sample
 # Kudos: Paul Colton, Aptana, Inc.
+# Description : You can use this script to display into a dialog box the current date.
 # License: EPL 1.0
 #
 

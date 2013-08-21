@@ -7,7 +7,7 @@
  */
 
 /**
- * This script displays some basic information (name and type of element) of the currently selected element.
+ * Description : This script displays some basic information (name and type of element) of the currently selected element.
  */
 function main() {
 	var op = new java.lang.Runnable({

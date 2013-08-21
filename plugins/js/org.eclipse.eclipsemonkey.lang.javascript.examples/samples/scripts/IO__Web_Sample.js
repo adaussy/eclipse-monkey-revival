@@ -2,6 +2,7 @@
  * Menu: Examples > IO > JS > Web Sample
  * Kudos: Paul Colton, Aptana, Inc.
  * License: EPL 1.0
+ * Description : You can use this script to display into a dialog a http request result.
  * DOM: http://download.eclipse.org/technology/dash/update/org.eclipse.eclipsemonkey.lang.javascript
  */
   

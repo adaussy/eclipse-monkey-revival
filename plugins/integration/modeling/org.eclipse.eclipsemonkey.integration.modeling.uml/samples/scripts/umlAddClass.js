@@ -7,7 +7,7 @@
  */
 
 /**
- * This script create a new UML class in the current package. A package must be
+ * Description : This script create a new UML class in the current package. A package must be
  * selected in the current UML editor. It illustrates how to create new
  * elements. In this case we use uml.createClass(), which is a pre-defined
  * helper on the uml object. It creates a new class, sets its name, and adds it

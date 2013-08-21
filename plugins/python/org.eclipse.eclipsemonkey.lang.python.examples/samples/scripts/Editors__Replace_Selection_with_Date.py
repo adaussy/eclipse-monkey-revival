@@ -1,8 +1,9 @@
 #
 # Menu: Examples >Editors > Py > Replace Selecton with Date
 # Kudos: Jose Fonseca & Paul Colton
+# Description: You can use this script to replace the current seleciton of the active text editorwith the current date
 # License: EPL 1.0
-#
+# 
 
 import time
 

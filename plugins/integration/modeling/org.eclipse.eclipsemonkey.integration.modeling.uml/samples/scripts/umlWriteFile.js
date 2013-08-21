@@ -7,7 +7,7 @@
  */
 
 /**
- * This script illustrates how to write the result of a script into a text file.
+ * Description : This script illustrates how to write the result of a script into a text file.
  */
 function main()
 {

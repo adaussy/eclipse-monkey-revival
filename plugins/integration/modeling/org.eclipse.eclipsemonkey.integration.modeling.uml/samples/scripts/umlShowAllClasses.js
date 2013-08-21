@@ -7,7 +7,7 @@
  */
 
 /**
- * This script finds and prints all the UML classes contained inside the selected element, directly or indirectly.
+ * Description :  This script finds and prints all the UML classes contained inside the selected element, directly or indirectly.
  */
 function main()
 {

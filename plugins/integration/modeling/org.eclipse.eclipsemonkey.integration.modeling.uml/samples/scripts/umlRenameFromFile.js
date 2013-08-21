@@ -7,7 +7,7 @@
  */
 
 /**
- * This script shows how to read the contents of a text file. It lets the user
+ * Description : This script shows how to read the contents of a text file. It lets the user
  * select a file from the workspace, reads the contents, and use it to rename
  * the currently selected model element.
  */
