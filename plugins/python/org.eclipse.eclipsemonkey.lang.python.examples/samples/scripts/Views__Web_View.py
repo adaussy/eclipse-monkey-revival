@@ -5,7 +5,7 @@
 #
 
 from org.eclipse.swt.browser import LocationListener
-from org.eclipse.eclipsemonkey.ui.scriptableView import GenericScriptableView
+from org.eclipse.eclipsemonkey.ui.views import GenericScriptableView
 from org.eclipse.ui import IWorkbenchPage
 
 class MyLocationListener(LocationListener):
