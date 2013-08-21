@@ -26,4 +26,4 @@ Export-Package: org.eclipse.eclipsemonkey.lang.javascript,
  org.eclipse.eclipsemonkey.lang.javascript.doms.resources
 Bundle-ClassPath: monkey.jar
 Bundle-Vendor: Eclipse.org
-Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
