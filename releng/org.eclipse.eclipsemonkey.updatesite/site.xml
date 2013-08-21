@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.eclipse.eclipsemonkey.feature_1.0.0.qualifier.jar" id="org.eclipse.eclipsemonkey.feature" version="1.0.0.qualifier">
+      <category name="Eclipse Monkey"/>
+   </feature>
+   <feature url="features/org.eclipse.eclipsemonkey.lang.javascript.feature_1.0.0.qualifier.jar" id="org.eclipse.eclipsemonkey.lang.javascript.feature" version="1.0.0.qualifier">
+      <category name="Eclipse Monkey Lang"/>
+   </feature>
+   <feature url="features/org.eclipse.eclipsemonkey.lang.python.feature_1.0.0.qualifier.jar" id="org.eclipse.eclipsemonkey.lang.python.feature" version="1.0.0.qualifier">
+      <category name="Eclipse Monkey Lang"/>
+   </feature>
+   <feature url="features/org.eclipse.eclipsemonkey.integration.modeling.feature_1.0.0.qualifier.jar" id="org.eclipse.eclipsemonkey.integration.modeling.feature" version="1.0.0.qualifier">
+      <category name="Eclipse Monkey Integration"/>
+   </feature>
+   <category-def name="Eclipse Monkey" label="Eclipse Monkey"/>
+   <category-def name="Eclipse Monkey Lang" label="Eclipse Monkey Lang"/>
+   <category-def name="Eclipse Monkey Integration" label="Eclipse Monkey Integration"/>
+</site>
