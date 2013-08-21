@@ -38,6 +38,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -215,10 +216,10 @@ public class ScriptsView extends ViewPart implements IScriptStoreListener {
 
 		layout = new StackLayout();
 		parent.setLayout(layout);
-
 		viewer = new TreeViewer(new Tree(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL));
+		ColumnViewerToolTipSupport.enableFor(viewer);
 		viewer.setContentProvider(new ScriptsViewContentProvider());
-		viewer.setLabelProvider(new ScriptsViewLabelProvider());
+		viewer.setLabelProvider(new ScriptCellLabelProvider());
 		viewer.setSorter(new ScriptsViewSorterProvider());
 		viewer.setInput(getViewSite());
 		viewer.expandAll();

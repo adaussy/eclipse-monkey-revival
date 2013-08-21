@@ -18,5 +18,7 @@ public interface IMetadaPattern {
 
 	public static final String MENU_METADA_PATTERN = "Menu:\\s*((\\p{Graph}| )+)";
 
-	public static final String LISTENER_METADA_PATTERN = "Listener:\\s*(\\w+)\\(\\)\\.(\\w+)";
+	public static final String LISTENER_METADA_PATTERN = "Listener:\\s*((\\p{Graph}| )+)";
+
+	public static final String DESCRIPTION_METADA_PATTERN = "Description:\\s*\\{(.+)\\}";
 }

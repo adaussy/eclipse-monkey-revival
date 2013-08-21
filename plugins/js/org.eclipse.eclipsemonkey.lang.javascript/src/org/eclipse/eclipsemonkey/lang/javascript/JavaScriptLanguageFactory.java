@@ -90,6 +90,11 @@ public class JavaScriptLanguageFactory implements IMonkeyLanguageFactory {
 			while(m.find()) {
 				metadata.getSubscriptions().add(new Subscription(m.group(1), m.group(2)));
 			}
+			p = Pattern.compile(IMetadaPattern.DESCRIPTION_METADA_PATTERN, Pattern.DOTALL);
+			m = p.matcher(comment);
+			while(m.find()) {
+				metadata.setDescription(m.group(1));
+			}
 		} else {
 			// no meta-data comment - do nothing
 		}

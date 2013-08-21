@@ -48,6 +48,10 @@ public class ScriptMetadata {
 
 	private String scopeName;
 
+	private Map<String, Object> metadataStore = new HashMap<String, Object>();
+
+	public static String DESCRIPTION_KEY = "DESCRIPTION_KEY";
+
 	private List<DOMDescriptor> doms = new ArrayList<DOMDescriptor>();
 
 	private List<Subscription> subscriptions = new ArrayList<Subscription>();
@@ -59,6 +63,19 @@ public class ScriptMetadata {
 	 */
 	public void setMenuName(String string) {
 		this.menuName = string;
+	}
+
+	public void addMetada(String key, String value) {
+		metadataStore.put(key, value);
+	}
+
+	public void setDescription(String description) {
+		metadataStore.put(DESCRIPTION_KEY, description);
+	}
+
+	public String getDescription() {
+		Object desc = metadataStore.get(DESCRIPTION_KEY);
+		return (String)(desc != null ? desc : "");
 	}
 
 	/**
