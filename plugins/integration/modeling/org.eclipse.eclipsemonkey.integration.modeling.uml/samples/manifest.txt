@@ -1,0 +1,12 @@
+scripts/umlAddClass.js
+scripts/umlAddClassWithNAttributes.js
+scripts/umlCountElements.js
+scripts/umlDisplaySelectedElement.js
+scripts/umlFindByName.js
+scripts/umlListAttributeWithNoType.js
+scripts/umlNewScript.js
+scripts/umlRename.js
+scripts/umlRenameFromFile.js
+scripts/umlShowAllClasses.js
+scripts/umlWriteFile.js
+
